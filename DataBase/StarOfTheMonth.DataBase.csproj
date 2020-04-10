@@ -150,6 +150,9 @@
       <DependentUpon>IntranetPortal.edmx</DependentUpon>
       <LastGenOutput>IntranetPortal.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\StarOfTheMonth_Insert_trigger.txt" />
+    <Content Include="Scripts\TableScriptWithData_IP.txt" />
+    <Content Include="Scripts\TableScriptWithData_SOM.txt" />
     <Content Include="SOMEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>SOMEntities.edmx</DependentUpon>

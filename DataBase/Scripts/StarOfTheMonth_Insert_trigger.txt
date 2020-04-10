@@ -1,0 +1,32 @@
+﻿USE [SOM_New]
+GO
+/****** Object:  Trigger [dbo].[StarOfTheMonth_Insert]    Script Date: 04/10/2020 6:34:16 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER TRIGGER [dbo].[StarOfTheMonth_Insert]  
+ON [dbo].[StarOfTheMonth]  
+AFTER INSERT  
+AS  
+BEGIN  
+
+INSERT INTO IntranetPortal.dbo.StarOfTheMonth 
+SELECT
+  i.Month,
+  i.Year,
+  i.Description,
+  i.EmpId,
+  i.NominationID,
+  i.IsDisplay,
+  i.IsApproved,
+  i.ApprovedDate,
+  i.ApprovedBy,
+  i.CreatedBy,
+  i.CreatedDate,
+  i.ModifiedBy,
+  i.ModifiedDate
+FROM
+    inserted AS i
+
+END 

@@ -1,0 +1,571 @@
+﻿USE [SOM_New]
+GO
+ALTER TABLE [dbo].[TQCHead] DROP CONSTRAINT [DF__TQCHead__Modifie__3B40CD36]
+GO
+ALTER TABLE [dbo].[TQCHead] DROP CONSTRAINT [DF__TQCHead__Created__395884C4]
+GO
+ALTER TABLE [dbo].[StarOfTheMonth] DROP CONSTRAINT [DF_StarOfTheMonth_ModifiedDate]
+GO
+ALTER TABLE [dbo].[StarOfTheMonth] DROP CONSTRAINT [DF_StarOfTheMonth_CreatedDate]
+GO
+ALTER TABLE [dbo].[StarOfTheMonth] DROP CONSTRAINT [DF_StarOfTheMonth_ApprovedDate]
+GO
+ALTER TABLE [dbo].[Notification] DROP CONSTRAINT [DF__Notificat__Creat__54CB950F]
+GO
+ALTER TABLE [dbo].[Nomination] DROP CONSTRAINT [DF__Nominatio__Modif__2FCF1A8A]
+GO
+ALTER TABLE [dbo].[Nomination] DROP CONSTRAINT [DF__Nominatio__Creat__2DE6D218]
+GO
+ALTER TABLE [dbo].[HorizontalDeployment] DROP CONSTRAINT [DF__Horizonta__Modif__4A4E069C]
+GO
+ALTER TABLE [dbo].[HorizontalDeployment] DROP CONSTRAINT [DF__Horizonta__Creat__4865BE2A]
+GO
+ALTER TABLE [dbo].[EvaluatorAvailability] DROP CONSTRAINT [DF__Evaluator__Modif__467D75B8]
+GO
+ALTER TABLE [dbo].[EvaluatorAvailability] DROP CONSTRAINT [DF__Evaluator__Creat__44952D46]
+GO
+ALTER TABLE [dbo].[Evaluation] DROP CONSTRAINT [DF__Evaluatio__Modif__2A164134]
+GO
+ALTER TABLE [dbo].[Evaluation] DROP CONSTRAINT [DF__Evaluatio__Creat__282DF8C2]
+GO
+ALTER TABLE [dbo].[DepartmentHead] DROP CONSTRAINT [DF__Departmen__Modif__7E37BEF6]
+GO
+ALTER TABLE [dbo].[DepartmentHead] DROP CONSTRAINT [DF__Departmen__Creat__7C4F7684]
+GO
+ALTER TABLE [dbo].[Configuration] DROP CONSTRAINT [DF__Configura__Modif__3EDC53F0]
+GO
+ALTER TABLE [dbo].[Configuration] DROP CONSTRAINT [DF__Configura__Creat__3CF40B7E]
+GO
+ALTER TABLE [dbo].[AuditLog] DROP CONSTRAINT [DF__AuditLog__Modifi__3587F3E0]
+GO
+ALTER TABLE [dbo].[AuditLog] DROP CONSTRAINT [DF__AuditLog__Create__339FAB6E]
+GO
+/****** Object:  Table [dbo].[TQCHead]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[TQCHead]
+GO
+/****** Object:  Table [dbo].[StarOfTheMonth]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[StarOfTheMonth]
+GO
+/****** Object:  Table [dbo].[Notification]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[Notification]
+GO
+/****** Object:  Table [dbo].[Nomination]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[Nomination]
+GO
+/****** Object:  Table [dbo].[HorizontalDeployment]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[HorizontalDeployment]
+GO
+/****** Object:  Table [dbo].[EvaluatorAvailability]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[EvaluatorAvailability]
+GO
+/****** Object:  Table [dbo].[Evaluation]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[Evaluation]
+GO
+/****** Object:  Table [dbo].[EnumAbbreviation]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[EnumAbbreviation]
+GO
+/****** Object:  Table [dbo].[DepartmentHead]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[DepartmentHead]
+GO
+/****** Object:  Table [dbo].[Configuration]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[Configuration]
+GO
+/****** Object:  Table [dbo].[AuditLog]    Script Date: 04/10/2020 6:33:01 PM ******/
+DROP TABLE [dbo].[AuditLog]
+GO
+/****** Object:  Table [dbo].[AuditLog]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuditLog](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[NominationID] [nvarchar](20) NULL,
+	[EmployeeNumber] [nvarchar](20) NULL,
+	[DepartmentHeadID] [nvarchar](20) NULL,
+	[TQCHeadID] [nvarchar](20) NULL,
+	[EvaluatorID] [nvarchar](20) NULL,
+	[IsNewAlert] [bit] NULL,
+	[IsNotification] [bit] NULL,
+	[CurrentStatus] [int] NULL,
+	[IsActive] [bit] NULL,
+	[CreatedBy] [nvarchar](20) NULL,
+	[CreatedDate] [nvarchar](16) NULL,
+	[ModifiedBy] [nvarchar](20) NULL,
+	[ModifiedDate] [nvarchar](16) NULL,
+	[AdminId] [nvarchar](20) NULL,
+	[Comments] [nvarchar](max) NULL,
+ CONSTRAINT [PK__AuditLog__3214EC27F64F2534] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Configuration]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Configuration](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[Module] [nvarchar](100) NULL,
+	[Type] [nvarchar](100) NULL,
+	[Description] [nvarchar](500) NULL,
+	[Value] [nvarchar](800) NULL,
+	[IsActive] [bit] NULL,
+	[IsDisplayUI] [bit] NULL,
+	[CreatedBy] [nvarchar](20) NULL,
+	[CreatedDate] [nvarchar](16) NULL,
+	[ModifiedBy] [nvarchar](20) NULL,
+	[ModifiedDate] [nvarchar](16) NULL,
+ CONSTRAINT [PK__Configur__3214EC273E9A5808] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[DepartmentHead]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[DepartmentHead](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[NominationID] [nvarchar](20) NULL,
+	[EmployeeNumber] [nvarchar](20) NULL,
+	[CommentsByDeptHead] [nvarchar](800) NULL,
+	[Status] [int] NULL,
+	[IsActive] [bit] NULL,
+	[CreatedBy] [nvarchar](20) NULL,
+	[CreatedDate] [nvarchar](16) NULL,
+	[ModifiedBy] [nvarchar](20) NULL,
+	[ModifiedDate] [nvarchar](16) NULL,
+ CONSTRAINT [PK__Departme__3214EC275BC0FF86] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[EnumAbbreviation]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[EnumAbbreviation](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[ParentID] [bigint] NULL,
+	[ParentName] [nvarchar](50) NULL,
+	[ParentDescription] [nvarchar](100) NULL,
+	[ChildID] [bigint] NULL,
+	[ChildName] [nvarchar](50) NULL,
+	[ChildDescription] [nvarchar](100) NULL,
+	[IsActive] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Evaluation]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Evaluation](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[NominationID] [nvarchar](20) NULL,
+	[EmployeeNumber] [nvarchar](20) NULL,
+	[EvaluatorID] [nvarchar](20) NULL,
+	[ReactiveIdeaDrivenBySituation] [int] NULL,
+	[BasedOnInstruction] [int] NULL,
+	[ProactiveIdeaGeneratedBySelf] [int] NULL,
+	[Delayed] [int] NULL,
+	[AsPerPlan] [int] NULL,
+	[AheadOfPlan] [int] NULL,
+	[FollowedUp] [int] NULL,
+	[Participated] [int] NULL,
+	[Implemented] [int] NULL,
+	[CoordiantionWithInTheDept] [int] NULL,
+	[CoordinationWithAnotherFunction] [int] NULL,
+	[CoordinationWithMultipleFunctions] [int] NULL,
+	[PreventionOfaFailure] [int] NULL,
+	[ImprovementFromCurrentSituation] [int] NULL,
+	[BreakthroughImprovement] [int] NULL,
+	[ScopeIdentified] [int] NULL,
+	[ImplementedPartially] [int] NULL,
+	[ImplementedInAllApplicableAreas] [int] NULL,
+	[TotalScore] [int] NULL,
+	[Status] [int] NULL,
+	[IsActive] [bit] NULL,
+	[CreatedBy] [nvarchar](20) NULL,
+	[CreatedDate] [nvarchar](16) NULL,
+	[ModifiedBy] [nvarchar](20) NULL,
+	[ModifiedDate] [nvarchar](16) NULL,
+ CONSTRAINT [PK__Evaluati__3214EC27DD40413E] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[EvaluatorAvailability]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[EvaluatorAvailability](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[EvaluatorID] [nvarchar](20) NULL,
+	[Month] [nvarchar](15) NULL,
+	[Year] [nvarchar](4) NULL,
+	[IsActive] [bit] NULL,
+	[CreatedBy] [nvarchar](20) NULL,
+	[CreatedDate] [nvarchar](16) NULL,
+	[ModifiedBy] [nvarchar](20) NULL,
+	[ModifiedDate] [nvarchar](16) NULL,
+ CONSTRAINT [PK__Evaluato__3214EC27E5DCE581] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[HorizontalDeployment]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[HorizontalDeployment](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[NominationID] [nvarchar](20) NULL,
+	[EmpNumber] [nvarchar](20) NULL,
+	[AreaOfInterest] [nvarchar](max) NULL,
+	[ImplementationStatus] [nvarchar](max) NULL,
+	[IsActive] [bit] NULL,
+	[CreatedBy] [nvarchar](100) NULL,
+	[CreatedDate] [nvarchar](16) NULL,
+	[ModifiedBy] [nvarchar](100) NULL,
+	[ModifiedDate] [nvarchar](16) NULL,
+ CONSTRAINT [PK__Horizont__3214EC277E1B1534] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Nomination]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Nomination](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[EmployeeNumber] [nvarchar](20) NULL,
+	[StartDate] [nvarchar](9) NULL,
+	[EndDate] [nvarchar](9) NULL,
+	[ProjectTitle] [nvarchar](max) NULL,
+	[Idea] [nvarchar](max) NULL,
+	[PrimaryObjective] [nvarchar](max) NULL,
+	[BriefDescription] [nvarchar](max) NULL,
+	[Benefits] [nvarchar](max) NULL,
+	[HorizontalDeploymentID] [bigint] NULL,
+	[Acknowledgement] [nvarchar](max) NULL,
+	[SubmittedMonth] [nvarchar](15) NULL,
+	[SubmittedYear] [nvarchar](4) NULL,
+	[NomSubmittedDate] [nvarchar](16) NULL,
+	[NomSignature] [nvarchar](100) NULL,
+	[DHComments] [nvarchar](max) NULL,
+	[DHSubmittedDate] [nvarchar](16) NULL,
+	[DHSignature] [nvarchar](100) NULL,
+	[Status] [int] NULL,
+	[IsActive] [bit] NULL,
+	[CreatedBy] [nvarchar](100) NULL,
+	[CreatedDate] [nvarchar](16) NULL,
+	[ModifiedBy] [nvarchar](100) NULL,
+	[ModifiedDate] [nvarchar](16) NULL,
+	[Savings] [nvarchar](500) NULL,
+	[Cost] [nvarchar](500) NULL,
+	[Time] [nvarchar](500) NULL,
+	[Paper] [nvarchar](500) NULL,
+	[UploadedFileNames] [nvarchar](max) NULL,
+	[NominationId] [nvarchar](20) NULL,
+	[SOMComments] [nvarchar](max) NULL,
+	[SOMSubmittedDate] [nvarchar](16) NULL,
+	[SOMSignature] [nvarchar](100) NULL,
+ CONSTRAINT [PK__Nominati__3214EC278BD82BBC] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Notification]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Notification](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[Category] [nvarchar](150) NULL,
+	[SourceUser] [nvarchar](50) NULL,
+	[DestinationUser] [nvarchar](50) NULL,
+	[Message] [nvarchar](max) NULL,
+	[UserSeen] [bit] NULL,
+	[IsActive] [bit] NULL,
+	[CreatedBy] [nvarchar](20) NULL,
+	[CreatedDate] [nvarchar](20) NULL,
+ CONSTRAINT [PK__Notifica__3214EC27EBAF471E] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[StarOfTheMonth]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[StarOfTheMonth](
+	[TransID] [int] IDENTITY(1,1) NOT NULL,
+	[Month] [nvarchar](50) NOT NULL,
+	[Year] [nvarchar](50) NULL,
+	[Description] [nvarchar](max) NULL,
+	[EmpId] [int] NOT NULL,
+	[NominationID] [nvarchar](50) NULL,
+	[IsDisplay] [bit] NOT NULL,
+	[IsApproved] [bit] NOT NULL,
+	[ApprovedDate] [datetime] NULL,
+	[ApprovedBy] [int] NULL,
+	[CreatedBy] [int] NOT NULL,
+	[CreatedDate] [datetime] NOT NULL,
+	[ModifiedBy] [int] NULL,
+	[ModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK__StarOfTh__9E5DDB1C4EAE5FC6] PRIMARY KEY CLUSTERED 
+(
+	[TransID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[TQCHead]    Script Date: 04/10/2020 6:33:01 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[TQCHead](
+	[ID] [bigint] IDENTITY(1,1) NOT NULL,
+	[EmployeeNumber] [nvarchar](20) NULL,
+	[Name] [nvarchar](100) NULL,
+	[StartDate] [nvarchar](8) NULL,
+	[EndDate] [nvarchar](8) NULL,
+	[IsActive] [bit] NULL,
+	[CreatedBy] [nvarchar](20) NULL,
+	[CreatedDate] [nvarchar](16) NULL,
+	[ModifiedBy] [nvarchar](20) NULL,
+	[ModifiedDate] [nvarchar](16) NULL,
+ CONSTRAINT [PK__TQCHead__3214EC27A9D9EFF0] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[AuditLog] ON 
+GO
+INSERT [dbo].[AuditLog] ([ID], [NominationID], [EmployeeNumber], [DepartmentHeadID], [TQCHeadID], [EvaluatorID], [IsNewAlert], [IsNotification], [CurrentStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [AdminId], [Comments]) VALUES (1, N'20200001', N'7500009', N'7500008', NULL, NULL, 0, 1, 2002, 1, N'7500009', NULL, N'989', NULL, NULL, NULL)
+GO
+INSERT [dbo].[AuditLog] ([ID], [NominationID], [EmployeeNumber], [DepartmentHeadID], [TQCHeadID], [EvaluatorID], [IsNewAlert], [IsNotification], [CurrentStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [AdminId], [Comments]) VALUES (2, N'20200002', N'7500009', N'7500008', NULL, NULL, 0, 1, 2002, 1, N'7500009', NULL, NULL, NULL, NULL, NULL)
+GO
+INSERT [dbo].[AuditLog] ([ID], [NominationID], [EmployeeNumber], [DepartmentHeadID], [TQCHeadID], [EvaluatorID], [IsNewAlert], [IsNotification], [CurrentStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [AdminId], [Comments]) VALUES (3, N'20200001', N'7500009', N'7500008', NULL, NULL, 0, 1, 2003, 1, NULL, NULL, N'989', NULL, NULL, N'need')
+GO
+INSERT [dbo].[AuditLog] ([ID], [NominationID], [EmployeeNumber], [DepartmentHeadID], [TQCHeadID], [EvaluatorID], [IsNewAlert], [IsNotification], [CurrentStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [AdminId], [Comments]) VALUES (4, N'20200002', N'7500009', N'7500008', NULL, NULL, 1, 1, 2008, 1, NULL, NULL, NULL, NULL, NULL, N'reject')
+GO
+INSERT [dbo].[AuditLog] ([ID], [NominationID], [EmployeeNumber], [DepartmentHeadID], [TQCHeadID], [EvaluatorID], [IsNewAlert], [IsNotification], [CurrentStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [AdminId], [Comments]) VALUES (5, N'20200001', N'7500009', N'7500008', NULL, NULL, 0, 1, 2013, 1, N'7500009', NULL, N'989', NULL, NULL, NULL)
+GO
+INSERT [dbo].[AuditLog] ([ID], [NominationID], [EmployeeNumber], [DepartmentHeadID], [TQCHeadID], [EvaluatorID], [IsNewAlert], [IsNotification], [CurrentStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [AdminId], [Comments]) VALUES (7, N'20200001', N'7500009', N'7500008', N'989', NULL, 0, 1, 2004, 1, NULL, NULL, N'989', NULL, NULL, NULL)
+GO
+INSERT [dbo].[AuditLog] ([ID], [NominationID], [EmployeeNumber], [DepartmentHeadID], [TQCHeadID], [EvaluatorID], [IsNewAlert], [IsNotification], [CurrentStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [AdminId], [Comments]) VALUES (8, N'20200001', N'7500009', N'7500008', N'989', N'7500213', 0, 1, 2005, 1, N'989', NULL, N'989', NULL, NULL, N'')
+GO
+INSERT [dbo].[AuditLog] ([ID], [NominationID], [EmployeeNumber], [DepartmentHeadID], [TQCHeadID], [EvaluatorID], [IsNewAlert], [IsNotification], [CurrentStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [AdminId], [Comments]) VALUES (9, N'20200001', N'7500009', NULL, NULL, N'7500213', 0, 1, 2007, 1, N'7500213', NULL, N'989', NULL, NULL, NULL)
+GO
+INSERT [dbo].[AuditLog] ([ID], [NominationID], [EmployeeNumber], [DepartmentHeadID], [TQCHeadID], [EvaluatorID], [IsNewAlert], [IsNotification], [CurrentStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [AdminId], [Comments]) VALUES (10, N'20200001', N'7500009', N'7500008', N'989', N'7500213', 1, 1, 2014, 1, N'989', N'10042020 182706', NULL, N'10042020 182707', NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[AuditLog] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Configuration] ON 
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (1, N'SOM', N'NominationDeadLineDate', N'Nomination Dead Line Date of every Month', N'31', 1, 1, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (2, N'SOM', N'NominationUserGrades', N'Nomination User Grades', N'A1,A2,A3,B1,B2,B3', 1, 1, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (3, N'SOM', N'EvaluationUserGrades', N'Evaluation User Grades', N'C1,C2,C3,D1,D2,D3,D4,D5,S1,S2,S3,S4,M', 1, 1, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (4, N'SOM', N'NominationSubmissionCount', N'Nomination Submission Count per Month', N'2', 1, 1, N'0', N'', N'511071', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (5, N'USERRole', N'NominationUserRole-101', N'Nomination user role page access list', N'liNominationlst,liAddNomination,liNotification', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (6, N'USERRole', N'EvaluationUserRole-103', N'Evaluation user role page access list', N'liDashboard,liNominationlst,liEvaluationlst,liLogout,liNotification', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (7, N'USERRole', N'DepartmentHeadUserRole-102', N'HOD user role page access list', N'liDashboard,liNominationlst,liNominationPendinglst,liNotification', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (8, N'USERRole', N'TQCHeadUserRole-104', N'TQCHead user role page access list', N'liDashboard,liNominationlst,liPanelMembers,liTQCHead,liSettings,liLogout,liNotification,liStarOfMonth', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (9, N'SOM', N'NominationID', N'NominationID series', N'20200002', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (10, N'USERRole', N'AdminUserRole', N'Admin Role page Access list', N'liDashboard,liNominationlst,liEvaluationlst,liPanelMembers,liTQCHead,liSettings,liNotification,liStarOfMonth', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (11, N'SMTP', N'SMTPDetails', N'SMTP Details', N'smtp.outlook.office365.com ; 567;sst@tvssst.org; common123#', 1, 1, N'0', N'22032020 210403', N'511071', N'22032020 210403')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (12, N'MAIL', N' Nomination', N'Star of the Month – Nomination', N'Hi! 
+
+ 
+
+Thanks for submitting your nomination for “Star of the Month”. The reference no is ##NominationID##. You will receive further notifications as the nomination gets processed.', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (13, N'MAIL', N' NominationNeedClarification', N'Star of the Month – Nomination - Need Clarification', N'Hi! 
+
+ 
+
+With reference to your nomination for “Star of the Month” (Ref: ##NominationID##), a clarification has been sought by your HOD. Please click on the following link and update the details', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (14, N'MAIL', N' NominationApproved', N'Star of the Month – Nomination - Approved', N'Hi! 
+
+ 
+
+Your nomination for “Star of the Month” (Ref: ##NominationID##) has been approved by your HOD and has been forwarded to TQC dept.', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (15, N'MAIL', N' NominationAssignedForEvaluation', N'Star of the Month – Nomination - Assigned for Evaluation', N'Hi!
+
+ 
+
+Your nomination for “Star of the Month” (Ref: ##NominationID##) has been processed by TQC dept and has been forwarded to the Judges panel for evaluation.', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (16, N'MAIL', N' NominationEvaluationComplete', N'Star of the Month – Nomination - Evaluation Complete', N'Hi!
+
+ 
+
+Your nomination for “Star of the Month” (Ref: ##NominationID##) has been evaluated by the Judges panel along with other nominations and the results have been forwarded to TQC dept. The winner will be announced shortly.', 1, 0, N'0', N'', N'0', N'')
+GO
+INSERT [dbo].[Configuration] ([ID], [Module], [Type], [Description], [Value], [IsActive], [IsDisplayUI], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (17, N'SOM', N'UPDATEIP', N'Update SOM Info to IP', N'true', 1, 0, N'0', N'', N'0', N'31032020 222240')
+GO
+SET IDENTITY_INSERT [dbo].[Configuration] OFF
+GO
+SET IDENTITY_INSERT [dbo].[EnumAbbreviation] ON 
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (1, 1000, N'EmployeeRole', N'Employee Role', 1001, N'Employee', N'Employee', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (2, 1000, N'EmployeeRole', N'Employee Role', 1002, N'DepartmentHead', N'Department Head', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (3, 1000, N'EmployeeRole', N'Employee Role', 1003, N'TQCHead', N'TQC Head', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (4, 1000, N'EmployeeRole', N'Employee Role', 1004, N'Evalutors', N'Evalutors', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (5, 1000, N'EmployeeRole', N'Employee Role', 1005, N'Admin', N'Admin', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (6, 2000, N'NominationStatus', N'Nomination Status', 2001, N'Employee_Save', N'Employee Save', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (7, 2000, N'NominationStatus', N'Nomination Status', 2002, N'Employee_To_DH', N'Employee Assign DH', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (8, 2000, N'NominationStatus', N'Nomination Status', 2003, N'DH_TO_EmployeeClarication', N'DH Assign EmployeeClarication', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (9, 2000, N'NominationStatus', N'Nomination Status', 2004, N'DH_To_TQC', N'DH Assign TQC', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (10, 2000, N'NominationStatus', N'Nomination Status', 2005, N'TQC_To_Evaluators', N'TQC Assign Evaluators', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (11, 2000, N'NominationStatus', N'Nomination Status', 2006, N'Evaluators_Save', N'Evaluators Save', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (12, 2000, N'NominationStatus', N'Nomination Status', 2007, N'Evaluators_To_TQC', N'Evaluators Assign TQC', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (13, 2000, N'NominationStatus', N'Nomination Status', 2008, N'DH_Reject', N'DH Reject', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (14, 2000, N'NominationStatus', N'Nomination Status', 2009, N'TQC_Reject', N'TQC Reject', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (15, 2000, N'NominationStatus', N'Nomination Status', 2010, N'Evaluator_Reject', N'Evaluator Reject', 1)
+GO
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (16, 2000, N'NominationStatus', N'Nomination Status', 2011, N'Completed', N'Completed', 1)
+GO
+SET IDENTITY_INSERT [dbo].[EnumAbbreviation] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Evaluation] ON 
+GO
+INSERT [dbo].[Evaluation] ([ID], [NominationID], [EmployeeNumber], [EvaluatorID], [ReactiveIdeaDrivenBySituation], [BasedOnInstruction], [ProactiveIdeaGeneratedBySelf], [Delayed], [AsPerPlan], [AheadOfPlan], [FollowedUp], [Participated], [Implemented], [CoordiantionWithInTheDept], [CoordinationWithAnotherFunction], [CoordinationWithMultipleFunctions], [PreventionOfaFailure], [ImprovementFromCurrentSituation], [BreakthroughImprovement], [ScopeIdentified], [ImplementedPartially], [ImplementedInAllApplicableAreas], [TotalScore], [Status], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (1, N'20200001', N'7500009', N'7500213', 3, 6, 9, 3, 6, 9, 3, 6, 9, 3, 6, 9, 3, 6, 9, 3, 6, 9, 90, 2007, 1, N'989', NULL, N'7500213', NULL)
+GO
+SET IDENTITY_INSERT [dbo].[Evaluation] OFF
+GO
+SET IDENTITY_INSERT [dbo].[EvaluatorAvailability] ON 
+GO
+INSERT [dbo].[EvaluatorAvailability] ([ID], [EvaluatorID], [Month], [Year], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (1, N'7500213', N'Mar', N'2020', 1, N'511071', N'22032020 203041', N'511071', N'22032020 203041')
+GO
+INSERT [dbo].[EvaluatorAvailability] ([ID], [EvaluatorID], [Month], [Year], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (2, N'7500092', N'Mar', N'2020', 1, N'511071', N'22032020 203219', N'511071', N'22032020 203219')
+GO
+SET IDENTITY_INSERT [dbo].[EvaluatorAvailability] OFF
+GO
+SET IDENTITY_INSERT [dbo].[HorizontalDeployment] ON 
+GO
+INSERT [dbo].[HorizontalDeployment] ([ID], [NominationID], [EmpNumber], [AreaOfInterest], [ImplementationStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (1, N'20200001', N'7500009', N'asdasd', N'asdasd', 1, N'7500009', NULL, N'7500009', NULL)
+GO
+INSERT [dbo].[HorizontalDeployment] ([ID], [NominationID], [EmpNumber], [AreaOfInterest], [ImplementationStatus], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (2, N'20200002', N'7500009', N'asd', N'asd', 1, N'7500009', NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[HorizontalDeployment] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Nomination] ON 
+GO
+INSERT [dbo].[Nomination] ([ID], [EmployeeNumber], [StartDate], [EndDate], [ProjectTitle], [Idea], [PrimaryObjective], [BriefDescription], [Benefits], [HorizontalDeploymentID], [Acknowledgement], [SubmittedMonth], [SubmittedYear], [NomSubmittedDate], [NomSignature], [DHComments], [DHSubmittedDate], [DHSignature], [Status], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [Savings], [Cost], [Time], [Paper], [UploadedFileNames], [NominationId], [SOMComments], [SOMSubmittedDate], [SOMSignature]) VALUES (1, N'7500009', N'10042020', N'11042020', N'asdasd', N'asdasd', N'asdasd', N'asdasd', N'asdasd', NULL, N'asdasdas', N'Apr', N'2020', N'10042020', N'7500009', N'approved', N'10042020', N'7500008', 2014, 1, N'7500009', NULL, N'989', NULL, N'1', N'72', NULL, NULL, NULL, N'20200001', N'som declared', N'10042020', N'989')
+GO
+INSERT [dbo].[Nomination] ([ID], [EmployeeNumber], [StartDate], [EndDate], [ProjectTitle], [Idea], [PrimaryObjective], [BriefDescription], [Benefits], [HorizontalDeploymentID], [Acknowledgement], [SubmittedMonth], [SubmittedYear], [NomSubmittedDate], [NomSignature], [DHComments], [DHSubmittedDate], [DHSignature], [Status], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate], [Savings], [Cost], [Time], [Paper], [UploadedFileNames], [NominationId], [SOMComments], [SOMSubmittedDate], [SOMSignature]) VALUES (2, N'7500009', N'13042020', N'15042020', N'asdasd', N'asdasd', N'asdasd', N'asdasd', N'asdasd', NULL, N'asdasd', N'Apr', N'2020', N'10042020', N'7500009', NULL, N'10042020', N'7500008', 2008, 1, N'7500009', NULL, NULL, NULL, N'1', N'63', NULL, NULL, NULL, N'20200002', NULL, NULL, NULL)
+GO
+SET IDENTITY_INSERT [dbo].[Nomination] OFF
+GO
+SET IDENTITY_INSERT [dbo].[StarOfTheMonth] ON 
+GO
+INSERT [dbo].[StarOfTheMonth] ([TransID], [Month], [Year], [Description], [EmpId], [NominationID], [IsDisplay], [IsApproved], [ApprovedDate], [ApprovedBy], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (5, N'Jan', N'2020', N'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vulputate posuere...', 7500006, NULL, 1, 0, NULL, 0, 2, CAST(N'2019-10-13T13:45:51.740' AS DateTime), 2, CAST(N'2019-11-12T13:04:50.690' AS DateTime))
+GO
+INSERT [dbo].[StarOfTheMonth] ([TransID], [Month], [Year], [Description], [EmpId], [NominationID], [IsDisplay], [IsApproved], [ApprovedDate], [ApprovedBy], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (6, N'Feb', N'2020', N'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vulputate posuere...', 7500003, NULL, 1, 0, NULL, 0, 2, CAST(N'2019-10-15T06:44:50.480' AS DateTime), 2, CAST(N'2019-11-12T13:05:07.783' AS DateTime))
+GO
+INSERT [dbo].[StarOfTheMonth] ([TransID], [Month], [Year], [Description], [EmpId], [NominationID], [IsDisplay], [IsApproved], [ApprovedDate], [ApprovedBy], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (25, N'Apr', N'2020', N'asdasd', 7500009, N'20200001', 1, 1, CAST(N'2020-04-10T18:26:55.240' AS DateTime), NULL, 989, CAST(N'2020-04-10T18:26:55.240' AS DateTime), 989, CAST(N'2020-04-10T18:26:55.240' AS DateTime))
+GO
+SET IDENTITY_INSERT [dbo].[StarOfTheMonth] OFF
+GO
+SET IDENTITY_INSERT [dbo].[TQCHead] ON 
+GO
+INSERT [dbo].[TQCHead] ([ID], [EmployeeNumber], [Name], [StartDate], [EndDate], [IsActive], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (1, N'989', N'W Wilfred Jerome', N'17032020', N'01019999', 1, N'7500082', NULL, N'7500082', NULL)
+GO
+SET IDENTITY_INSERT [dbo].[TQCHead] OFF
+GO
+ALTER TABLE [dbo].[AuditLog] ADD  CONSTRAINT [DF__AuditLog__Create__339FAB6E]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[AuditLog] ADD  CONSTRAINT [DF__AuditLog__Modifi__3587F3E0]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [ModifiedDate]
+GO
+ALTER TABLE [dbo].[Configuration] ADD  CONSTRAINT [DF__Configura__Creat__3CF40B7E]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[Configuration] ADD  CONSTRAINT [DF__Configura__Modif__3EDC53F0]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [ModifiedDate]
+GO
+ALTER TABLE [dbo].[DepartmentHead] ADD  CONSTRAINT [DF__Departmen__Creat__7C4F7684]  DEFAULT (format(getdate(),'ddMMMyyyyTHHmmss')) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[DepartmentHead] ADD  CONSTRAINT [DF__Departmen__Modif__7E37BEF6]  DEFAULT (format(getdate(),'ddMMMyyyyTHHmmss')) FOR [ModifiedDate]
+GO
+ALTER TABLE [dbo].[Evaluation] ADD  CONSTRAINT [DF__Evaluatio__Creat__282DF8C2]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[Evaluation] ADD  CONSTRAINT [DF__Evaluatio__Modif__2A164134]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [ModifiedDate]
+GO
+ALTER TABLE [dbo].[EvaluatorAvailability] ADD  CONSTRAINT [DF__Evaluator__Creat__44952D46]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[EvaluatorAvailability] ADD  CONSTRAINT [DF__Evaluator__Modif__467D75B8]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [ModifiedDate]
+GO
+ALTER TABLE [dbo].[HorizontalDeployment] ADD  CONSTRAINT [DF__Horizonta__Creat__4865BE2A]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[HorizontalDeployment] ADD  CONSTRAINT [DF__Horizonta__Modif__4A4E069C]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [ModifiedDate]
+GO
+ALTER TABLE [dbo].[Nomination] ADD  CONSTRAINT [DF__Nominatio__Creat__2DE6D218]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[Nomination] ADD  CONSTRAINT [DF__Nominatio__Modif__2FCF1A8A]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [ModifiedDate]
+GO
+ALTER TABLE [dbo].[Notification] ADD  CONSTRAINT [DF__Notificat__Creat__54CB950F]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[StarOfTheMonth] ADD  CONSTRAINT [DF_StarOfTheMonth_ApprovedDate]  DEFAULT (getdate()) FOR [ApprovedDate]
+GO
+ALTER TABLE [dbo].[StarOfTheMonth] ADD  CONSTRAINT [DF_StarOfTheMonth_CreatedDate]  DEFAULT (getdate()) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[StarOfTheMonth] ADD  CONSTRAINT [DF_StarOfTheMonth_ModifiedDate]  DEFAULT (getdate()) FOR [ModifiedDate]
+GO
+ALTER TABLE [dbo].[TQCHead] ADD  CONSTRAINT [DF__TQCHead__Created__395884C4]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [CreatedDate]
+GO
+ALTER TABLE [dbo].[TQCHead] ADD  CONSTRAINT [DF__TQCHead__Modifie__3B40CD36]  DEFAULT (format(getdate(),'ddMMyyyy HHmmss')) FOR [ModifiedDate]
+GO
+
+
+
