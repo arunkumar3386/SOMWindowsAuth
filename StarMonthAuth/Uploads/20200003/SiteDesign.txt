@@ -1,0 +1,106 @@
+https://www.creative-tim.com/templates/free
+https://demos.creative-tim.com/now-ui-dashboard/examples/dashboard.html
+https://colorlib.com//polygon/admindek/default/dashboard-analytics.html
+https://gurayyarar.github.io/AdminBSBMaterialDesign/pages/ui/buttons.html
+https://themewagon.com/themes/free-bootstrap-4-admin-dashboard-template-admincast/
+https://themewagon.com/themes/free-bootstrap-3-admin-dashboard-template/
+https://themewagon.com/themes/free-bootstrap-4-html5-admin-dashboard-template-themekit/
+
+
+
+1. Login Page
+	Based on user login load the bank Audit license informations
+	Signup Not needed	
+2. Dashboard
+	GUI to display audit count, License remaining dates,
+	Last Audit Excepition summary report front page	in Grid
+	Audit History Details
+3. Audit
+	(Tab 1)
+		Tool running status
+		Audit Count Details
+		Audit Lic Expires Details
+		Last Audit Details
+	(Tab 2)
+		Add/Edit Email Distribution List 
+		File Updload
+		Run Audit
+	Diplay Audit running Status	
+	Once Audit Completed was user able to dowload exception reports
+	User choose the option remove the SCV Audit data's from Cloud server
+4. License Details	
+	4.1 License Details
+		License Expire date, Completed/ Remaining Audit Count Details		
+	4.2 License Subcribtion Details
+		User ablitity to send License Renewal notification.
+		Using Payment gateway to purchase new license
+5. Profile
+	Update profile details
+6. User Maintenance	
+	Add/Modify/Remove User Details
+7. Environment Setup(For Admin)
+	Add/Modify/Remove Audit History Details
+	Add/Modify/Remove Polmtpf Details
+	Add/Modify/Remove Product Details
+	Add/Modify/Remove Excepition Reports Details
+	Add/Modify/Remove POA account Details
+	
+	
+Core UI for Widgets https://coreui.io/demo/#main.html
+Material UI for table and forms		 https://demos.creative-tim.com/material-dashboard/examples/dashboard.html
+Star Admin For Widget http://www.bootstrapdash.com/demo/star-admin-free/jquery/src/demo_1/index.html
+Widget : https://modularcode.io/modular-admin-html/index.html
+Jquery Table AdminBSBMaterialDesign : https://gurayyarar.github.io/AdminBSBMaterialDesign/pages/tables/jquery-datatable.html
+Advanced Table https://templatemag.com/demo/Dashio/
+
+https://codepen.io/ettrics/full/ogRaRv/
+https://codepen.io/hrtzt/full/NPZKRN/
+https://codepen.io/trhino/full/ujHan/
+
+LOgin page themes
+https://demo.w3layouts.com/demos_new/template_demo/11-10-2018/food_signin_form_demo_Free/1431453182/web/index.html
+https://demo.w3layouts.com/demos_new/template_demo/18-03-2019/gaze_signup-login_form-demo_Free/1587213728/web/index.html
+https://colorlib.com/etc/lf/Login_v9/index.html#
+
+Calender widget
+https://w3layouts.com/calendar-widget-flat-responsive-widget-template/   
+
+Loaders
+https://codepen.io/akshaycodes/pen/OaXJgZ     
+
+
+
+http://localhost:60513/TransactionDetails/TranDetails
+http://localhost:60513/CustomerActs/accountlist
+
+
+
+System.AggregateException
+  HResult=0x80131500
+  Message=One or more errors occurred.
+  Source=System.Private.CoreLib
+  StackTrace:
+   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at TPPJourney.Controllers.RedirectController.SubmitConsent() in F:\Arun\Work\GitHub\OBIE-PSD2-TPPJourney\TPPJourney\Controllers\RedirectController.cs:line 164
+   at Microsoft.Extensions.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Internal.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__12.MoveNext()
+
+Inner Exception 1:
+InvalidOperationException: Error loading discovery document: Issuer name does not match authority: https://localhost:5001/
+
+side navigation Menu
+
+https://azouaoui-med.github.io/angular-pro-sidebar/demo/#
+https://bootsnipp.com/snippets/Q0dAX
+https://demos.creative-tim.com/vue-material-dashboard-pro/#/widgets
+
+Tables : https://demos.creative-tim.com/vue-material-dashboard-pro/#/table-list/paginated
+DatePicker, DropDown, CheckBox : https://demos.creative-tim.com/vue-material-dashboard-pro/#/forms/extended
+Button : https://demos.creative-tim.com/vue-material-dashboard-pro/#/components/buttons
+UserProfile : https://demos.creative-tim.com/vue-material-dashboard-pro/#/pages/user
+Login Screen : https://demos.creative-tim.com/vue-material-dashboard-pro/#/login
+Pricing Screen : https://demos.creative-tim.com/vue-material-dashboard-pro/#/pricing
+
+
+

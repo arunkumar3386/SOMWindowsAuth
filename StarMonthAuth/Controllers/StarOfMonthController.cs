@@ -89,6 +89,17 @@ namespace StarMonthAuth.Controllers
                     return Json(new { success = _repoResponse.success, message = _repoResponse.message, data = model });
                 }
             }
+            else if (ID == -1)
+            {
+                _statRepo = new StarOfMonthRepo();
+                string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
+                _repoResponse = _statRepo.LoadStarOfMonthDetailsByID(ID, _loggedInUserID);
+                if (_repoResponse.success)
+                {
+                    model = _repoResponse.Data;
+                    return Json(new { success = _repoResponse.success, message = _repoResponse.message, data = model });
+                }
+            }
             return Json(new { success = _repoResponse.success, message = _repoResponse.message, data = model });
         }
 

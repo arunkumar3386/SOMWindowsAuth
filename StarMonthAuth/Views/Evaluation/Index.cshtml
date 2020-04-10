@@ -802,7 +802,7 @@ onkeydown = "return ValidateNumber0_3(event);",
                             //enableSucessDiv(result.message);
 
                             alertify.alert(result.message);
-                            window.location.href = '/Evaluation'
+                            window.location.href = '/Evaluation/Index'
                         }
                         else {
                             enableErrorDiv(result.message);
@@ -829,7 +829,7 @@ onkeydown = "return ValidateNumber0_3(event);",
                             //$('#dialog').modal('hide');
                             //enableSucessDiv(result.message);
                             alertify.alert(result.message);
-                            window.location.href = '/Evaluation'
+                            window.location.href = '/Evaluation/Index'
                         }
                         else {
                             enableErrorDiv(result.message);
@@ -841,7 +841,7 @@ onkeydown = "return ValidateNumber0_3(event);",
             });
 
           function Clickfn(id) {
-            window.location.href = '@Url.Action("Nomination", "Nomination")?id=' +id;
+            window.location.href = '/Nomination/Nomination?id=' + id;
             //var url = '@Url.Action("Nomination", "Nomination", new {id = 10010})'; //Generate URL string using razor
            // window.location.href = url.replace('-1', id); //replace ID value
         }

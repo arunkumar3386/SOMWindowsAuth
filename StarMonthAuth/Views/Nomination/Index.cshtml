@@ -1,5 +1,4 @@
 ﻿@model StarOfTheMonth.Models.DashboardModel
-
 @{
     ViewData["Title"] = "Nomination List";
 }
@@ -14,8 +13,6 @@
                     <button type="button" class="btn btn-outline-excel ml-2"><span class="text-color">Save as Excel</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-file-excel"></i></button>
                 </div>*@
         </div>
-
-
 
         <div>
             <div class="clearfix">
@@ -43,7 +40,6 @@
                                 <button type="button" id="btnDashFilter" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse">Apply</button>
                             </div>
                         </div>
-
                         <div class="form-group required row NomSection TQCSection">
                             <label for="StartDate" class="col-sm-1 col-form-label control-label">Department:</label>
                             <div class="col-sm-3">
@@ -67,13 +63,10 @@
         </div>
 
 
-
-
         <div class="custom-control custom-checkbox mb-3" id="dvReject" style="display:none;">
             <input type="checkbox" class="custom-control-input" id="RejectedCheck" name="example1">
             <label class="custom-control-label" for="RejectedCheck">Rejected Forms</label>
         </div>
-
         <div id="tblNomination" style="display:none;">
             <div class="table-responsive">
                 @*<h6 style="font-weight:bold; text-decoration:underline;">Nomination List</h6>*@
@@ -112,7 +105,6 @@
                 </div>
             </div>
         </div>
-
 
         <div id="tblNominationReject" style="display:none;">
             <div class="table-responsive">
@@ -157,10 +149,8 @@
                 </div>
             </div>
         </div>
-
     </div>
 </div>
-
 @*ModalPopup ADD Evaluator Start*@
 <div class="modal fade" id="addEvaluator" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -201,22 +191,18 @@
                 <button type="button" id="btnAddEvaluator" onclick="saveAssignEvaluator()" class="btn btn-outline-excel text-brand"><span class="text-color">Assign</span> &nbsp;&nbsp;&nbsp;<i class="fas fa-check"></i></button>
             </div>
         </div>
-
     </div>
 </div>
-
 @*ModalPopup ADD Evaluator End*@
-
 
 <button type="button" style="display:none;" data-toggle="modal" id="btnShowEvaluator" data-target="#addEvaluator">AddEvaluator</button>
 <input id="btnNominationGridDetGrid" value="Load" type="hidden" data-url='@Url.Action("LoadNominationDetailsForGrid","Nomination")' />
 <input id="btnNominationGridRejectDetGrid" value="Load" type="hidden" data-url='@Url.Action("LoadNominationRejectDetailsForGrid","Nomination")' />
-
 <button style="visibility:hidden;" id="evalNameSearch" data-url='@Url.Action("GetEvaluatorDataByName","Nomination")'></button>
 <button style="visibility:hidden;" id="evalNumberSearch" data-url='@Url.Action("GetEvaluatorDataByID","Nomination")'></button>
 <input id="btnAssignEvalSave" value="Load" type="hidden" data-url='@Url.Action("assignEvaltorForNomination","Nomination")' />
-
 @section Scripts {
+    @*<script src="~/Scripts/jquery-3.4.1.js"></scri*@pt>
     <script>
 
         function saveAssignEvaluator() {
@@ -370,20 +356,25 @@
                                     'sortable': false,
                                     'render': function json(data, type, full, meta) {
                                         //console.log(full);
-                                        //if (SOMRole == "1003") {
-                                        //    if (full.IsEvalatorAssigned) {
-                                        //        return "<a style='cursor:pointer;' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>";
-                                        //    }
-                                        //    else {
-                                        //        return "<a style='cursor:pointer;'  data-toggle='tooltip' title='View Nomination' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>"
-                                        //            + "  " + "<a style='cursor:pointer;color:green;' data-toggle='tooltip' title='Assign Evaluator' onclick='AssignEvaluator(" + full.ID + ")'><i class='fas fa-user-plus'></i></a>";
-                                        //    }
-                                            
-                                        //}
-                                        //else {
+                                        if (SOMRole == "1003") {
+                                            if (full.IsEvalatorAssigned) {
+                                                return "<a style='cursor:pointer;' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>" + " "
+                                                    + "<a style='cursor:pointer; color:red;'onclick='PdfDownload()' href='/Nomination/GeneratePDF?ID=" + full.NominationID + "'><i class='fas fa-file-pdf'></i></a>";
+                                            }
+                                            else {
+                                                return "<a style='cursor:pointer;' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>" + " "
+                                                    + "<a style='cursor:pointer; color:red;'onclick='PdfDownload()' href='/Nomination/GeneratePDF?ID=" + full.NominationID + "'><i class='fas fa-file-pdf'></i></a>" + "  "
+                                                    + "<a style='cursor:pointer; color:green;' data-toggle='tooltip' title='Assign Evaluator' onclick='AssignEvaluator(" + full.ID + ")'> <i class='fas fa-user-plus'></i></a> ";
+
+                                                //return "<a style='cursor:pointer;'  data-toggle='tooltip' title='View Nomination' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>"
+                                                //     + "  " + "<a style='cursor:pointer;color:green;' data-toggle='tooltip' title='Assign Evaluator' onclick='AssignEvaluator(" + full.ID + ")'><i class='fas fa-user-plus'></i></a>";
+                                            }
+                                        }
+                                        else
+                                        {
                                             return "<a style='cursor:pointer;' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>" + " "
                                                 + "<a style='cursor:pointer; color:red;'onclick='PdfDownload()' href='/Nomination/GeneratePDF?ID=" + full.NominationID +"'><i class='fas fa-file-pdf'></i></a>";
-                                        //}
+                                        }
 
                                         //return "<a asp-controller='Nomination' asp-action='Index'>"+full.EmployeeID+"</a>"
                                     }
@@ -673,8 +664,8 @@
 
     </script>
 }
-
 <style>
+
     /*move tfoot to next to grid header*/
     tfoot {
         display: table-header-group;
@@ -684,6 +675,7 @@
         display: none;
         background: #253c80;
     }
+
     .ui-autocomplete {
         z-index: 5000 !important
     }

@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4F72B74B-BB4A-4B26-975B-408364456C26}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>StarOfTheMonth.DataBase</RootNamespace>
+    <AssemblyName>StarOfTheMonth.DataBase</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AuditLog.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DepartmentHead.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EmpMaster.cs">
+      <DependentUpon>IntranetPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EnumAbbreviation.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Evaluation.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EvaluatorAvailability.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="HorizontalDeployment.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IntranetPortal.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IntranetPortal.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IntranetPortal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IntranetPortal.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IntranetPortal.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>IntranetPortal.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Nomination.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Notification.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SOMEntities.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SOMEntities.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SOMEntities.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SOMEntities.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SOMEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="StarOfTheMonth.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TQCHead.cs">
+      <DependentUpon>SOMEntities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="IntranetPortal.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>IntranetPortal.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="App.Config" />
+    <None Include="IntranetPortal.edmx.diagram">
+      <DependentUpon>IntranetPortal.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <EntityDeploy Include="SOMEntities.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>SOMEntities.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="SOMEntities.edmx.diagram">
+      <DependentUpon>SOMEntities.edmx</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="IntranetPortal.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IntranetPortal.edmx</DependentUpon>
+      <LastGenOutput>IntranetPortal.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="IntranetPortal.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>IntranetPortal.edmx</DependentUpon>
+      <LastGenOutput>IntranetPortal.cs</LastGenOutput>
+    </Content>
+    <Content Include="SOMEntities.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SOMEntities.edmx</DependentUpon>
+      <LastGenOutput>SOMEntities.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="SOMEntities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>SOMEntities.edmx</DependentUpon>
+      <LastGenOutput>SOMEntities.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

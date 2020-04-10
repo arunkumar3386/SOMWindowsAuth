@@ -61,7 +61,7 @@ namespace StarMonthAuth.Controllers
                 //loggedInuser = "Chandrasekar"; // Evaluation user
                 //loggedInuser = "S.Karthik"; // Evaluation user
 
-                 loggedInuser = "Jerome"; //TQC Head
+                loggedInuser = "Jerome"; //TQC Head
                 //loggedInuser = "KS.Suseel"; //Admin
 
                 ILoginRepo loginRepo = new LoginRepo();

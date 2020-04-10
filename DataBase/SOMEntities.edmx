@@ -1,0 +1,721 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SOM_NewModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AuditLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NominationID" Type="nvarchar" MaxLength="20" />
+          <Property Name="EmployeeNumber" Type="nvarchar" MaxLength="20" />
+          <Property Name="DepartmentHeadID" Type="nvarchar" MaxLength="20" />
+          <Property Name="TQCHeadID" Type="nvarchar" MaxLength="20" />
+          <Property Name="EvaluatorID" Type="nvarchar" MaxLength="20" />
+          <Property Name="IsNewAlert" Type="bit" />
+          <Property Name="IsNotification" Type="bit" />
+          <Property Name="CurrentStatus" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="ModifiedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="AdminId" Type="nvarchar" MaxLength="20" />
+          <Property Name="Comments" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Configuration">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Module" Type="nvarchar" MaxLength="100" />
+          <Property Name="Type" Type="nvarchar" MaxLength="100" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Value" Type="nvarchar" MaxLength="800" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="IsDisplayUI" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="ModifiedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="DepartmentHead">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NominationID" Type="nvarchar" MaxLength="20" />
+          <Property Name="EmployeeNumber" Type="nvarchar" MaxLength="20" />
+          <Property Name="CommentsByDeptHead" Type="nvarchar" MaxLength="800" />
+          <Property Name="Status" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="ModifiedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="EnumAbbreviation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ParentID" Type="bigint" />
+          <Property Name="ParentName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ParentDescription" Type="nvarchar" MaxLength="100" />
+          <Property Name="ChildID" Type="bigint" />
+          <Property Name="ChildName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ChildDescription" Type="nvarchar" MaxLength="100" />
+          <Property Name="IsActive" Type="bit" />
+        </EntityType>
+        <EntityType Name="Evaluation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NominationID" Type="nvarchar" MaxLength="20" />
+          <Property Name="EmployeeNumber" Type="nvarchar" MaxLength="20" />
+          <Property Name="EvaluatorID" Type="nvarchar" MaxLength="20" />
+          <Property Name="ReactiveIdeaDrivenBySituation" Type="int" />
+          <Property Name="BasedOnInstruction" Type="int" />
+          <Property Name="ProactiveIdeaGeneratedBySelf" Type="int" />
+          <Property Name="Delayed" Type="int" />
+          <Property Name="AsPerPlan" Type="int" />
+          <Property Name="AheadOfPlan" Type="int" />
+          <Property Name="FollowedUp" Type="int" />
+          <Property Name="Participated" Type="int" />
+          <Property Name="Implemented" Type="int" />
+          <Property Name="CoordiantionWithInTheDept" Type="int" />
+          <Property Name="CoordinationWithAnotherFunction" Type="int" />
+          <Property Name="CoordinationWithMultipleFunctions" Type="int" />
+          <Property Name="PreventionOfaFailure" Type="int" />
+          <Property Name="ImprovementFromCurrentSituation" Type="int" />
+          <Property Name="BreakthroughImprovement" Type="int" />
+          <Property Name="ScopeIdentified" Type="int" />
+          <Property Name="ImplementedPartially" Type="int" />
+          <Property Name="ImplementedInAllApplicableAreas" Type="int" />
+          <Property Name="TotalScore" Type="int" />
+          <Property Name="Status" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="ModifiedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="EvaluatorAvailability">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EvaluatorID" Type="nvarchar" MaxLength="20" />
+          <Property Name="Month" Type="nvarchar" MaxLength="15" />
+          <Property Name="Year" Type="nvarchar" MaxLength="4" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="ModifiedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="HorizontalDeployment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NominationID" Type="nvarchar" MaxLength="20" />
+          <Property Name="EmpNumber" Type="nvarchar" MaxLength="20" />
+          <Property Name="AreaOfInterest" Type="nvarchar(max)" />
+          <Property Name="ImplementationStatus" Type="nvarchar(max)" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="ModifiedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="Nomination">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeNumber" Type="nvarchar" MaxLength="20" />
+          <Property Name="StartDate" Type="nvarchar" MaxLength="9" />
+          <Property Name="EndDate" Type="nvarchar" MaxLength="9" />
+          <Property Name="ProjectTitle" Type="nvarchar(max)" />
+          <Property Name="Idea" Type="nvarchar(max)" />
+          <Property Name="PrimaryObjective" Type="nvarchar(max)" />
+          <Property Name="BriefDescription" Type="nvarchar(max)" />
+          <Property Name="Benefits" Type="nvarchar(max)" />
+          <Property Name="HorizontalDeploymentID" Type="bigint" />
+          <Property Name="Acknowledgement" Type="nvarchar(max)" />
+          <Property Name="SubmittedMonth" Type="nvarchar" MaxLength="15" />
+          <Property Name="SubmittedYear" Type="nvarchar" MaxLength="4" />
+          <Property Name="NomSubmittedDate" Type="nvarchar" MaxLength="16" />
+          <Property Name="NomSignature" Type="nvarchar" MaxLength="100" />
+          <Property Name="DHComments" Type="nvarchar(max)" />
+          <Property Name="DHSubmittedDate" Type="nvarchar" MaxLength="16" />
+          <Property Name="DHSignature" Type="nvarchar" MaxLength="100" />
+          <Property Name="Status" Type="int" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="100" />
+          <Property Name="ModifiedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="Savings" Type="nvarchar" MaxLength="500" />
+          <Property Name="Cost" Type="nvarchar" MaxLength="500" />
+          <Property Name="Time" Type="nvarchar" MaxLength="500" />
+          <Property Name="Paper" Type="nvarchar" MaxLength="500" />
+          <Property Name="UploadedFileNames" Type="nvarchar(max)" />
+          <Property Name="NominationId" Type="nvarchar" MaxLength="20" />
+          <Property Name="SOMComments" Type="nvarchar(max)" />
+          <Property Name="SOMSubmittedDate" Type="nvarchar" MaxLength="16" />
+          <Property Name="SOMSignature" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Category" Type="nvarchar" MaxLength="150" />
+          <Property Name="SourceUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="DestinationUser" Type="nvarchar" MaxLength="50" />
+          <Property Name="Message" Type="nvarchar(max)" />
+          <Property Name="UserSeen" Type="bit" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="20" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="StarOfTheMonth">
+          <Key>
+            <PropertyRef Name="TransID" />
+          </Key>
+          <Property Name="TransID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Month" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Year" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="EmpId" Type="int" Nullable="false" />
+          <Property Name="NominationID" Type="nvarchar" MaxLength="50" />
+          <Property Name="IsDisplay" Type="bit" Nullable="false" />
+          <Property Name="IsApproved" Type="bit" Nullable="false" />
+          <Property Name="ApprovedDate" Type="datetime" StoreGeneratedPattern="Computed" />
+          <Property Name="ApprovedBy" Type="int" />
+          <Property Name="CreatedBy" Type="int" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="int" />
+          <Property Name="ModifiedDate" Type="datetime" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="TQCHead">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmployeeNumber" Type="nvarchar" MaxLength="20" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="StartDate" Type="nvarchar" MaxLength="8" />
+          <Property Name="EndDate" Type="nvarchar" MaxLength="8" />
+          <Property Name="IsActive" Type="bit" />
+          <Property Name="CreatedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="CreatedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="nvarchar" MaxLength="20" />
+          <Property Name="ModifiedDate" Type="nvarchar" MaxLength="16" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityContainer Name="SOM_NewModelStoreContainer">
+          <EntitySet Name="AuditLog" EntityType="Self.AuditLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Configuration" EntityType="Self.Configuration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DepartmentHead" EntityType="Self.DepartmentHead" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EnumAbbreviation" EntityType="Self.EnumAbbreviation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Evaluation" EntityType="Self.Evaluation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EvaluatorAvailability" EntityType="Self.EvaluatorAvailability" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HorizontalDeployment" EntityType="Self.HorizontalDeployment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Nomination" EntityType="Self.Nomination" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Notification" EntityType="Self.Notification" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StarOfTheMonth" EntityType="Self.StarOfTheMonth" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TQCHead" EntityType="Self.TQCHead" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SOM_NewModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AuditLog">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NominationID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DepartmentHeadID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TQCHeadID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EvaluatorID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="IsNewAlert" Type="Boolean" />
+          <Property Name="IsNotification" Type="Boolean" />
+          <Property Name="CurrentStatus" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="AdminId" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Configuration">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Module" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="800" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="IsDisplayUI" Type="Boolean" />
+          <Property Name="CreatedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="DepartmentHead">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NominationID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CommentsByDeptHead" Type="String" MaxLength="800" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="EnumAbbreviation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ParentID" Type="Int64" />
+          <Property Name="ParentName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ParentDescription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ChildID" Type="Int64" />
+          <Property Name="ChildName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ChildDescription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Evaluation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NominationID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EmployeeNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EvaluatorID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ReactiveIdeaDrivenBySituation" Type="Int32" />
+          <Property Name="BasedOnInstruction" Type="Int32" />
+          <Property Name="ProactiveIdeaGeneratedBySelf" Type="Int32" />
+          <Property Name="Delayed" Type="Int32" />
+          <Property Name="AsPerPlan" Type="Int32" />
+          <Property Name="AheadOfPlan" Type="Int32" />
+          <Property Name="FollowedUp" Type="Int32" />
+          <Property Name="Participated" Type="Int32" />
+          <Property Name="Implemented" Type="Int32" />
+          <Property Name="CoordiantionWithInTheDept" Type="Int32" />
+          <Property Name="CoordinationWithAnotherFunction" Type="Int32" />
+          <Property Name="CoordinationWithMultipleFunctions" Type="Int32" />
+          <Property Name="PreventionOfaFailure" Type="Int32" />
+          <Property Name="ImprovementFromCurrentSituation" Type="Int32" />
+          <Property Name="BreakthroughImprovement" Type="Int32" />
+          <Property Name="ScopeIdentified" Type="Int32" />
+          <Property Name="ImplementedPartially" Type="Int32" />
+          <Property Name="ImplementedInAllApplicableAreas" Type="Int32" />
+          <Property Name="TotalScore" Type="Int32" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="EvaluatorAvailability">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EvaluatorID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Month" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Year" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="HorizontalDeployment">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NominationID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EmpNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="AreaOfInterest" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ImplementationStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="Nomination">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="StartDate" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="EndDate" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="ProjectTitle" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Idea" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PrimaryObjective" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BriefDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Benefits" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HorizontalDeploymentID" Type="Int64" />
+          <Property Name="Acknowledgement" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SubmittedMonth" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="SubmittedYear" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="NomSubmittedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="NomSignature" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DHComments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DHSubmittedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="DHSignature" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Savings" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Cost" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Time" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Paper" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="UploadedFileNames" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NominationId" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SOMComments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SOMSubmittedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="SOMSignature" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Notification">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="SourceUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DestinationUser" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserSeen" Type="Boolean" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="20" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="StarOfTheMonth">
+          <Key>
+            <PropertyRef Name="TransID" />
+          </Key>
+          <Property Name="TransID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Month" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Year" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EmpId" Type="Int32" Nullable="false" />
+          <Property Name="NominationID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IsDisplay" Type="Boolean" Nullable="false" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+          <Property Name="ApprovedDate" Type="DateTime" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ApprovedBy" Type="Int32" />
+          <Property Name="CreatedBy" Type="Int32" Nullable="false" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="Int32" />
+          <Property Name="ModifiedDate" Type="DateTime" Precision="3" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="TQCHead">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmployeeNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="StartDate" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="EndDate" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="IsActive" Type="Boolean" />
+          <Property Name="CreatedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ModifiedBy" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedDate" Type="String" MaxLength="16" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityContainer Name="SOMEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AuditLogs" EntityType="Self.AuditLog" />
+          <EntitySet Name="Configurations" EntityType="Self.Configuration" />
+          <EntitySet Name="DepartmentHeads" EntityType="Self.DepartmentHead" />
+          <EntitySet Name="EnumAbbreviations" EntityType="Self.EnumAbbreviation" />
+          <EntitySet Name="Evaluations" EntityType="Self.Evaluation" />
+          <EntitySet Name="EvaluatorAvailabilities" EntityType="Self.EvaluatorAvailability" />
+          <EntitySet Name="HorizontalDeployments" EntityType="Self.HorizontalDeployment" />
+          <EntitySet Name="Nominations" EntityType="Self.Nomination" />
+          <EntitySet Name="Notifications" EntityType="Self.Notification" />
+          <EntitySet Name="StarOfTheMonths" EntityType="Self.StarOfTheMonth" />
+          <EntitySet Name="TQCHeads" EntityType="Self.TQCHead" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SOM_NewModelStoreContainer" CdmEntityContainer="SOMEntities">
+          <EntitySetMapping Name="AuditLogs">
+            <EntityTypeMapping TypeName="SOM_NewModel.AuditLog">
+              <MappingFragment StoreEntitySet="AuditLog">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="NominationID" ColumnName="NominationID" />
+                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
+                <ScalarProperty Name="DepartmentHeadID" ColumnName="DepartmentHeadID" />
+                <ScalarProperty Name="TQCHeadID" ColumnName="TQCHeadID" />
+                <ScalarProperty Name="EvaluatorID" ColumnName="EvaluatorID" />
+                <ScalarProperty Name="IsNewAlert" ColumnName="IsNewAlert" />
+                <ScalarProperty Name="IsNotification" ColumnName="IsNotification" />
+                <ScalarProperty Name="CurrentStatus" ColumnName="CurrentStatus" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="AdminId" ColumnName="AdminId" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Configurations">
+            <EntityTypeMapping TypeName="SOM_NewModel.Configuration">
+              <MappingFragment StoreEntitySet="Configuration">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Module" ColumnName="Module" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="IsDisplayUI" ColumnName="IsDisplayUI" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DepartmentHeads">
+            <EntityTypeMapping TypeName="SOM_NewModel.DepartmentHead">
+              <MappingFragment StoreEntitySet="DepartmentHead">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="NominationID" ColumnName="NominationID" />
+                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
+                <ScalarProperty Name="CommentsByDeptHead" ColumnName="CommentsByDeptHead" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EnumAbbreviations">
+            <EntityTypeMapping TypeName="SOM_NewModel.EnumAbbreviation">
+              <MappingFragment StoreEntitySet="EnumAbbreviation">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="ParentName" ColumnName="ParentName" />
+                <ScalarProperty Name="ParentDescription" ColumnName="ParentDescription" />
+                <ScalarProperty Name="ChildID" ColumnName="ChildID" />
+                <ScalarProperty Name="ChildName" ColumnName="ChildName" />
+                <ScalarProperty Name="ChildDescription" ColumnName="ChildDescription" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Evaluations">
+            <EntityTypeMapping TypeName="SOM_NewModel.Evaluation">
+              <MappingFragment StoreEntitySet="Evaluation">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="NominationID" ColumnName="NominationID" />
+                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
+                <ScalarProperty Name="EvaluatorID" ColumnName="EvaluatorID" />
+                <ScalarProperty Name="ReactiveIdeaDrivenBySituation" ColumnName="ReactiveIdeaDrivenBySituation" />
+                <ScalarProperty Name="BasedOnInstruction" ColumnName="BasedOnInstruction" />
+                <ScalarProperty Name="ProactiveIdeaGeneratedBySelf" ColumnName="ProactiveIdeaGeneratedBySelf" />
+                <ScalarProperty Name="Delayed" ColumnName="Delayed" />
+                <ScalarProperty Name="AsPerPlan" ColumnName="AsPerPlan" />
+                <ScalarProperty Name="AheadOfPlan" ColumnName="AheadOfPlan" />
+                <ScalarProperty Name="FollowedUp" ColumnName="FollowedUp" />
+                <ScalarProperty Name="Participated" ColumnName="Participated" />
+                <ScalarProperty Name="Implemented" ColumnName="Implemented" />
+                <ScalarProperty Name="CoordiantionWithInTheDept" ColumnName="CoordiantionWithInTheDept" />
+                <ScalarProperty Name="CoordinationWithAnotherFunction" ColumnName="CoordinationWithAnotherFunction" />
+                <ScalarProperty Name="CoordinationWithMultipleFunctions" ColumnName="CoordinationWithMultipleFunctions" />
+                <ScalarProperty Name="PreventionOfaFailure" ColumnName="PreventionOfaFailure" />
+                <ScalarProperty Name="ImprovementFromCurrentSituation" ColumnName="ImprovementFromCurrentSituation" />
+                <ScalarProperty Name="BreakthroughImprovement" ColumnName="BreakthroughImprovement" />
+                <ScalarProperty Name="ScopeIdentified" ColumnName="ScopeIdentified" />
+                <ScalarProperty Name="ImplementedPartially" ColumnName="ImplementedPartially" />
+                <ScalarProperty Name="ImplementedInAllApplicableAreas" ColumnName="ImplementedInAllApplicableAreas" />
+                <ScalarProperty Name="TotalScore" ColumnName="TotalScore" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EvaluatorAvailabilities">
+            <EntityTypeMapping TypeName="SOM_NewModel.EvaluatorAvailability">
+              <MappingFragment StoreEntitySet="EvaluatorAvailability">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="EvaluatorID" ColumnName="EvaluatorID" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HorizontalDeployments">
+            <EntityTypeMapping TypeName="SOM_NewModel.HorizontalDeployment">
+              <MappingFragment StoreEntitySet="HorizontalDeployment">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="NominationID" ColumnName="NominationID" />
+                <ScalarProperty Name="EmpNumber" ColumnName="EmpNumber" />
+                <ScalarProperty Name="AreaOfInterest" ColumnName="AreaOfInterest" />
+                <ScalarProperty Name="ImplementationStatus" ColumnName="ImplementationStatus" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Nominations">
+            <EntityTypeMapping TypeName="SOM_NewModel.Nomination">
+              <MappingFragment StoreEntitySet="Nomination">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="ProjectTitle" ColumnName="ProjectTitle" />
+                <ScalarProperty Name="Idea" ColumnName="Idea" />
+                <ScalarProperty Name="PrimaryObjective" ColumnName="PrimaryObjective" />
+                <ScalarProperty Name="BriefDescription" ColumnName="BriefDescription" />
+                <ScalarProperty Name="Benefits" ColumnName="Benefits" />
+                <ScalarProperty Name="HorizontalDeploymentID" ColumnName="HorizontalDeploymentID" />
+                <ScalarProperty Name="Acknowledgement" ColumnName="Acknowledgement" />
+                <ScalarProperty Name="SubmittedMonth" ColumnName="SubmittedMonth" />
+                <ScalarProperty Name="SubmittedYear" ColumnName="SubmittedYear" />
+                <ScalarProperty Name="NomSubmittedDate" ColumnName="NomSubmittedDate" />
+                <ScalarProperty Name="NomSignature" ColumnName="NomSignature" />
+                <ScalarProperty Name="DHComments" ColumnName="DHComments" />
+                <ScalarProperty Name="DHSubmittedDate" ColumnName="DHSubmittedDate" />
+                <ScalarProperty Name="DHSignature" ColumnName="DHSignature" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="Savings" ColumnName="Savings" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Paper" ColumnName="Paper" />
+                <ScalarProperty Name="UploadedFileNames" ColumnName="UploadedFileNames" />
+                <ScalarProperty Name="NominationId" ColumnName="NominationId" />
+                <ScalarProperty Name="SOMComments" ColumnName="SOMComments" />
+                <ScalarProperty Name="SOMSubmittedDate" ColumnName="SOMSubmittedDate" />
+                <ScalarProperty Name="SOMSignature" ColumnName="SOMSignature" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notifications">
+            <EntityTypeMapping TypeName="SOM_NewModel.Notification">
+              <MappingFragment StoreEntitySet="Notification">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="SourceUser" ColumnName="SourceUser" />
+                <ScalarProperty Name="DestinationUser" ColumnName="DestinationUser" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="UserSeen" ColumnName="UserSeen" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StarOfTheMonths">
+            <EntityTypeMapping TypeName="SOM_NewModel.StarOfTheMonth">
+              <MappingFragment StoreEntitySet="StarOfTheMonth">
+                <ScalarProperty Name="TransID" ColumnName="TransID" />
+                <ScalarProperty Name="Month" ColumnName="Month" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="EmpId" ColumnName="EmpId" />
+                <ScalarProperty Name="NominationID" ColumnName="NominationID" />
+                <ScalarProperty Name="IsDisplay" ColumnName="IsDisplay" />
+                <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+                <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
+                <ScalarProperty Name="ApprovedBy" ColumnName="ApprovedBy" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TQCHeads">
+            <EntityTypeMapping TypeName="SOM_NewModel.TQCHead">
+              <MappingFragment StoreEntitySet="TQCHead">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="EmployeeNumber" ColumnName="EmployeeNumber" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

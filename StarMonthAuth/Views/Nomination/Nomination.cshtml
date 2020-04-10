@@ -411,9 +411,16 @@
             var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
             var status = $("#Status").val();
             var comments = $("#AuditLogComments").val();
+            var auditLogComments = $("#AuditLogComments").val();
+            console.log(comments);
             spinner_On();
             hideSuccessErrorDiv();
             if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+                if (auditLogComments != "") {
+                    NominationFormDH($("#btnReject").data('url'));
+                    spinner_Off();
+                    return;
+                }
                 if (comments == "") {
                     alertify.alert("HoD Comments required");
                     spinner_Off();
@@ -441,20 +448,25 @@
         });
 
         function DHReAssignFunction() {
-              var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
             var status = $("#Status").val();
             var comments = $("#CommentsByDH").val();
+            var auditLogComments = $("#AuditLogComments").val();
             spinner_On();
             hideSuccessErrorDiv();
             if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+                if (auditLogComments != "") {
+                    NominationFormDH($("#btnReAssign").data('url'));
+                    spinner_Off();
+                    return;
+                }
                 if (comments == "") {
                     alertify.alert("HoD Comments required");
                     spinner_Off();
                     return;
                 }
             }
-            spinner_Off();
-            NominationFormDH($("#btnReAssign").data('url'));
+           
         }
 
         $('#btnApprove').click(function () {
@@ -587,7 +599,7 @@
         }
 
         function reDirectToGridPage() {
-            window.location.href = '/Nomination';
+            window.location.href = '/Nomination/Index';
         }
 
         function hideEnableUIControls() {
@@ -743,6 +755,10 @@
                 }
                 else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_DH") {
                     console.log("loop6");
+                    DHAllowtoAddComments();
+                }
+                else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_DH") {
+                    console.log("loop6.1");
                     DHAllowtoAddComments();
                 }
                 else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status == "Employee_Assign_DH") {

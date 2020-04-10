@@ -52,10 +52,6 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Helper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>DLL\Helper.dll</HintPath>
-    </Reference>
     <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
     </Reference>
@@ -63,18 +59,6 @@
       <HintPath>..\packages\itextsharp.xmlworker.5.5.13.1\lib\itextsharp.xmlworker.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="StarOfTheMonth.DataBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>DLL\StarOfTheMonth.DataBase.dll</HintPath>
-    </Reference>
-    <Reference Include="StarOfTheMonth.Model, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>DLL\StarOfTheMonth.Model.dll</HintPath>
-    </Reference>
-    <Reference Include="StarOfTheMonth.Repo, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>DLL\StarOfTheMonth.Repo.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -177,11 +161,6 @@
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\Notification.css" />
     <Content Include="Content\styles.css" />
-    <Content Include="DLL\Helper.dll" />
-    <Content Include="DLL\StarOfTheMonth.DataBase.dll" />
-    <Content Include="DLL\StarOfTheMonth.dll" />
-    <Content Include="DLL\StarOfTheMonth.Model.dll" />
-    <Content Include="DLL\StarOfTheMonth.Repo.dll" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fa-brands-400.svg" />
     <Content Include="fonts\fa-regular-400.svg" />
@@ -245,11 +224,17 @@
     <Content Include="Scripts\dataTables.bootstrap4.min.js" />
     <Content Include="Scripts\dataTables.buttons.min.js" />
     <Content Include="Scripts\html2canvas.js" />
-    <Content Include="Scripts\jquery-3.3.1.js" />
-    <Content Include="Scripts\jquery-3.3.1.min.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.js" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\3.3.1\jquery-3.3.1.js" />
+    <Content Include="Scripts\3.3.1\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\3.3.1\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\3.3.1\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.map" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-3.4.1.js" />
+    <Content Include="Scripts\jquery-3.4.1.min.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.js" />
+    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <Content Include="Scripts\jquery-migrate-3.0.0.min.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery.dataTables.min.js" />
@@ -307,8 +292,26 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="packages.config" />
-    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.3.1.min.map" />
+    <Content Include="Scripts\3.3.1\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\3.3.1\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataBase\StarOfTheMonth.DataBase.csproj">
+      <Project>{4f72b74b-bb4a-4b26-975b-408364456c26}</Project>
+      <Name>StarOfTheMonth.DataBase</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Helper\Helper.csproj">
+      <Project>{cda10263-aab6-42e3-9a9c-32207076c5c8}</Project>
+      <Name>Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StarOfTheMonth.Model\StarOfTheMonth.Model.csproj">
+      <Project>{3d9d41da-a69e-4259-8bda-632be951ff8e}</Project>
+      <Name>StarOfTheMonth.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StarOfTheMonth.Repo\StarOfTheMonth.Repo.csproj">
+      <Project>{413bc351-afff-4c57-b1b0-805ebd9deadc}</Project>
+      <Name>StarOfTheMonth.Repo</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
