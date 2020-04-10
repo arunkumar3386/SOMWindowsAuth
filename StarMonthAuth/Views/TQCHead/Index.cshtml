@@ -1,0 +1,341 @@
+﻿@model StarOfTheMonth.Models.TQCHeadModel
+
+@{
+    ViewData["Title"] = "TQC Head";
+}
+<div class="container py-3 bg-white">
+    <div class="b-radius-5 py-3 px-4">
+        <div class="clearfix mb-4">
+            <div class="float-left">
+                <h4 id="dashboardHeading"><i class="fas fa-h-square"></i>&nbsp;&nbsp;TQC Head</h4>
+            </div>
+        </div>
+        <div>
+            <div class="clearfix">
+                <div class="float-right">
+                    <button type="button" class="btn btn-outline-save ml-2 mb-2" onclick="addTQCHeadInfo()">
+                        <span class="text-color">Add TQC Head</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="dvTQCHead" style="display:none;">
+            <div class="table-responsive">
+                <div style="width:100%; margin:0 auto;">
+                    <table id="TQCHeadTbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>ID</th>
+                                <th>Emp.No</th>
+                                <th>Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>IsActive</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>SlNo</th>
+                                <th>ID</th>
+                                <th>EmployeeID</th>
+                                <th>Name</th>
+                                <th>StartDate_Grid</th>
+                                <th>EndDate_Grid</th>
+                                <th>IsActive</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*ModalPopup Edit Start*@
+<a href="#" style="display:none;" id="TQCHeadEditModal" data-toggle="modal" data-target="#editTQCHeadModal">Edit values</a>
+
+<div class="modal fade" id="editTQCHeadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-brand" id="exampleModalLabel">Edit TQC Head</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="frmTqcHead">
+                @{Html.RenderPartial("_MessageDiv");}
+                @Html.HiddenFor(m => m.ID, new { @id = "ID" })
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            @*<div class="col-md-4 my-3">Employee number</div>
+                                <div class="col-md-8 my-2">
+                                    @Html.TextBoxFor(m => m.EmployeeID, new { @class = "form-control", @id = "EmployeeID", @readonly = "readonly" })
+                                </div>*@
+                            <div class="col-md-4 my-3">Employee No<span class="req st"> </span></div>
+                            <div class="col-md-8 my-2">
+                                @Html.EditorFor(model => model.EmpNumber, new { htmlAttributes = new { @class = "form-control", @id = "EmpNumber", @placeholder = "Search by employee number" } })
+                            </div>
+
+                            <div class="col-md-4 my-3">Employee Name<span class="req st"> </span></div>
+                            <div class="col-md-8 my-2">
+                                @Html.EditorFor(model => model.EmpName, new { htmlAttributes = new { @class = "form-control", @id = "EmpName", @placeholder = "Search by employee Name" } })
+                            </div>
+
+                            <div class="col-md-4 my-3">Start Date<span class="req st"> </span></div>
+                            <div class="col-md-8 my-2">
+                                @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control", @type = "date", @id = "StartDate" })
+                            </div>
+
+                            <div class="col-md-4 my-3 endDate">End Date</div>
+                            <div class="col-md-8 my-2 endDate">
+                                @Html.TextBoxFor(m => m.EndDate, new { @class = "form-control", @type = "date", @id = "EndDate" })
+                            </div>
+                            @*<div class="col-md-4 my-3">IsActive</div>
+                            <div class="col-md-8 my-2">
+                                @Html.CheckBoxFor(m => m.IsActive, new { @class = "form-control", @checked = "checked", @id = "IsActive" })
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-cancel text-brand" data-dismiss="modal"><span class="text-color">Cancel</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-times"></i></button>
+                <button type="button" class="btn btn-outline-save text-brand" onclick="TQCHeadPopupSave()"><span class="text-color">Save Changes</span> &nbsp;&nbsp;&nbsp;<i class="fas fa-save"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+@*ModalPopup Edit End*@
+<input id="btnTQCHeadDetGrid" type="hidden" data-url='@Url.Action("LoadAllTQCHeadDatas","TQCHead")' />
+<input id="btnTQCHeadPopup" type="hidden" data-url='@Url.Action("LoadTQCHeadDetailsByID","TQCHead")' />
+<input id="btnTQCHeadPopupSave" type="hidden" data-url='@Url.Action("SaveTQCHeadDetails","TQCHead")' />
+
+<button style="visibility:hidden;" id="empNameSearch" data-url='@Url.Action("GetEmployeeDataByName","Nomination")'></button>
+<button style="visibility:hidden;" id="empNumberSearch" data-url='@Url.Action("GetEmployeeDataByEmpNumber","Nomination")'></button>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $("#pageTitle").text("TQC Head");
+            LoadTQCHeadGrid();
+        });
+
+        $("#btnFilter").click(function () {
+            LoadTQCHeadGrid();
+        });
+
+        function LoadTQCHeadGrid() {
+            spinner_On();
+            $.ajax(
+                {
+                    "url": $("#btnTQCHeadDetGrid").data('url'),
+                    "type": "POST",
+                    //"data": { dept: N_dept, date: N_date },
+                    "dataType": "json",
+                    success: function (data) {
+                        console.log(data);
+                        $('#dvTQCHead').show();
+                        var datatableInstance = $('#TQCHeadTbl').DataTable({
+                            data: data,
+                            paging: true,
+                            bDestroy: true,
+                            processing: true,
+                            pageLength: 15,
+                            order: [],
+                            columns: [
+                                { 'data': 'SlNo',  "visible": false},
+                                { 'data': 'ID', "visible": false },
+                                { 'data': 'EmployeeID' },
+                                { 'data': 'EmpName' },                              
+                                { 'data': 'StartDate_Grid' },
+                                { 'data': 'EndDate_Grid' },
+                                { 'data': 'IsActive', "visible": false },
+                                {
+                                    'data': '',
+                                    'sortable': false,
+                                    'render': function json(data, type, full, meta) {
+                                        return "<i onclick='ediTQCHeadInfo(" + full.ID + ")' class='fas fa-edit' style='cursor:pointer;'></i>";
+                                    }
+                                },
+                            ],
+                        });
+
+                        // To decide it's textbox or Select Filter
+                        $("#TQCHeadTbl tfoot th").each(function (i) {
+                            var title = $('#TQCHeadTbl thead th').eq($(this).index()).text();
+                            if (title == "Emp.No" || title == "Name" || title == "Start Date" || title == "End Date" || title == "IsActive") {
+                                $(this).html('<div class="search"><input type="text" class="form-control" placeholder="Search"></div>');
+                                //$(this).html('<div class="search"><input type="text" class="form-control" placeholder="Search ' + title + '"></div>');
+                            }
+                            else if (title == "Sl.No") {
+                                $(this).html("");
+                            }
+                            else {
+                                $(this).html('<input type="button" class="btn btn-primary" value="Clear" onclick="clearSearch()"/>');
+                            }
+                        });
+
+                        // Filter : Textbox keyup Action...
+                        datatableInstance.columns().every(function () {
+                            var dataTableColumn = this;
+                            $(this.footer()).find('input').on('keyup change', function () {
+                                //console.log(this.value);
+                                dataTableColumn.search(this.value).draw();
+                            });
+                        });
+                        spinner_Off();
+                    },
+                    error: function (json) {
+                        spinner_Off();
+                    }
+                });
+        }
+
+        function clearSearch() {
+            var table = $("#TQCHeadTbl").DataTable();
+            table.search('').columns().search('').draw();
+            $(".search input[type='text']").val("");
+        }
+
+        function addTQCHeadInfo() {
+            $("#TQCHeadEditModal").trigger("click");
+            $("#exampleModalLabel").text("Add TQC Head Details");
+            $('#ID').val("");
+            $('#EmpNumber').val("");
+            $('#EmpName').val("");
+            $('#StartDate').val("");
+            $('#EndDate').val("");
+            $(".endDate").hide();
+            //$('#IsActive').val("");
+            $('#Name').focus();
+            spinner_Off();
+        }
+
+        function ediTQCHeadInfo(ID) {
+            $.ajax({
+                type: "Post",
+                url: $("#btnTQCHeadPopup").data('url'),
+                data: '{ID: ' + ID + ' }',
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function (response) {
+                    console.log(response);
+                    $(".endDate").show();
+                    $("#TQCHeadEditModal").trigger("click");
+                    $("#exampleModalLabel").text("Edit TQC Head Details");
+                    $('#ID').val(response.data.ID);
+                    $('#EmpNumber').val(response.data.EmployeeID);
+                    $('#EmpName').val(response.data.EmpName);
+                    $('#StartDate').val(response.data.StartDate_Grid);
+                    $('#EndDate').val(response.data.EndDate_Grid);
+                    //$('#IsActive').val(response.data.IsActive);
+
+                    $('#EmpNumber').attr('readonly', 'readonly');
+                    $('#EmpNumber').addClass('input-disabled');
+                    $('#EmpName').attr('readonly', 'readonly');
+                    $('#EmpName').addClass('input-disabled');
+
+                },
+                failure: function (response) {
+                    alertify.alert(response.responseText);
+                },
+                error: function (response) {
+                    alertify.alert(response.responseText);
+                }
+            });
+        }
+
+        function TQCHeadPopupSave() {
+            hideSuccessErrorDiv();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: $("#btnTQCHeadPopupSave").data('url'),
+                    data: $('#frmTqcHead').serialize(),
+                    success: function (result) {
+                        console.log(result);
+                        if (result.success == true) {
+                            $('#dialog').modal('hide');
+                            enableSucessDiv(result.message);
+                        }
+                        else {
+                            enableErrorDiv(result.message);
+                        }
+                    },
+                });
+        }
+
+        $("#EmpName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: $("#empNameSearch").data('url'),
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            //this.console.log(item);
+                            return item;
+                            //return { label: item.EmployeeID, value: item.Name };
+                        }))
+                    }
+                })
+            },
+            select: function (e, i) {
+                //console.log(i);
+                var result = i.item.val;
+                var splt = result.split("###");
+                $("#EmpNumber").val(splt[0]);
+            },
+            minLength: 1,
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+
+        $("#EmpNumber").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: $("#empNumberSearch").data('url'),
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            //this.console.log(item);
+                            return item;
+                            //return { label: item.EmployeeID, value: item.Name };
+                        }))
+                    }
+                })
+            },
+            select: function (e, i) {
+                //console.log(i);
+                var result = i.item.val;
+                $("#EmpName").val(result);
+            },
+            minLength: 1,
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+
+    </script>
+}
+
+<style>
+    /*move tfoot to next to grid header*/
+    tfoot {
+        display: table-header-group;
+    }
+    .ui-autocomplete {
+        z-index: 5000 !important
+    }
+</style>

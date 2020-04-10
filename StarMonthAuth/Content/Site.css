@@ -1,0 +1,287 @@
+﻿body {
+    /*padding-top: 50px;*/
+    /*padding-bottom: 20px;*/
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    /*padding-left: 15px;
+    padding-right: 15px;*/
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+/*.dl-horizontal dt {
+    white-space: normal;
+}*/
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*input,
+select,
+textarea {
+    max-width: 280px;
+}*/
+
+/*Start Spinner style*/
+.center-div {
+    width: 300px;
+    height: 300px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -150px;
+    margin-top: -150px;
+}
+
+.spinner {
+    position: fixed;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-color: Black;
+    filter: alpha(opacity=60);
+    opacity: 0.6;
+    -moz-opacity: 0.8;
+}
+
+.loader {
+    margin: auto;
+    border: 12px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 12px solid #103679;
+    border-bottom: 12px solid #103679;
+    width: 80px;
+    height: 80px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+.inner-div {
+    /*background-color: white;*/
+    border-radius: 15px;
+    margin: auto;
+    padding: 2%;
+    width: 150px;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+/*End Spinner style*/
+    /*Data table Word break start*/
+    .dataTableColumnWordBreak {
+    word-wrap: break-word !important;
+    white-space: normal !important;
+}
+
+/*Data table Word break end*/
+
+
+.ExlExport {
+    background-color: #dfdfdf;
+    padding: 3px;
+    padding-right: 6px;
+    padding-left: 6px;
+    cursor: pointer;
+}
+
+/*set Vertical Scroll for cell*/
+.VerticalScrollDataTableGridCell {
+    overflow: auto;
+    height: 60px;
+}
+
+.sliderHeaderArrow {
+    float: right;
+    margin: 11px;
+}
+
+.req:after {
+    font-size: 17px;
+    display: inline-block;
+    position: relative;
+    top: 0px;
+    padding: 2px;
+    /*content: "* required";*/
+    content: "*";
+    color: rgb(255,0,0)
+}
+
+.req.st:after {
+    content: "*";
+    top: 0px;
+    padding-top: 0;
+    padding-bottom: 0
+}
+
+
+/*File upload Start*/
+.ajax-file-upload-statusbar {
+    border: 1px solid #0ba1b5;
+    margin-top: 10px;
+    /*width: 420px;*/
+    width: auto !important;
+    margin-right: 10px;
+    margin: 5px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    padding: 5px 5px 5px 15px
+}
+
+.ajax-file-upload-filename {
+    /*width: 300px;*/
+    height: auto;
+    margin: 0 5px 5px 0px;
+}
+
+.ajax-file-upload-filesize {
+    width: 50px;
+    height: auto;
+    margin: 0 5px 5px 0px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ajax-file-upload-progress {
+    margin: 5px 10px 10px 0px;
+    position: relative;
+    width: 250px;
+    border: 1px solid #ddd;
+    padding: 1px;
+    border-radius: 3px;
+    display: inline-block;
+    color: #FFFFFF;
+}
+
+.ajax-file-upload-bar {
+    background-color: #0ba1b5;
+    width: 0;
+    height: 20px;
+    border-radius: 3px;
+    color: #FFFFFF;
+}
+
+.ajax-file-upload-percent {
+    position: absolute;
+    display: inline-block;
+    top: 3px;
+    left: 48%
+}
+
+.ajax-file-upload-red {
+    -moz-box-shadow: inset 0 39px 0 -24px #e67a73;
+    -webkit-box-shadow: inset 0 39px 0 -24px #e67a73;
+    box-shadow: inset 0 39px 0 -24px #e67a73;
+    background-color: #e4685d;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    display: inline-block;
+    color: #fff;
+    font-family: arial;
+    font-size: 13px;
+    font-weight: normal;
+    padding: 4px 15px;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #b23e35;
+    cursor: pointer;
+    vertical-align: top;
+    margin: 5px 10px 5px 0px;
+}
+
+.ajax-file-upload-green {
+    background-color: #77b55a;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    color: #fff;
+    font-family: arial;
+    font-size: 13px;
+    font-weight: normal;
+    padding: 4px 15px;
+    text-decoration: none;
+    cursor: pointer;
+    text-shadow: 0 1px 0 #5b8a3c;
+    vertical-align: top;
+    margin: 5px 10px 5px 0px;
+}
+
+.ajax-file-upload {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 15px 20px;
+    cursor: pointer;
+    line-height: 20px;
+    height: 25px;
+    margin: 0 10px 10px 0;
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    color: #888;
+    text-decoration: none;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -moz-box-shadow: 0 2px 0 0 #e8e8e8;
+    -webkit-box-shadow: 0 2px 0 0 #e8e8e8;
+    box-shadow: 0 2px 0 0 #e8e8e8;
+    padding: 6px 10px 4px 10px;
+    color: #fff;
+    background: #2f8ab9;
+    border: none;
+    -moz-box-shadow: 0 2px 0 0 #13648d;
+    -webkit-box-shadow: 0 2px 0 0 #13648d;
+    box-shadow: 0 2px 0 0 #13648d;
+    vertical-align: middle;
+}
+
+    .ajax-file-upload:hover {
+        background: #3396c9;
+        -moz-box-shadow: 0 2px 0 0 #15719f;
+        -webkit-box-shadow: 0 2px 0 0 #15719f;
+        box-shadow: 0 2px 0 0 #15719f;
+    }
+
+.ajax-upload-dragdrop {
+    border: 1px dotted #000;
+    width: auto !important;
+    color: #DADCE382;
+    text-align: left;
+    vertical-align: middle;
+    padding: 10px 10px 0px 10px;
+    margin: 16px;
+}
+
+.state-hover {
+    border: 2px solid #A5A5C7;
+}
+
+.ajax-file-upload-container {
+    margin: 0px 0px 0px 0px;
+}
+
+/*File upload End*/

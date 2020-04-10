@@ -1,0 +1,107 @@
+﻿<div class="header-menu">
+    <div class="container px-0">
+        <nav class="navbar navbar-expand-lg navbar-dark py-1">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active" id="liDashboard" style="color:White; display:none;">
+                        <a href="@Url.Action("Index", "Dashboard")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fas fa-home"></span>
+                            Home
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liNominationlst" style="color:White; display:none;">
+                        <a href="@Url.Action("Index", "Nomination")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fas fa-list"></span>
+                            Nomination List
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liNominationlstTemp" style="color:White; display:none;">
+                        <a href="@Url.Action("Index", "Nom")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fas fa-list"></span>
+                            Nomination List
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liNominationPendinglst" style="color:White; display:none;">
+                        <a href="@Url.Action("PendingNomination", "Nomination")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fas fa-pause-circle"></span>
+                            Pending Approvals
+                        </a>
+                    </li>
+                    @*<li class="nav-item" id="liNominationApprovallst" style="color:White; display:none;">
+            <a href="@Url.Action("ApproveNomination", "Nomination")" class="nav-link text-uppercase font-weight-bold">
+                <span class="fas fa-check-circle"></span>
+                Approved List
+            </a>
+        </li>*@
+                    <li class="nav-item" id="liEvaluationlst" style="color:White; display:none;">
+                        <a href="@Url.Action("Index", "Evaluation")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fas fa-list"></span>
+                            Pending Evaluation List
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liAddNomination" style="color:White; display:none;">
+                        <a href="@Url.Action("Nomination", "Nomination")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fa fa-wpforms"></span>
+                            Create Nomination
+                        </a>
+                    </li>
+                    @*<li class="nav-item" id="liPanelMembers" style="color:White; display:none;">
+                        <a href="@Url.Action("Index", "PanelMembers")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fas fa-list-ol"></span>
+                            Panel Members
+                        </a>
+                    </li>*@
+                    <li class="nav-item" id="liTQCHead" style="color:White; display:none;">
+                        <a href="@Url.Action("Index", "TQCHead")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fas fa-h-square"></span>
+                            TQC Head
+                        </a>
+                    </li>
+                    <li class="nav-item" id="liStarOfMonth" style="color:White; display:none;">
+                        <a href="@Url.Action("Index", "StarOfMonth")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fas fa-star"></span>
+                            Star of Month
+                        </a>
+                    </li>
+                    @*<li class="nav-item">
+            <a id="liConfiguration" Style="color:White;" href="@Url.Action("Index", "Configuration")" class="nav-link text-uppercase font-weight-bold">
+                <span class="fas fa-cog"></span>
+                Settings
+            </a>
+        </li>*@
+                </ul>
+
+                <ul class="nav justify-content-end top-bar-right">
+                    <li id="liSettings" style="display:none;color:White; cursor:pointer;" class="nav-item">
+                        <a href="@Url.Action("Index", "Configuration")" class="nav-link text-uppercase font-weight-bold">
+                            <span style="color:White; font-size:32px;" class="fas fa-cog"></span>
+                        </a>
+                    </li>
+                    @*<li class="nav-item dropdown p-8-10">
+                        <a class="nav-link dropdown-toggle login-box" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="login-information" Style="color:White;">
+                                <label class="login-profile">
+                                   
+                                </label>&nbsp;&nbsp;
+                                <span class="login-icon">
+                                    <i class="fas fa-user-circle"></i>
+                                </span>
+                            </span>
+                        </a>
+                        
+                    </li>*@
+                    <li id="liNotification" style="color:White; display:none;" class="notification-alert-icon">
+                        @{ Html.RenderPartial("_Notification"); }
+                        @*<i class="fas fa-bell"></i>
+            <span class="notification-alert-number">4</span>*@
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+</div>

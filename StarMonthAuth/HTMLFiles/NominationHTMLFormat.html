@@ -1,0 +1,121 @@
+
+
+<html>
+<head>
+    <title>Nomination for Star of the month</title>
+</head>
+<body>
+    <div>
+        <div>
+            <h4 align="center"><b>Nomination for Star of the month</b></h4>
+        </div>
+    </div>
+    <label for="Name"><b>Employee name: </b> </label>&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <span id="Name" name="Name" style="border:2px solid red;">&nbsp; ##Name## &nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;
+    <label for="EmployeeNumber"><b>Employee number: </b> </label>
+    <span id="EmployeeNumber" name="EmployeeNumber" type="text"> ##EmployeeNumber## </span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <div>
+        <label for="Department"><b>Department: </b> </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span id="Department" name="Department" type="text"> ##Department## </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    &nbsp;&nbsp;
+    <div>
+        <label for="StartDate"><b>Project Start date: </b> </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span id="StartDate" name="sStartDate" type="text"> ##sStartDate## </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <label for="EndDate"><b>Project End date: </b> </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <span id="EndDate" name="sEndDate" type="text"> ##sEndDate## </span>
+    </div>
+    <br />
+    <div>
+        <label for="ProjectTitle"><b>Project Title: </b> </label>
+        <div>
+            <textarea cols="71" name="ProjectTitle" rows="1"><span>##ProjectTitle##</span></textarea>
+        </div>
+    </div>
+    <br />
+    <div>
+        <label for="Idea"><b>Need (Background) for the project / idea:</b> </label>
+        <div>
+            <div>
+                <textarea cols="71" id="Idea" name="Idea" rows="2"><span>##Idea##</span></textarea>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div>
+        <label for="PrimaryObjective"><b>Primary objective and target</b> </label>
+        <div>
+            <textarea cols="71" id="PrimaryObjective" name="PrimaryObjective" rows="2"><span>##PrimaryObjective##</span></textarea>
+        </div>
+    </div>
+    <br />
+    <div>
+        <label for="BriefDescription"><b>Brief description of the improvement</b> </label>
+        <div>
+            <textarea cols="71" id="BriefDescription" name="BriefDescription" rows="2"><span>##BriefDescription##</span></textarea>
+        </div>
+    </div>
+    <br />
+    <div>
+        <label for="Benefits"><b>Benefits (Sales / Productivity / Quality / Cost / Delivery / Safety / Customer delight etc.)</b> </label>
+        <div>
+            <textarea cols="71" id="Benefits" name="Benefits" rows="2"><span>##Benefits##</span></textarea>
+        </div>
+    </div>
+    <br />
+    <div>
+        <b>Horizontal deployment:</b>
+        <table style="width:600px;" id="tblHorDep">
+            <tr>
+                <th style="background-color: lightgray;font-weight: bold;  border: 1px solid black;width:50%;" align="center">Areas identified</th>
+                <th style="width:50%;background-color: lightgray;font-weight: bold;  border: 1px solid black;" align="center">Implementation status</th>
+            </tr>
+            <tbody>
+                ##HorizontalDeployment##
+
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <div>
+        <label for="files"><b>File Attachments:</b> </label>
+        <table>
+            <tbody>
+                ##UploadedFileName##
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <div>
+        <label for="Acknowledgement"><b>Acknowledgements:</b> </label>
+        <div>
+            <textarea cols="71" data-val="true" data-val-required="The Acknowledgement field is required."
+                      id="Acknowledgement" name="Acknowledgement" rows="2"><span>##Acknowledgement##</span></textarea>
+        </div>
+    </div>
+    <br />
+    <p>
+        <b>Nominee Submitted Date:</b>
+        <span id="nomineeSubmitDate">##NominationSubmittedDate##</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <b>Signature of the nominee:</b> <span id="nomineeId">##NominationSignature##</span>
+    </p>
+    <br />
+    <div>
+        <label for="CommentsByDH"><b>Comments by Dept / Section Head:</b> </label>
+        <br />
+        <textarea cols="71" id="CommentsByDH" name="CommentsByDH" rows="2"><span>##DHComments##</span></textarea>
+    </div>
+    <br />
+    <label for="DHSubmittedDate">
+        <b>HOD Submitted Date:</b>
+        <span id="HoDSubmitDate">##DHSubmittedDate##</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <b>Signature of the HOD:</b> <span id="HoDId">##DHSignature##</span>
+    </label>
+</body>
+</html>

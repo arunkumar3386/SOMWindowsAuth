@@ -1,0 +1,1074 @@
+﻿@model StarOfTheMonth.Models.NominationModel
+@{
+    /**/
+
+    ViewBag.Title = "Nomination Form";
+}
+<div class="container py-3 bg-white">
+    <form id="frmNomination" enctype="multipart/form-data">
+        <div class="clearfix mb-4">
+            <div class="float-left">
+                <h4><i class="fas fa-list-ol"></i>&nbsp;&nbsp;Nomination form for Star of the month</h4>
+            </div>
+        </div>
+        @{Html.RenderPartial("_MessageDiv");}
+        <div class="b-radius-5 py-3 px-4">
+            @Html.HiddenFor(m => m.ID, new { @id = "ID" })
+            @Html.HiddenFor(m => m.Status, new { @id = "Status" })
+            @Html.HiddenFor(m => m.NominationID, new { @id = "NominationID" })
+            @Html.HiddenFor(m => m.lstAreaOfInterest, new { @id = "lstAreaOfInterest" })
+            @Html.HiddenFor(m => m.lstImplementationStatus, new { @id = "lstImplementationStatus" })
+            @Html.HiddenFor(m => m.lstHDIDs, new { @id = "lstHDIDs" })
+            @Html.HiddenFor(m => m.NominationMessage, new { @id = "NominationMessage" })
+            @Html.HiddenFor(m => m.ReportingPersonID, new { @id = "ReportingPersonID" })
+            @Html.HiddenFor(m => m.AuditLogComments, new { @id = "AuditLogComments" })
+            <div class="alert alert-danger" id="NomResctrict" style="display:none;">
+                @Html.DisplayFor(m => m.NominationMessage, new { @id = "NominationMessage" })
+            </div>
+
+            <div class="form-group required row NomSection">
+                <label for="Name" class="col-sm-3 col-form-label control-label">Employee name:</label>
+                <div class="col-sm-3">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control NomSection", @id = "Name", @readonly = "readonly", @disabled = "disabled" } })
+                </div>
+                <div class="col-sm-6">
+
+                    <a style="float:right;" onclick="PdfDownload();" href="@Url.Action("GeneratePDF", "Nomination", new { ID = Model.NominationID })" class="nav-link text-uppercase font-weight-bold">
+                        <span class="fas fa-file-pdf"></span>
+                        Print PDF
+                    </a>
+                </div>
+            </div>
+            <div class="form-group required row NomSection">
+                <label for="EmployeeNumber" class="col-sm-3 col-form-label control-label">Employee number:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.EmployeeNumber, new { @class = "form-control NomSection", @id = "EmployeeNumber", @readonly = "readonly", @disabled = "disabled" })
+                </div>
+                <label for="Department" class="col-sm-3 col-form-label control-label">Department:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.Department, new { @class = "form-control NomSection", @id = "Department", @readonly = "readonly", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="form-group required row NomSection">
+                <label for="StartDate" class="col-sm-3 col-form-label control-label">Project Start date:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.sStartDate, new { @class = "form-control date-picker NomSection", @id = "StartDate" })
+                    @*@Html.TextBoxFor(m => m.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control NomSection", @id = "StartDate", @type = "date" })*@
+                </div>
+                <label for="EndDate" class="col-sm-3 col-form-label control-label">Project End date:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.sEndDate, new { @class = "form-control date-picker NomSection", @id = "EndDate" })
+                    @*@Html.TextBoxFor(m => m.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control NomSection", @id = "EndDate", @type = "date" })*@
+                </div>
+            </div>
+            <div class="form-group row NomSection">
+                <label for="Savings" class="col-sm-3 col-form-label control-label">Savings</label>
+                <div class="col-sm-3">
+                    @Html.ListBoxFor(m => m.SavingsIds, Model.Savings, new { @class = "form-control listbox NomSection", @id = "SavingsIds" })
+                </div>
+                <label for="Cost" class="col-sm-3 col-form-label control-label">Cost</label>
+                <div class="col-sm-2">
+                    @Html.TextBoxFor(m => m.Cost, new { @class = "form-control NomSection" })
+                    @*<small id="CostHelp" class="form-text text-muted">in Lakhs</small>*@
+                </div>
+                <div class="col-sm-1" style="margin-top:16px;">
+                    <span id="TimeHelp" style="margin-left:-26px;" class="col-form-label control-label">in Lakhs</span>
+                </div>
+            </div>
+            <div class="form-group row NomSection">
+                <label for="Time" class="col-sm-3 col-form-label control-label">Time</label>
+                <div class="col-sm-2">
+                    @Html.TextBoxFor(m => m.Time, new { @class = "form-control NomSection" })
+                </div>
+                <div class="col-sm-1" style="margin-top:16px;">
+                    <span id="TimeHelp" style="margin-left:-26px;" class="col-form-label control-label">in Hours</span>
+                </div>
+                <label for="Paper" class="col-sm-3 col-form-label control-label">Paper</label>
+                <div class="col-sm-2">
+                    @Html.TextBoxFor(m => m.Paper, new { @class = "form-control NomSection" })
+                </div>
+                <div class="col-sm-1" style="margin-top:16px;">
+                    <span id="TimeHelp" style="margin-left:-26px;" class="col-form-label control-label">in Sheets</span>
+                </div>
+            </div>
+            <div class="form-group required row NomSection">
+                <label for="ProjectTitle" class="col-sm-4 col-form-label control-label">Project Title:</label>
+                <div class="col-sm-12">
+                    @Html.TextAreaFor(m => m.ProjectTitle, new { @class = "form-control NomSection" })
+                </div>
+            </div>
+            <div class="form-group required row NomSection">
+                <label for="Idea" class="col-sm-4 col-form-label control-label">Need (Background) for the project / idea:</label>
+                <div class="col-sm-12">
+                    @Html.TextAreaFor(m => m.Idea, new { @class = "form-control NomSection" })
+                </div>
+            </div>
+            <div class="form-group required row NomSection">
+                <label for="PrimaryObjective" class="col-sm-4 col-form-label control-label">Primary objective and target</label>
+                <div class="col-sm-12">
+                    @Html.TextAreaFor(m => m.PrimaryObjective, new { @class = "form-control NomSection" })
+                </div>
+            </div>
+            <div class="form-group required row NomSection">
+                <label for="BriefDescription" class="col-sm-4 col-form-label control-label">Brief description of the improvement</label>
+                <div class="col-sm-12">
+                    @Html.TextAreaFor(m => m.BriefDescription, new { @class = "form-control NomSection" })
+                </div>
+            </div>
+            <div class="form-group required row NomSection">
+                <label for="Benefits" class="col-sm-12 col-form-label control-label">Benefits (Sales / Productivity / Quality / Cost / Delivery / Safety / Customer delight etc.)</label>
+                <div class="col-sm-12">
+                    @Html.TextAreaFor(m => m.Benefits, new { @class = "form-control NomSection" })
+                </div>
+            </div>
+            <div class="form-group row NomSection">
+                <div class="col-sm-4 col-form-label">Horizontal deployment:</div>
+                <div class="col-sm-12">
+                    <table id="tblHorDep" class="table table-striped table-hover table-bordered dataTable">
+                        <thead>
+                            <tr class="table-head-brand text-center">
+                                <th scope="col" style="display:none;">HDID</th>
+                                <th scope="col">Areas identified</th>
+                                <th scope="col">Implementation status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.lstHD != null)
+                            {
+                                foreach (var item in Model.lstHD)
+                                {
+                                    <tr class="tr_clone">
+                                        <td class="p-0" style="display:none;"><input type="text" name="HDID" class="form-control NomSection" value="@item.ID"></td>
+                                        <td class="p-0"><input type="text" name="AreaOfInterest" class="form-control NomSection" value="@item.AreaOfInterest"></td>
+                                        <td class="p-0"><input type="text" name="ImplementationStatus" class="form-control NomSection" value="@item.ImplementationStatus"></td>
+                                        @if (Model.NominationSubmittedDate == null)
+                                        {
+                                            <td class="tr_clone_add NomSection">ADD</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="NomSection">ADD</td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr class="tr_clone">
+                                    <td class="p-0" style="display:none;"><input type="text" name="HDID" class="form-control NomSection"></td>
+                                    <td class="p-0"><input type="text" name="AreaOfInterest" class="form-control NomSection"></td>
+                                    <td class="p-0"><input type="text" name="ImplementationStatus" class="form-control NomSection"></td>
+                                    @if (Model.NominationSubmittedDate == null)
+                                    {
+                                        <td class="tr_clone_add NomSection">ADD</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="NomSection">ADD</td>
+                                    }
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group required row NomSection">
+                <label for="Acknowledgement" class="col-sm-4 col-form-label control-label">Acknowledgements:</label>
+                <div class="col-sm-12">
+                    @Html.TextAreaFor(m => m.Acknowledgement, new { @class = "form-control NomSection" })
+                </div>
+            </div>
+            <div class="form-group required row NomSection">
+                <label for="files" class="col-sm-4 col-form-label control-label">File Attachments:</label>
+                <div class="col-sm-12">
+                    <form id="uploader">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input id="fileInput" type="file" multiple>
+                                <!--  <br /><br />-->
+                                @if (Model.uploadFilelst != null)
+                                {
+                                    <!--<h6>Uploaded File Details</h6>-->
+                                    <table>
+                                        @*<thead>
+                                        <tr>FileName</tr>
+                                        <tr>Action</tr>
+                                    </thead>*@
+                                        <tbody>
+                                            @foreach (var item in Model.uploadFilelst)
+                                            {
+                                                <tr>
+                                                    <th>
+                                                        <span>
+                                                            <b> @item.FileName</b>
+                                                            <a href="Nomination/DownloadFile?nomID=@item.NominationID&fname=@item.FileName" target="_blank">
+                                                                <i class="fas fa-download" style="padding-left:10px; cursor:pointer;color:green;" data-toggle="tooltip" data-placement="bottom" title="Download"></i>
+                                                            </a>
+                                                        </span>
+                                                    </th>
+                                                    <th></th>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                <table class="table" id="FilesList" style="visibility:hidden">
+                                    <tr>
+                                        <th>
+                                            Attachment(s)
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
+                                    </tr>
+                                </table>
+                                <input type="hidden" id="btnupload" value="Upload" style="float:right" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="form-group row DHSection">
+                <label for="NominationSubmittedDate" class="col-sm-3 col-form-label">Nominee Submitted Date:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.NominationSubmittedDate, new { @class = "form-control NomSection", @id = "NominationSubmittedDate", @readonly = "readonly" })
+                </div>
+                <label for="NominationSignature" class="col-sm-3 col-form-label">Signature of the nominee:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.NominationSignature, new { @class = "form-control NomSection", @id = "NominationSignature", @readonly = "readonly" })
+                </div>
+            </div>
+            <div class="form-group required row DHSection">
+                <label for="CommentsByDH" class="col-sm-4 col-form-label control-label">Comments by Dept / Section Head:</label>
+                <div class="col-sm-12">
+                    @Html.TextAreaFor(m => m.CommentsByDH, new { @class = "form-control", @id = "CommentsByDH" })
+                </div>
+            </div>
+            <div class="form-group row TQCHeadSection">
+                <label for="DHSubmittedDate" class="col-sm-3 col-form-label">HoD Submitted Date:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.DHSubmittedDate, new { @class = "form-control", @id = "DHSubmittedDate", @readonly = "readonly" })
+                </div>
+                <label for="DHSignature" class="col-sm-3 col-form-label">Signature of the HoD:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.DHSignature, new { @class = "form-control", @id = "DHSignature", @readonly = "readonly" })
+                </div>
+            </div>
+            <div class="form-group row DHSection">
+                <label for="CommentsByDH" class="col-sm-4 col-form-label control-label">Comments by TQC</label>
+                <div class="col-sm-12">
+                    @Html.TextAreaFor(m => m.CommentsForSOM, new { @class = "form-control", @id = "CommentsForSOM", @readonly = "readonly" })
+                </div>
+            </div>
+            <div class="form-group row DHSection">
+                <label for="DHSubmittedDate" class="col-sm-3 col-form-label">TQC Submitted Date:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.SOMSubmittedDate, new { @class = "form-control", @id = "SOMSubmittedDate", @readonly = "readonly" })
+                </div>
+                <label for="DHSignature" class="col-sm-3 col-form-label">Signature of the TQC:</label>
+                <div class="col-sm-3">
+                    @Html.TextBoxFor(m => m.SOMSignature, new { @class = "form-control", @id = "SOMSignature", @readonly = "readonly" })
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    
+
+    <div class="b-radius-5 bg-light clearfix px-4 py-3" style="margin-top: -2px;">
+        <div class="float-left">
+            <button type="button" class="btn btn-outline-pdf" data-toggle="modal" data-target="#showAuditLogModal"><span class="text-color">Audit Log</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-clipboard-list"></i></button>
+        </div>
+        <div class="float-right">
+            <button style="visibility:hidden;" id="empNameSearch" data-url='@Url.Action("GetEmployeeDataByName","Nomination")'></button>
+            <button type="button" data-url='@Url.Action("Approve","Nomination")' id="btnApprove" class="btn btn-outline-submit ml-2"><span class="text-color">Approve</span> &nbsp;&nbsp;&nbsp;<i class="fas fa-check"></i></button>
+            <button type="button" data-url='@Url.Action("Reject","Nomination")' id="btnReject" class="btn btn-outline-cancel" style="display:none;"><span class="text-color">Reject</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-times"></i></button>
+            <button type="button" data-url='@Url.Action("ReAssign","Nomination")' id="btnReAssign" class="btn btn-outline-cancel" style="display:none;"><span class="text-color">Assign to Nominee</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-trash-restore"></i></button>
+            <button type="button" id="btnCancel" class="btn btn-outline-cancel" data-dismiss="modal"><span class="text-color">Cancel</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-times"></i></button>
+            <button type="button" data-url='@Url.Action("Save","Nomination")' id="btnSave" class="btn btn-outline-save ml-2"><span class="text-color">Save</span> &nbsp;&nbsp;&nbsp;<i class="fas fa-save"></i></button>
+            <button type="button" data-url='@Url.Action("Submit","Nomination")' id="btnSubmit" class="btn btn-outline-submit ml-2"><span class="text-color">Submit To HOD</span> &nbsp;&nbsp;&nbsp;<i class="fas fa-check"></i></button>
+
+            <button type="button" style="visibility:hidden;" id="btnfilUpload" class="btn btn-primary btn-lg" data-url='@Url.Action("FileUpload","Nomination")' />
+            <input id="btnDownloadAuditRpt" value="download" type="hidden" data-url='@Url.Action("DownloadFile", "Nomination")' />
+        </div>
+    </div>
+</div>
+
+@*Modal popup for Audit log started*@
+<div class="modal fade" id="showAuditLogModal" tabindex="-1" role="dialog" aria-labelledby="showAuditLogModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-brand" id="showAuditLogModalLabel">Audit Log</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div id="dvAuditLog">
+                        <div class="table-responsive">
+                            <div style="width:100%; margin:0 auto;">
+                                @*<h6><b>Nomination ID :</b> @Model.NominationID</h6>*@
+                                <table id="TblAuditLog" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                                    <thead style="background-color: #253c80;color: white;">
+                                        <tr>
+                                            <th>Sl.no</th>
+                                            <th>Action Date</th>
+                                            <th>Status</th>
+                                            <th>Message</th>
+                                            <th>HoD Name</th>
+                                            <th>Evaluator Name</th>
+                                            <th>TQC Head Name</th>
+                                            <th>Comments</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model != null && Model.lstAuditLogs != null)
+                                        {
+                                            foreach (var item in Model.lstAuditLogs)
+                                            {
+                                                <tr>
+                                                    <th>@item.SlNo</th>
+                                                    <th>@item.CreatedDate</th>
+                                                    <th>@item.CurrentStatus</th>
+                                                    <th>@item.InfoMessage</th>
+                                                    <th>@item.DepartmentHeadName</th>
+                                                    <th>@item.EvaluatorName</th>
+                                                    <th>@item.TQCHeadName</th>
+                                                    <th>@item.Comments</th>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-cancel text-brand" data-dismiss="modal"><span class="text-color">Cancel</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-times"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+@*Modal popup for Audit Log ended*@
+
+
+
+
+@section Scripts {
+
+    <script>
+        $(function () {
+            $('.date-picker').datepicker({
+                changeDay: true,
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: 'dd/mm/yy',
+                onClose: function (dateText, inst) {
+                    //console.log(inst);
+                    $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
+                }
+            });
+        });
+
+        var table = $('#tblHorDep')[0];
+
+        $(table).delegate('.tr_clone_add', 'click', function () {
+            var thisRow = $(this).closest('tr')[0];
+            $(thisRow).clone().insertAfter(thisRow).find('input:text').val('');
+        });
+
+        $('#btnCancel').click(function () {
+            window.location.href = '/Nomination/Index'
+        });
+
+        $('#btnReject').click(function () {
+            alertify.prompt("Comments", "",
+                function (evt, value) {
+                    if (value=="") {
+                        alertify.alert('Comments is Required');
+                        ('#btnReject').click();
+                    }
+                    else {
+                        $("#AuditLogComments").val(value);
+
+                        setTimeout(function () { DHRejectFunction(); }, 3000);
+                        
+                    }
+                },
+                function () {                   
+                });
+        });
+
+        function DHRejectFunction() {
+            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+            var status = $("#Status").val();
+            var comments = $("#AuditLogComments").val();
+            spinner_On();
+            hideSuccessErrorDiv();
+            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+                if (comments == "") {
+                    alertify.alert("HoD Comments required");
+                    spinner_Off();
+                    return;
+                }
+            }
+            NominationFormDH($("#btnReject").data('url'));
+        }
+
+
+        $('#btnReAssign').click(function () {
+            alertify.prompt("Comments", "",
+                function (evt, value) {
+                    if (value == "") {
+                        alertify.alert('Comments is Required');
+                        ('#btnReAssign').click();
+                    }
+                    else {
+                        $("#AuditLogComments").val(value);
+                        setTimeout(function () { DHReAssignFunction(); }, 3000);
+                    }
+                },
+                function () {
+                });
+        });
+
+        function DHReAssignFunction() {
+              var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+            var status = $("#Status").val();
+            var comments = $("#CommentsByDH").val();
+            spinner_On();
+            hideSuccessErrorDiv();
+            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+                if (comments == "") {
+                    alertify.alert("HoD Comments required");
+                    spinner_Off();
+                    return;
+                }
+            }
+            spinner_Off();
+            NominationFormDH($("#btnReAssign").data('url'));
+        }
+
+        $('#btnApprove').click(function () {
+            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+            var status = $("#Status").val();
+            var comments = $("#CommentsByDH").val();
+            spinner_On();
+            hideSuccessErrorDiv();
+            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+                if (comments == "") {
+                    alertify.alert("HoD Comments required");
+                    spinner_Off();
+                    return;
+                }
+            }
+            spinner_Off();
+            NominationFormDH($("#btnApprove").data('url'));
+        });
+
+        function NominationFormDH(url) {
+            spinner_On();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: url,
+                    data: $('#frmNomination').serialize(),
+                    success: function (result) {
+                        console.log(result);
+                        if (result.success == true) {
+                            alertify.alert(result.message);
+                            window.location.href = '/Nomination/PendingNomination'
+                            //enableSucessDiv(result.message);
+                        }
+                        else {
+                            enableErrorDiv(result.message);
+                        }
+                        spinner_Off();
+                    },
+                });
+        }
+
+
+        $('#btnSave').click(function () {
+            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+            var status = $("#Status").val();
+            var comments = $("#CommentsByDH").val();
+            spinner_On();
+            hideSuccessErrorDiv();
+            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+                if (comments == "") {
+                    alertify.alert("HoD Comments required");
+                    spinner_Off();
+                    return;
+                }
+            }
+            saveNomination($("#btnSave").data('url'));
+            spinner_Off();
+
+        });
+
+        $('#btnSubmit').click(function () {
+            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+            var status = $("#Status").val();
+            var comments = $("#CommentsByDH").val();
+
+            spinner_On();
+            hideSuccessErrorDiv();
+            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+                if (comments == "") {
+                    alertify.alert("HoD Comments required");
+                    spinner_Off();
+                    return;
+                }
+            }
+            saveNomination($("#btnSubmit").data('url'));
+            spinner_Off();
+        });
+
+    function saveNomination(url) {
+        var startDate = new Date($('#StartDate').val());
+        var endDate = new Date($('#EndDate').val());
+        console.log($('#StartDate').val() + " " + $('#EndDate').val());
+        console.log(startDate + " " + endDate);
+            if (startDate > endDate) {
+                alertify.alert("SOM Alert", "Project Start date greater than end Date");
+                return;
+            }
+            var fullAreaInt = "";
+            var impStatus = "";
+            var id = "";
+            $(".tr_clone").find("td input:text").each(function () {
+                textVal = this.value;
+                inputName = $(this).attr("name");
+                if (inputName == "HDID") {
+                    id = id + "###" + textVal;
+                }
+                else if (inputName == "AreaOfInterest") {
+                    fullAreaInt = fullAreaInt + "###" + textVal;
+                }
+                else if (inputName == "ImplementationStatus") {
+                    impStatus = impStatus + "###" + textVal;
+                }
+
+            });
+
+            console.log(fullAreaInt + " -- " + impStatus);
+            $('#lstAreaOfInterest').val(fullAreaInt);
+            $('#lstImplementationStatus').val(impStatus);
+            $('#lstHDIDs').val(id);
+            var nomID = $('#NominationID').val();
+            //alert(nomID);
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: url,
+                    data: $('#frmNomination').serialize(),
+                    success: function (result) {
+                        console.log(result);
+                        if (result.success == true) {
+                            //$("#btnupload").click();
+                            fileUploadPostFunction(result.Data);
+                            alertify.alert("SOM Alert", result.message, function () { reDirectToGridPage() });
+                        }
+                        else {
+                            enableErrorDiv(result.message);
+                        }
+                        spinner_Off();
+                    },
+                });
+        }
+
+        function reDirectToGridPage() {
+            window.location.href = '/Nomination';
+        }
+
+        function hideEnableUIControls() {
+            var status = $("#Status").val();
+            $(".TQCHeadSection").hide();
+
+            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+            console.log(UserGrade);
+            console.log(status);
+
+            if (UserGrade == "1001") { //Nomination Section
+                $(".DHSection").hide();
+                $("#btnSubmit").val("Submit to DH");
+                $("#btnApprove").hide();
+            }
+            else if (UserGrade == "1002") { // DH Section
+                $("#btnCancel").show();
+                $('.NomSection').attr('readonly', 'readonly');
+                $('.NomSection').addClass('input-disabled');
+                $("#btnSubmit").hide();
+                $("#btnApprove").show();
+                $("#btnReAssign").show();
+                $("#btnReject").show();
+                $("#fileInput").hide();
+            }
+            else if (UserGrade == "1004") {
+                $('.NomSection').attr('readonly', 'readonly');
+                $('.NomSection').addClass('input-disabled');
+                $("#btnCancel").show();
+                $("#btnSave").hide();
+                $("#btnSubmit").hide();
+                $("#btnApprove").hide();
+                $("#btnReAssign").hide();
+                $("#btnReject").hide();
+                $(".TQCHeadSection").show();
+                $("#CommentsByDH").attr('readonly', 'readonly');
+                $("#fileInput").hide();
+            }
+
+            if (status == "Employee_Assign_DH" && UserGrade != "1002") {
+
+                $('.NomSection').attr('readonly', 'readonly');
+                $('.NomSection').addClass('input-disabled');
+                $("#btnCancel").hide();
+                $("#btnSave").hide();
+                $("#btnSubmit").hide();
+                $("#btnApprove").hide();
+                $("#btnReAssign").hide();
+                $("#btnReject").hide();
+                $("#fileInput").hide();
+            }
+
+            if (status != "Employee_Save")
+            {
+
+            }
+            else if (status != "DH_Assign_EmployeeClarification")
+            {
+
+            }
+            else if (status != "AdminReopen") {
+
+            }
+            else {
+                showControls();
+            }
+            if (status == "Employee_Save") {
+                showControls();
+            }
+
+            if (status == "DH_Assign_TQC") {
+                showControls();
+            }
+            if (status == "Evaluators_Assign_TQC") {
+                showControls();
+            }
+            if (status == "DH_Reject") {
+                showControls();
+            }
+
+            //To check Logged in user same as Rpt person
+
+            var ReportingPersonID = $("#ReportingPersonID").val();
+            var loggedInUserID = '@HttpContext.Current.Session["UserID"].ToString()';
+            if (status == "Employee_Assign_DH" && ReportingPersonID != loggedInUserID) {
+                $('.NomSection').attr('readonly', 'readonly');
+                $('.NomSection').addClass('input-disabled');
+                $("#btnCancel").hide();
+                $("#btnSave").hide();
+                $("#btnSubmit").hide();
+                $("#btnApprove").hide();
+                $("#btnReAssign").hide();
+                $("#btnReject").hide();
+                $("#fileInput").hide();
+            }
+
+            var nomCreatedID = $("#EmployeeNumber").val();
+            if (UserGrade == "1001" && loggedInUserID != nomCreatedID) {
+                showControls();
+            }
+
+
+        }
+
+        function controlNominationPage() {
+            spinner_On();
+            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+            var loggedInUserID = '@HttpContext.Current.Session["UserID"].ToString()';
+            var ReportingPersonID = $("#ReportingPersonID").val();
+            var status = $("#Status").val();
+            var nomCreatedID = $("#EmployeeNumber").val();
+
+            console.log(UserGrade + " -- " + loggedInUserID + " -- " + ReportingPersonID + " -- " + status + " -- " + nomCreatedID)
+            console.log(status);
+            var combineSts = "10011002";
+            if (!UserGrade.match(combineSts)) {
+                if (status == "0") {
+                    console.log("loop00");
+                    NomAllowaccessPage();
+                }
+                else if (status == "DH_Assign_EmployeeClarification") {
+                    console.log("loop0");
+                    if (UserGrade == "1001") {
+                        NomAllowaccessPage();
+                    }
+                    else {
+                        justViewPage();
+                    }
+                }
+
+                else {
+                    console.log("loop1");
+                    justViewPage();
+                }
+
+            }
+            //else if (UserGrade != "1002") {
+            //    console.log("loop2");
+            //    justViewPage();
+            //}
+            //else {
+                if (UserGrade == "1001" && loggedInUserID == nomCreatedID && status == "Employee_Save") {
+                    console.log("loop3");
+                    NomAllowtoAddComments();
+                }
+                else if (UserGrade == "1001" && loggedInUserID != nomCreatedID && status == "Employee_Save") {
+                    console.log("loop4");
+                    justViewPage();
+                }
+                else if (UserGrade == "1001" && loggedInUserID != nomCreatedID && status != "Employee_Save") {
+                    console.log("loop5");
+                    justViewPage();
+                }
+                else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_DH") {
+                    console.log("loop6");
+                    DHAllowtoAddComments();
+                }
+                else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status == "Employee_Assign_DH") {
+                    console.log("loop7");
+                    justViewPage();
+                }
+                else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status != "Employee_Assign_DH") {
+                    console.log("loop8");
+                    justViewPage();
+                }
+            //}
+
+            var value = $("#NominationMessage").val();
+
+            if (value != '') {
+                $("#NomResctrict").show();
+                $("#NominationMessage").html(value);
+                $("#btnSave").hide();
+                $("#btnSubmit").hide();
+            }
+            else {
+                $("#NomResctrict").hide();
+            }
+
+            spinner_Off();
+        }
+
+        $("#SavingsIds").change(function () {
+            var valu = $("#SavingsIds").val();
+            if (valu == "1,2,3") {
+                $("#Cost").removeAttr('readonly', 'readonly');
+                $("#Cost").removeClass('readonly', 'readonly');
+
+                $("#Time").removeAttr('readonly', 'readonly');
+                $("#Time").removeClass('readonly', 'readonly');
+
+                $("#Paper").removeAttr('readonly', 'readonly');
+                $("#Paper").removeClass('readonly', 'readonly');
+            }
+            else if (valu == "2,3") {
+                $("#Cost").attr('readonly', 'readonly');
+                $("#Cost").addClass('readonly', 'readonly');
+
+                $("#Time").removeAttr('readonly', 'readonly');
+                $("#Time").removeClass('readonly', 'readonly');
+
+                $("#Paper").removeAttr('readonly', 'readonly');
+                $("#Paper").removeClass('readonly', 'readonly');
+            }
+            else if (valu == "1,3") {
+                $("#Cost").removeAttr('readonly', 'readonly');
+                $("#Cost").removeClass('readonly', 'readonly');
+
+                $("#Time").attr('readonly', 'readonly');
+                $("#Time").addClass('readonly', 'readonly');
+
+                $("#Paper").removeAttr('readonly', 'readonly');
+                $("#Paper").removeClass('readonly', 'readonly');
+            }
+            else if (valu == "1,2") {
+                $("#Cost").removeAttr('readonly', 'readonly');
+                $("#Cost").removeClass('readonly', 'readonly');
+
+                $("#Time").removeAttr('readonly', 'readonly');
+                $("#Time").removeClass('readonly', 'readonly');
+
+                $("#Paper").attr('readonly', 'readonly');
+                $("#Paper").addClass('readonly', 'readonly');
+            }
+            else if (valu == "1") {
+                $("#Cost").removeAttr('readonly', 'readonly');
+                $("#Cost").removeClass('readonly', 'readonly');
+
+                $("#Time").attr('readonly', 'readonly');
+                $("#Time").addClass('readonly', 'readonly');
+
+                $("#Paper").attr('readonly', 'readonly');
+                $("#Paper").addClass('readonly', 'readonly');
+            }
+            else if (valu == "2") {
+                $("#Cost").attr('readonly', 'readonly');
+                $("#Cost").addClass('readonly', 'readonly');
+
+                $("#Time").removeAttr('readonly', 'readonly');
+                $("#Time").removeClass('readonly', 'readonly');
+
+                $("#Paper").attr('readonly', 'readonly');
+                $("#Paper").addClass('readonly', 'readonly');
+            }
+            else if (valu == "3") {
+                $("#Cost").attr('readonly', 'readonly');
+                $("#Cost").addClass('readonly', 'readonly');
+
+                $("#Time").attr('readonly', 'readonly');
+                $("#Time").addClass('readonly', 'readonly');
+
+                $("#Paper").removeAttr('readonly', 'readonly');
+                $("#Paper").removeClass('readonly', 'readonly');
+            }
+            else {
+                $("#Cost").attr('readonly', 'readonly');
+                $("#Cost").addClass('readonly', 'readonly');
+
+                $("#Time").attr('readonly', 'readonly');
+                $("#Time").addClass('readonly', 'readonly');
+
+                $("#Paper").attr('readonly', 'readonly');
+                $("#Paper").addClass('readonly', 'readonly');
+            }
+            //alert($("#SavingsIds").val());
+        });
+
+        function justViewPage() {
+          
+            $('.NomSection').attr('readonly', 'readonly');
+            $('.NomSection').addClass('input-disabled');
+            $("#btnCancel").show();
+            $("#btnSave").hide();
+            $("#btnSubmit").hide();
+            $("#btnApprove").hide();
+            $("#btnReAssign").hide();
+            $("#btnReject").hide();
+            $(".DHSection").show();
+            $(".TQCHeadSection").show();
+            $("#CommentsByDH").attr('readonly', 'readonly');
+            $("#fileInput").hide();
+            $("#SavingsIds").multiselect("disable");
+        }
+
+        function DHAllowtoAddComments() {
+            $('.NomSection').attr('readonly', 'readonly');
+            $('.NomSection').addClass('input-disabled');
+            $("#btnCancel").show();
+            $("#btnSave").hide();
+            $("#btnSubmit").hide();
+            $("#btnApprove").show();
+            $("#btnReAssign").show();
+            $("#btnReject").show();
+            $(".DHSection").show();
+            $(".TQCHeadSection").hide();
+            $("#CommentsByDH").removeAttr("readonly");
+            $("#fileInput").hide();
+            $("#SavingsIds").multiselect("disable");
+        }
+
+        function NomAllowtoAddComments() {
+            $('.NomSection').removeAttr('readonly');
+            $('.NomSection').removeClass('input-disabled');
+            $("#btnCancel").show();
+            $("#btnSave").show();
+            $("#btnSubmit").show();
+            $("#btnApprove").hide();
+            $("#btnReAssign").hide();
+            $("#btnReject").hide();
+            $(".DHSection").hide();
+            $(".TQCHeadSection").hide();
+            $("#CommentsByDH").attr('readonly', 'readonly');
+            $("#fileInput").show();
+            $("#SavingsIds").multiselect("enable");
+        }
+
+        function NomAllowaccessPage() {
+            $('.NomSection').removeAttr('readonly');
+            $('.NomSection').removeClass('input-disabled');
+            $("#btnCancel").show();
+            $("#btnSave").show();
+            $("#btnSubmit").show();
+            $("#btnApprove").hide();
+            $("#btnReAssign").hide();
+            $("#btnReject").hide();
+            $(".DHSection").show();
+            $(".DHSection").attr('readonly', 'readonly');
+            $('.DHSection').addClass('input-disabled');
+            $("#NominationSubmittedDate").attr('readonly', 'readonly');
+            $("#NominationSignature").attr('readonly', 'readonly');
+            $(".TQCHeadSection").show();
+            $("#CommentsByDH").attr('readonly', 'readonly');
+            $("#fileInput").show();
+            $("#SavingsIds").multiselect("enable");
+        }
+
+        function showControls() {
+            console.log("here");
+            $('.NomSection').attr('readonly', 'readonly');
+            $('.NomSection').addClass('input-disabled');
+            $("#btnCancel").show();
+            $("#btnSave").hide();
+            $("#btnSubmit").hide();
+            $("#btnApprove").hide();
+            $("#btnReAssign").hide();
+            $("#btnReject").hide();
+            $(".DHSection").show();
+            $(".TQCHeadSection").show();
+            $("#CommentsByDH").attr('readonly', 'readonly');
+            $("#fileInput").hide();
+        }
+
+        var formdata = new FormData(); //FormData object
+
+        $(document).ready(function () {
+            var nomMessage = $("#NominationMessage").val();
+            if (nomMessage != '') {
+                alertify.alert("SOM Alert", nomMessage, function () { $("#btnCancel").click(); });
+            }
+            controlNominationPage();
+            //hideEnableUIControls();
+            $("#Name").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: $("#empNameSearch").data('url'),
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                //this.console.log(item);
+                                return item;
+                                //return { label: item.EmployeeID, value: item.Name };
+                            }))
+
+                        }
+                    })
+                },
+                select: function (e, i) {
+                    console.log(i);
+                    var result = i.item.val;
+                    var splt = result.split("###");
+                    $("#EmployeeNumber").val(splt[0]);
+                    $("#Department").val(splt[1]);
+                },
+                minLength: 1,
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+
+            $("#fileInput").on("change", function () {
+                var fileInput = document.getElementById('fileInput');
+                //Iterating through each files selected in fileInput
+                for (i = 0; i < fileInput.files.length; i++) {
+
+                    var sfilename = fileInput.files[i].name;
+                    let srandomid = Math.random().toString(36).substring(7);
+
+                    formdata.append(sfilename, fileInput.files[i]);
+
+                    var markup = "<tr id='" + srandomid + "'><td>" + sfilename + "</td><td><a href='#' onclick='DeleteFile(\"" + srandomid + "\",\"" + sfilename +
+                        "\")'><span class='fas fa-times-circle red'></span></a></td></tr>"; // Binding the file name
+                    $("#FilesList tbody").append(markup);
+
+                }
+                chkatchtbl();
+                $('#fileInput').val('');
+
+            });
+        });
+
+        $('.listbox').multiselect({
+            includeSelectAllOption: true
+        });
+
+
+        function fileUploadPostFunction(nomID) {
+            formdata.append('NominationID', nomID);
+                $.ajax({
+                    url: $("#btnfilUpload").data('url'),
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: formdata,
+                    async: false,
+                    success: function (result) {
+                        //if (result != "") {
+                        //    alert(result);
+                        //}
+                    },
+                    error: function (err) {
+                        alertify.alert(err.statusText);
+                    }
+                });
+        }
+
+        function DeleteFile(Fileid, FileName) {
+            formdata.delete(FileName)
+            $("#" + Fileid).remove();
+            chkatchtbl();
+            }
+
+        function chkatchtbl() {
+            if ($('#FilesList tr').length > 1) {
+                $("#FilesList").css("visibility", "visible");
+            } else {
+                $("#FilesList").css("visibility", "hidden");
+            }
+        }
+
+        function PdfDownload() {
+            alertify.alert("SOM Alert", "Nomination PDF file will be downloaded shortly");
+        }
+
+    </script>
+}
+<style>
+    /*.ui-datepicker-calendar {
+        display: none;
+        background: #253c80;
+    }*/
+
+    .multiselect {
+        width: 240px !important;
+    }
+
+    .modal-dialog {
+        max-width: 900px !important;
+    }
+
+    .form-group.required .control-label:after {
+        content: "*";
+        color: red;
+    }
+
+    .red {
+        color: red;
+    }
+    .ajs-input {
+        width: 430px;
+        /*height: 80px;*/
+    }
+</style>

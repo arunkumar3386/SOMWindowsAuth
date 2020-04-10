@@ -1,0 +1,542 @@
+﻿@model StarOfTheMonth.Models.PanelMembersModel
+
+@{
+    ViewData["Title"] = "Panel Members";
+}
+<div class="container py-3 bg-white">
+    <div class="b-radius-5 py-3 px-4">
+        @*<div class="border-nomination-list b-radius-5 py-3 px-4">*@
+        <div class="clearfix mb-4">
+            <div class="float-left">
+                <h4 id="dashboardHeading"><i class="fas fa-list-ol"></i>&nbsp;&nbsp;Panel Members</h4>
+            </div>
+            @*<div class="float-right">
+                    <button type="button" class="btn btn-outline-excel ml-2"><span class="text-color">Save as Excel</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-file-excel"></i></button>
+                </div>*@
+        </div>
+
+        <div>
+            <div class="clearfix">
+                <div class="float-right">
+                    <button type="button" class="btn btn-outline-save ml-2 mb-2" data-toggle="modal" data-target="#addPanelMember" onclick="addPanelMembers()">
+                        <span class="text-color">Add panel member</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-plus"></i>
+                    </button>
+                    @*<button type="button" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse" data-target="#filterBox" aria-expanded="false"
+                                aria-controls="filterBox">
+                            <span class="text-color"></span>Filter &nbsp;&nbsp;&nbsp;<i class="fas fa-filter"></i>
+                        </button>*@
+                </div>
+            </div>
+            <div class="collapse" id="filterBox">
+                <div class="mb-3 mt-2 mx-0 py-2 row bg-light b-radius-5 border">
+                    <div class="col">
+                        <div class="row mx-0">
+                            <label for="selectDept">Select Department</label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(m => m.DeptFilter, Model.DeptFilterlst, new { @class = "form-control", @id = "DeptFilter" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row mx-0">
+                            <label for="selectDate">Select Month & Year</label>
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(m => m.DateFilter, Model.DateFilterlst, new { @class = "form-control", @id = "DateFilter" })
+                            </div>
+                            <button type="button" id="btnFilter" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="dvPanelMembers" style="display:none;">
+            <div class="table-responsive">
+                @*<h6 style="font-weight:bold; text-decoration:underline;">Nomination List</h6>*@
+                <div style="width:100%; margin:0 auto;">
+                    <table id="PanelMembersTbl" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>ID</th>
+                                <th>Emp.No</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Month</th>
+                                <th>Year</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>SlNo</th>
+                                <th>ID</th>
+                                <th>EvaluatorID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Month</th>
+                                <th>Year</th>
+                                <th>Action</th>
+                            </tr>
+                        </tfoot>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*ModalPopup ADD Start*@
+<div class="modal fade" id="addPanelMember" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-brand" id="exampleModalLabel">Add Panel Member</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @{Html.RenderPartial("_MessageDiv");}
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-10 my-2">
+                            
+                            @Html.EditorFor(model => model.EmpNumber, new { htmlAttributes = new { @class = "form-control", @id = "EmpNumber", @placeholder = "Search by employee number" } })
+                            
+                        </div>
+                        <div class="col-md-2 my-2" id="AddEmpNumberClick">
+                            <span class="req st"> </span>
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="col-md-10 my-2">
+                            
+                            @Html.EditorFor(model => model.EmpName, new { htmlAttributes = new { @class = "form-control", @id = "EmpName", @placeholder = "Search by employee Name" } })
+                            
+                        </div>
+                        <div class="col-md-2 my-2" id="AddEmpNameClick">
+                            <span class="req st"> </span>
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div class="container-fluid">
+                    <h5>Selected User List</h5>
+                    <div class="row font-weight-bold">
+                        <div class="col-md-8 my-2" id="your-selection">
+                        </div>
+                    </div>
+                </div>
+                </br>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-4 my-3">Month<span class="req st"> </span></div>
+                        <div class="col-md-8 my-2">
+                            @Html.DropDownListFor(m => m.MonthFilter, Model.MonthFilterlst, new { @class = "form-control", @id = "Month" })
+                        </div>
+                        <div class="col-md-4 my-3">Year<span class="req st"> </span></div>
+                        <div class="col-md-8 my-2">
+                            @Html.DropDownListFor(m => m.YearFilter, Model.YearFilterlst, new { @class = "form-control", @id = "Year" })
+                        </div>
+                    </div>
+                </div>
+                @*<div class="row font-weight-bold">
+                <div class="col-md-8 my-2">Arun Kumar</div>
+                <div class="col-md-2 my-2">12347</div>
+                <div class="col-md-2 my-2"><i class="fas fa-times-circle red"></i></div>
+            </div>
+            <div class="row font-weight-bold">
+                <div class="col-md-8 my-2">Devansh Nair</div>
+                <div class="col-md-2 my-2">12344</div>
+                <div class="col-md-2 my-2"><i class="fas fa-times-circle red"></i></div>
+            </div>
+            <div class="row font-weight-bold">
+                <div class="col-md-8 my-2">Muhammad Jindal</div>
+                <div class="col-md-2 my-2">12349</div>
+                <div class="col-md-2 my-2"><i class="fas fa-times-circle red"></i></div>
+            </div>*@
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-cancel text-brand" data-dismiss="modal"><span class="text-color">Cancel</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-times"></i></button>
+                <button type="button" id="btnAddPnlMembers" class="btn btn-outline-excel text-brand"><span class="text-color">Confirm</span> &nbsp;&nbsp;&nbsp;<i class="fas fa-check"></i></button>
+            </div>
+        </div>
+
+            </div>
+</div>
+
+@*ModalPopup ADD End*@
+@*ModalPopup Edit Start*@
+<a href="#" style="display:none;" id="PnlMembersEditModal" data-toggle="modal" data-target="#editPnlMembersModal">Edit values</a>
+
+<div class="modal fade" id="editPnlMembersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-brand" id="exampleModalLabel">Edit Star of the Month</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="frmPnlMember">
+                @{Html.RenderPartial("_MessageDiv");}
+                @Html.HiddenFor(m => m.ID, new { @id = "ID" })
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-4 my-3">Employee number</div>
+                            <div class="col-md-8 my-2">
+                                @Html.TextBoxFor(m => m.EvaluatorID, new { @class = "form-control", @id = "EvaluatorID", @readonly = "readonly" })
+                            </div>
+                            <div class="col-md-4 my-3">Employee name</div>
+                            <div class="col-md-8 my-2">
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @id = "Name", @readonly = "readonly" })
+                            </div>
+                            <div class="col-md-4 my-3">Month <span class="req st"> </span></div>
+                            <div class="col-md-8 my-2">
+                                @Html.DropDownListFor(m => m.MonthFilter, Model.MonthFilterlst, new { @class = "form-control", @id = "Month" })
+                            </div>
+                            <div class="col-md-4 my-3">Year <span class="req st"> </span></div>
+                            <div class="col-md-8 my-2">
+                                @Html.DropDownListFor(m => m.YearFilter, Model.YearFilterlst, new { @class = "form-control", @id = "Year" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-cancel text-brand" data-dismiss="modal"><span class="text-color">Cancel</span>&nbsp;&nbsp;&nbsp;<i class="fas fa-times"></i></button>
+                <button type="button" class="btn btn-outline-save text-brand" onclick="panelMembersPopupSave()"><span class="text-color">Save Changes</span> &nbsp;&nbsp;&nbsp;<i class="fas fa-save"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input id="selectedUserIDs"  type="hidden" />
+@*ModalPopup Edit End*@
+<input id="btnPanelMembersDetGrid" value="Load" type="hidden" data-url='@Url.Action("LoadPanelMembersDetailsForGrid","PanelMembers")' />
+<input id="btnPanelMembersPopup" value="Load" type="hidden" data-url='@Url.Action("PanelMembersPopupValues","PanelMembers")' />
+<input id="btnPanelMembersPopupSave" value="Load" type="hidden" data-url='@Url.Action("PanelMembersPopupSave","PanelMembers")' />
+
+<input id="btnAddPanelMembers" value="Load" type="hidden" data-url='@Url.Action("AddPanelmembers","PanelMembers")' />
+
+<button style="visibility:hidden;" id="empNameSearch" data-url='@Url.Action("GetEmployeeDataByName","PanelMembers")'></button>
+<button style="visibility:hidden;" id="empNumberSearch" data-url='@Url.Action("GetEmployeeDataByEmpNumber","PanelMembers")'></button>
+
+
+
+@section Scripts {
+    <script>
+        var selectedUserId = "";
+        $(document).ready(function () {
+            $("#pageTitle").text("Panel Members");
+            LoadPanelMembersGrid();
+        });
+
+
+        function addPanelMembers() {
+
+            $('#EmpNumber').val("");
+            $('#EmpName').val("");
+            $('#selectedUserIDs').val("");
+            spinner_Off();
+        }
+
+
+        $("#EmpName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: $("#empNameSearch").data('url'),
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            //this.console.log(item);
+                            return item;
+                            //return { label: item.EmployeeID, value: item.Name };
+                        }))
+                    }
+                })
+            },
+            select: function (e, i) {
+                //console.log(i);
+                var result = i.item.val;
+                var splt = result.split("###");
+                $("#EmpNumber").val(splt[0]);
+            },
+            minLength: 1,
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+
+        $("#EmpNumber").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: $("#empNumberSearch").data('url'),
+                    type: "POST",
+                    dataType: "json",
+                    data: { Prefix: request.term },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            //this.console.log(item);
+                            return item;
+                            //return { label: item.EmployeeID, value: item.Name };
+                        }))
+                    }
+                })
+            },
+            select: function (e, i) {
+                //console.log(i);
+                var result = i.item.val;
+                $("#EmpName").val(result);
+            },
+            minLength: 1,
+            messages: {
+                noResults: "", results: ""
+            }
+        });
+
+
+        $("#btnFilter").click(function () {
+            LoadPanelMembersGrid();
+        });
+
+        function LoadPanelMembersGrid() {
+            var N_dept = $("#DeptFilter option:selected").text();
+            var N_date = $("#DateFilter option:selected").text();
+            spinner_On();
+            $.ajax(
+                {
+                    "url": $("#btnPanelMembersDetGrid").data('url'),
+                    "type": "POST",
+                    "data": { dept: N_dept, date: N_date },
+                    "dataType": "json",
+                    success: function (data) {
+                        //console.log(data);
+                        $('#dvPanelMembers').show();
+                        var datatableInstance = $('#PanelMembersTbl').DataTable({
+                            data: data,
+                            paging: true,
+                            bDestroy: true,
+                            processing: true,
+                            pageLength: 15,
+                            order: [],
+                            columns: [
+                                { 'data': 'SlNo',"visible": false, },
+                                { 'data': 'ID', "visible": false, },
+                                { 'data': 'EvaluatorID' },
+                                { 'data': 'Name' },
+                                { 'data': 'Department' },
+                                { 'data': 'Month' },
+                                { 'data': 'Year' },
+                                {
+                                    'data': '',
+                                    'sortable': false,
+                                    'render': function json(data, type, full, meta) {
+                                        return "<i onclick='showPnlMembersPopup(" + full.ID + ")' class='fas fa-edit' style='cursor:pointer;'></i>";
+                                    }
+                                },
+                            ],
+                        });
+
+                        // To decide it's textbox or Select Filter
+                        $("#PanelMembersTbl tfoot th").each(function (i) {
+                            var title = $('#PanelMembersTbl thead th').eq($(this).index()).text();
+                            if (title == "Emp.No" || title == "Name" || title == "Department" || title == "Month" || title == "Year") {
+                                $(this).html('<div class="search"><input type="text" class="form-control" placeholder="Search"></div>');
+                                //$(this).html('<div class="search"><input type="text" class="form-control" placeholder="Search ' + title + '"></div>');
+                            }
+                            else if (title == "Sl.No") {
+                                $(this).html("");
+                            }
+                            else {
+                                $(this).html('<input type="button" class="btn btn-primary" value="Clear" onclick="clearSearch()"/>');
+                            }
+                        });
+
+                        // Filter : Textbox keyup Action...
+                        datatableInstance.columns().every(function () {
+                            var dataTableColumn = this;
+                            $(this.footer()).find('input').on('keyup change', function () {
+                                //console.log(this.value);
+                                dataTableColumn.search(this.value).draw();
+                            });
+                        });
+                        spinner_Off();
+                    },
+                    error: function (json) {
+                        spinner_Off();
+                    }
+                });
+        }
+
+        function clearSearch() {
+            var table = $("#PanelMembersTbl").DataTable();
+            table.search('').columns().search('').draw();
+            $(".search input[type='text']").val("");
+        }
+
+        function showPnlMembersPopup(ID) {
+            //alert(ID);
+            $.ajax({
+                type: "Post",
+                url: $("#btnPanelMembersPopup").data('url'),
+                data: '{ID: ' + ID + ' }',
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function (response) {
+                    console.log(response);
+                    $("#PnlMembersEditModal").trigger("click");
+                    console.log(response);
+
+                    $('#ID').val(response.data.ID);
+                    $('#EvaluatorID').val(response.data.EvaluatorID);
+                    $('#Name').val(response.data.Name);
+                    $('#Month').val(response.data.MonthFilter);
+                    $('#Year').val(response.data.YearFilter);
+
+                },
+                failure: function (response) {
+                    alertify.alert("SOM Alert", response.responseText, function () { });
+                },
+                error: function (response) {
+                    alertify.alert("SOM Alert", response.responseText, function () { });
+                }
+            });
+        }
+
+        function panelMembersPopupSave() {
+            //alert(-789);
+            $('.spinner').css('display', 'block');
+            hideSuccessErrorDiv();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: $("#btnPanelMembersPopupSave").data('url'),
+                    data: $('#frmPnlMember').serialize(),
+                    success: function (result) {
+                        console.log(result);
+                        if (result.success == true) {
+                            //window.location.href = newUrl;
+                            //$('#dialog').modal('hide');
+                            //enableSucessDiv(result.message);
+                            alertify.alert("SOM Alert", result.message, function () { location.reload(); });
+                            
+                        }
+                        else {
+                            enableErrorDiv(result.message);
+                        }
+                        $('.spinner').css('display', 'none');
+                    },
+                });
+        }
+
+        $("#AddEmpNameClick").on("click", function () {
+            var newNameSelected = $("#EmpName").val();
+            var newNumberSelected = $("#EmpNumber").val();
+            var det = newNameSelected + " (" + newNumberSelected + ")"
+            var thehtml = '<span id=' + newNumberSelected + '><br/>' + det + "<i class='fas fa-times-circle red' onclick='rmvlstItem(" + newNumberSelected + ");'></i></span>";
+            var selectedItems = $('#your-selection').html();
+            if (selectedItems.indexOf(det) === -1) {
+                $('#your-selection').append(thehtml);
+               
+                var dat = $("#selectedUserIDs").val();
+                $("#selectedUserIDs").val(dat + "," + newNumberSelected);
+
+               // $("#your-selectionRemove").append("<i class='fas fa-times-circle red'></i>");
+            } else {
+                
+                alertify.alert("SOM Alert", "Already selected!", function () {  });
+            }
+            $("#EmpName").val('');
+            $("#EmpNumber").val('');
+            
+        });
+
+        $("#AddEmpNumberClick").on("click", function () {
+            var newNameSelected = $("#EmpName").val();
+            var newNumberSelected = $("#EmpNumber").val();
+            var det = newNameSelected + " (" + newNumberSelected + ")"
+            var thehtml = '<span id=' + newNumberSelected + '><br/>' + det + "<i class='fas fa-times-circle red' onclick='rmvlstItem(" + newNumberSelected + ");'></i></span>";
+            var selectedItems = $('#your-selection').html();
+            if (selectedItems.indexOf(det) === -1) {
+                $('#your-selection').append(thehtml);
+                var dat = $("#selectedUserIDs").val();
+                $("#selectedUserIDs").val(dat + "," + newNumberSelected);
+            } else {
+                alertify.alert("SOM Alert", "Already selected!", function () { });
+            }
+            $("#EmpName").val('');
+            $("#EmpNumber").val('');
+            //$("#selectedUserIDs").val(selectedUserId);
+        });
+
+
+        function rmvlstItem(value) {
+            var idd = "#" + value;    
+            $(idd).empty();
+            var dat = $("#selectedUserIDs").val();
+            //console.log(dat);
+            dat = dat.replace(value, " ");
+            //console.log(dat);
+            $("#selectedUserIDs").val(dat);
+        }
+
+        $("#btnAddPnlMembers").on("click", function () {       
+            var _ddd = $("#selectedUserIDs").val();
+            var _Month = $("#Month option:selected").text();
+            var _Year = $("#Year option:selected").text();
+            console.log(_ddd);
+            $.ajax(
+                {
+                    type: 'Post',
+                    url: $("#btnAddPanelMembers").data('url'),
+                    data: '{data: ' + JSON.stringify(_ddd) + ',Month:' + JSON.stringify(_Month) + ',Year:' + JSON.stringify(_Year) +' }',
+                    //dataType: "text",
+                    contentType: "application/json",
+                    success: function (result) {
+                        if (result.success == true) {
+                            //window.location.href = newUrl;
+                            //$('#dialog').modal('hide');
+                            console.log(result);
+                            alertify.alert("SOM Alert", result.message, function () { location.reload(); });
+                            location.reload();
+                           
+                        }
+                        else {
+                            enableErrorDiv(result.message);
+                        }
+                        $('.spinner').css('display', 'none');
+                    },
+                    failure: function (response) {
+                        alertify.alert("SOM Alert", response.responseText, function () { });
+                       
+                    },
+                    error: function (response) {
+                        alertify.alert("SOM Alert", response.responseText, function () { });
+                    }
+                });
+        });
+
+
+    </script>
+}
+
+<style>
+    /*move tfoot to next to grid header*/
+    tfoot {
+        display: table-header-group;
+    }
+
+    .ui-autocomplete {
+        z-index: 5000 !important
+    }
+
+
+</style>
