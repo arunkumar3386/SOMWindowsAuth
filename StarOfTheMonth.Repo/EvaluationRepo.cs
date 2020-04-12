@@ -13,6 +13,7 @@ namespace StarOfTheMonth.Repo
         RepositoryResponse AddorUpdateEvaluationData(EvaluationModel model, string _loggedInUserID, bool isSubmit);
         RepositoryResponse LoadEvaluationDataByID(long ID);
         RepositoryResponse LoadEmpNominationDetails(long ID, string nominationID, string empNum);
+        RepositoryResponse LoadAllEvaluationData_Alltime(string _loggedInUserID, string dept = "", string date = "");
     }
 
     public class EvaluationRepo : IEvaluationRepo
@@ -398,8 +399,73 @@ namespace StarOfTheMonth.Repo
             return db;
         }
 
+        public RepositoryResponse LoadAllEvaluationData_Alltime(string _loggedInUserID, string dept, string date)
+        {
+            baseModel = new RepositoryResponse();
+            try
+            {
+                string subMonth = string.Empty;
+                string subYear = string.Empty;
 
-        
+                if (!string.IsNullOrEmpty(date))
+                {
+                    string[] sDate = date.Split('-');
+                    subMonth = sDate[0];
+                    subYear = sDate[1];
+                }
+
+                List<EvaluationModel> lstEvaluation = new List<EvaluationModel>();
+                using (objSOMEntities = new SOMEntities())
+                using (objIPEntities = new IntranetPortalEntities())
+                {
+
+                    var _NomDetails = (from em in objIPEntities.EmpMasters.AsEnumerable()
+                                       join eva in objSOMEntities.Evaluations.AsEnumerable() on em.EmployeeNumber equals eva.EmployeeNumber.ToString()
+                                       join nom in objSOMEntities.Nominations.AsEnumerable() on eva.NominationID equals nom.NominationId
+                                       where 
+                                       //eva.EvaluatorID == _loggedInUserID && 
+                                       nom.IsActive == true
+                                       //&& (eva.Status == (int)NominationStatus.TQC_Assign_Evaluator || eva.Status == (int)NominationStatus.Evaluators_Save
+                                       //|| eva.Status == (int)NominationStatus.Evaluators_Assign_TQC || eva.Status == (int)NominationStatus.TQC_Declare_SOM
+                                       //|| eva.Status == (int)NominationStatus || eva.Status == (int)NominationStatus.Evaluators_Save)
+                                       select new { em, eva, nom }).OrderByDescending(r => r.nom.ID).ToList();
+                    int i = 1;
+                    foreach (var item in _NomDetails)
+                    {
+                        //Evaluation objEvaluation = objSOMEntities.Evaluations.Where(
+                        //                r => r.CreatedBy == _loggedInUserID
+                        //                && r.NominationID.Value == item.nom.ID
+                        //                && r.IsActive == true).FirstOrDefault();
+
+                        //Evaluation objEvaluation = objSOMEntities.Evaluations.Where(
+                        //                r=> r.NominationID == item.nom.NominationId
+                        //                && r.IsActive == true).FirstOrDefault();
+
+                        lstEvaluation.Add(ConvertEvaluation_DB2Model(item.em, item.eva, item.nom, i));
+                    }
+
+                    if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
+                    {
+                        lstEvaluation = lstEvaluation.Where(r => r.Department == dept).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(subMonth) && !string.IsNullOrEmpty(subYear))
+                    {
+                        lstEvaluation = lstEvaluation.Where(r => r.SubmittedMonth == subMonth && r.SubmittedYear == subYear).ToList();
+                    }
+
+
+                    baseModel = new RepositoryResponse { success = true, message = "Get Evaluation details Successfully", Data = lstEvaluation.OrderByDescending(r => r.TotalScore) };
+                }
+            }
+            catch (Exception ex)
+            {
+                baseModel = new RepositoryResponse { success = false, message = ex.ToString() };
+            }
+
+            return baseModel;
+        }
+
+
 
         protected virtual void Dispose(bool disposing)
         {

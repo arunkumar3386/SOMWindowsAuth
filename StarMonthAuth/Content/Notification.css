@@ -220,8 +220,8 @@ a.dropdown-menu-header {
 .badge {
     padding: 3px 5px 2px;
     position: absolute;
-    top: 8px;
-    right: 5px;
+    top: 6px;
+    right: 20px;
     display: inline-block;
     min-width: 10px;
     font-size: 12px;

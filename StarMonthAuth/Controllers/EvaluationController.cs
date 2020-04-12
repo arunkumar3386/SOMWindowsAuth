@@ -1,5 +1,6 @@
 ﻿using Helper;
 using Newtonsoft.Json;
+using StarMonthAuth.ActionFilter;
 //using StarOfTheMonth.ActionFilter;
 using StarOfTheMonth.Models;
 using StarOfTheMonth.Repo;
@@ -12,7 +13,7 @@ using System.Web.Mvc;
 
 namespace StarMonthAuth.Controllers
 {
-    //[CheckSessionIsAvailable]
+    [CheckSessionIsAvailable]
     public class EvaluationController : Controller
     {
         private IEvaluationRepo _evaluationRepo;
@@ -189,6 +190,52 @@ namespace StarMonthAuth.Controllers
                 _message = string.Join("<br/>", _message1);
 
                 return Json(new { success = false, message = _message1 });
+            }
+        }
+
+        public ActionResult Evaluationlst()
+        {
+            DashboardModel model = new DashboardModel();
+            _loginRepo = new LoginRepo();
+            var monthFilter = _loginRepo.GetMonthYearFilter();
+            var deptFilter = _loginRepo.GetDepartmentDetails();
+
+            model.Nom_DateFilterlst = monthFilter;
+            model.Nom_DeptFilterlst = deptFilter;
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult LoadAllEvaluationDetailsForGrid(string dept = "", string date = "")
+        {
+            string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
+            if (dept == "--Select--")
+            {
+                dept = "";
+            }
+            if (date == "--Select--")
+            {
+                date = "";
+            }
+            else if (!string.IsNullOrEmpty(date))
+            {
+                string[] monthYear = date.Split(' ');
+                string month = monthYear[0].Substring(0, 3);
+                string year = monthYear[1];
+                date = month + "-" + year;
+            }
+            _repoResponse = new RepositoryResponse();
+            _evaluationRepo = new EvaluationRepo();
+            _repoResponse = _evaluationRepo.LoadAllEvaluationData_Alltime(_loggedInUserID, dept, date);
+            if (_repoResponse.success)
+            {
+                var _sa = new JsonSerializerSettings();
+                return Json(_repoResponse.Data);
+            }
+            else
+            {
+                return Json(new { success = _repoResponse.success.ToString(), message = _repoResponse.message });
             }
         }
     }

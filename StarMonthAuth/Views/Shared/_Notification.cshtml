@@ -1,11 +1,11 @@
 ﻿
 <div class="widget-content-right header-user-info ml-3" style="padding-right:5px;">
-    <a href="#" onclick="return false;" class="btn-shadow p-1 btn btn-sm " role="button"
-       data-toggle="dropdown" id="NotificationDropDownMenu" data-target="#" style="float: left" aria-expanded="true">
+    @*<a href="#" onclick="return false;" class="btn-shadow p-1 btn btn-sm " role="button"
+       data-toggle="dropdown" id="NotificationDropDownMenu" data-target="#" style="float: left" aria-expanded="true">*@
         <i class="fas fa-bell fa-2x" style="color:white;line-height:0px !important; margin-top:12px;">
         </i>
         <span id="spBadgeCnt" class="badge badge-danger" style="margin-left:0px; top: -11px;"></span>
-    </a>
+    @*</a>*@
 
     @*<ul class="dropdown-menu dropdown-menu-left pull-right" role="menu" aria-labelledby="NotificationDropDownMenu" id="ulNotifyMenu">
         <ul class="timeline timeline-icons timeline-sm" style="margin:10px;width:210px">
@@ -30,7 +30,7 @@
         LoadNotification();
     });
     function LoadNotification() {
-        $('#spBadgeCnt').html("3");
+        //$('#spBadgeCnt').html("3");
         $.ajax(
             {
                 type: 'GET',

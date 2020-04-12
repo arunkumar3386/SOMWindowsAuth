@@ -15,7 +15,7 @@ namespace StarOfTheMonth.Repo
         List<SelectListItem> GetMonthYearFilter(int Count = 12);
         List<SelectListItem> GetDepartmentDetails(string selectedDept ="", string selectDetpOnly="");
         RepositoryResponse GetLoginUserDetails(string userName);
-        RepositoryResponse GetPageAccessListByUserGrade(string grade);
+        RepositoryResponse GetPageAccessListByUserGrade(string grade, string loggedInuser);
         RepositoryResponse GetUserDetailsByUserID(string userID);
         int GetCountForUser(string loggedInUserID, int SOMUserGrade);
     }
@@ -258,40 +258,55 @@ namespace StarOfTheMonth.Repo
         }
 
 
-        public RepositoryResponse GetPageAccessListByUserGrade(string grade)
+        public RepositoryResponse GetPageAccessListByUserGrade(string grade, string loggedInuser)
         {
             RepositoryResponse baseModel = new RepositoryResponse();
             using (objSOMEntities = new SOMEntities())
+            using (objIPEntities = new IntranetPortalEntities())
             {
+                string OrgGrade = string.Empty;
+                var emp = objIPEntities.EmpMasters.Where(r => r.UserName == loggedInuser).FirstOrDefault();
+                var reptPerson = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == emp.EmployeeNumber).FirstOrDefault();
+                if (reptPerson != null)
+                {
+                    OrgGrade = reptPerson.Grade;
+                    grade = "DH";
+                }
                 var NomUsrRole = objSOMEntities.Configurations.Where(r => r.Module == "SOM" && r.Type == "NominationUserGrades" && r.IsActive == true).
-                                    Select(r=>r.Value).FirstOrDefault();
+                                    Select(r => r.Value.ToLower()).FirstOrDefault();
 
-                var DHUsrRole = objSOMEntities.Configurations.Where(r => r.Module == "SOM" && r.Type == "NominationUserGrades" && r.IsActive == true).
-                                    Select(r => r.Value).FirstOrDefault();
+                //var DHUsrRole = objSOMEntities.Configurations.Where(r => r.Module == "SOM" && r.Type == "NominationUserGrades" && r.IsActive == true).
+                //                    Select(r => r.Value).FirstOrDefault();
 
                 var EvaUsrRole = objSOMEntities.Configurations.Where(r => r.Module == "SOM" && r.Type == "EvaluationUserGrades" && r.IsActive == true).
-                                    Select(r => r.Value).FirstOrDefault();
+                                    Select(r => r.Value.ToLower()).FirstOrDefault();
+
+                var TqCUser = objSOMEntities.TQCHeads.Where(r => r.IsActive == true && r.EmployeeNumber == emp.EmployeeNumber).FirstOrDefault();
 
                 Configuration objConfig = new Configuration();
-                if (NomUsrRole.Contains(grade))
+                if (emp.UserRole == 102)
                 {
-                    objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type== "NominationUserRole-101" && r.IsActive == true).FirstOrDefault();
+                    objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "AdminUserRole" && r.IsActive == true).FirstOrDefault();
+                }
+                else if (TqCUser != null)
+                {
+                    objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "TQCHeadUserRole-104" && r.IsActive == true).FirstOrDefault();
+                }
+                else if (NomUsrRole.Contains(emp.Grade.ToLower()))
+                {
+                    objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "NominationUserRole-101" && r.IsActive == true).FirstOrDefault();
+                }
+                else if (grade == "DH" && !string.IsNullOrEmpty(OrgGrade.ToLower()) && EvaUsrRole.Contains(OrgGrade.ToLower()))
+                {
+                    objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "DHEvalUser" && r.IsActive == true).FirstOrDefault();
                 }
                 else if (grade == "DH")
                 {
                     objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "DepartmentHeadUserRole-102" && r.IsActive == true).FirstOrDefault();
                 }
-                else if (EvaUsrRole.Contains(grade))
+                else if (EvaUsrRole.Contains(emp.Grade.ToLower()))
                 {
                     objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "EvaluationUserRole-103" && r.IsActive == true).FirstOrDefault();
-                }
-                else if (grade == "TQC")
-                {
-                    objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "TQCHeadUserRole-104" && r.IsActive == true).FirstOrDefault();
-                }
-                else if (grade == "Admin")
-                {
-                    objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "AdminUserRole" && r.IsActive == true).FirstOrDefault();
                 }
 
                 if (objConfig != null)

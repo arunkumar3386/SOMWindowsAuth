@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using StarMonthAuth.ActionFilter;
 //using StarOfTheMonth.ActionFilter;
 using StarOfTheMonth.Models;
 using StarOfTheMonth.Repo;
@@ -9,7 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 namespace StarMonthAuth.Controllers
 {
-    //[CheckSessionIsAvailable]
+    [CheckSessionIsAvailable]
     public class ConfigurationController : Controller
     {
         private IConfigurationRepo _ConfigurationRepo;

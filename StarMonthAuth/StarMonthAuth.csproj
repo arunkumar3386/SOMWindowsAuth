@@ -130,6 +130,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionFilter\ActionFilter.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -277,6 +278,7 @@
     <Content Include="Views\PanelMembers\Index.cshtml" />
     <Content Include="Views\StarOfMonth\Index.cshtml" />
     <Content Include="Views\TQCHead\Index.cshtml" />
+    <Content Include="Views\Evaluation\Evaluationlst.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

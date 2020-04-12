@@ -37,9 +37,15 @@
                 Approved List
             </a>
         </li>*@
+                    <li class="nav-item" id="liViewEvaluationlst" style="color:White; display:none;"">
+                        <a href="@Url.Action("Evaluationlst", "Evaluation")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fas fa-list"></span>
+                            Evaluation List
+                        </a>
+                    </li>
                     <li class="nav-item" id="liEvaluationlst" style="color:White; display:none;">
                         <a href="@Url.Action("Index", "Evaluation")" class="nav-link text-uppercase font-weight-bold">
-                            <span class="fas fa-list"></span>
+                            <span class="fas fa-pause-circle"></span>
                             Pending Evaluation List
                         </a>
                     </li>
@@ -50,11 +56,11 @@
                         </a>
                     </li>
                     @*<li class="nav-item" id="liPanelMembers" style="color:White; display:none;">
-                        <a href="@Url.Action("Index", "PanelMembers")" class="nav-link text-uppercase font-weight-bold">
-                            <span class="fas fa-list-ol"></span>
-                            Panel Members
-                        </a>
-                    </li>*@
+            <a href="@Url.Action("Index", "PanelMembers")" class="nav-link text-uppercase font-weight-bold">
+                <span class="fas fa-list-ol"></span>
+                Panel Members
+            </a>
+        </li>*@
                     <li class="nav-item" id="liTQCHead" style="color:White; display:none;">
                         <a href="@Url.Action("Index", "TQCHead")" class="nav-link text-uppercase font-weight-bold">
                             <span class="fas fa-h-square"></span>
@@ -76,29 +82,44 @@
                 </ul>
 
                 <ul class="nav justify-content-end top-bar-right">
+
+                    <li id="liNotification" style="display:none;color:White; cursor:pointer;" class="nav-item">
+                        <a class="nav-link text-uppercase font-weight-bold">
+                            <span style="color:White; font-size:32px;" class="fas fa-bell fa-2x">
+
+                                <span id="spBadgeCnt" class="badge badge-danger" style="margin-left:0px;"></span>
+                            </span>
+                        </a>
+                    </li>
+
                     <li id="liSettings" style="display:none;color:White; cursor:pointer;" class="nav-item">
                         <a href="@Url.Action("Index", "Configuration")" class="nav-link text-uppercase font-weight-bold">
                             <span style="color:White; font-size:32px;" class="fas fa-cog"></span>
                         </a>
                     </li>
                     @*<li class="nav-item dropdown p-8-10">
-                        <a class="nav-link dropdown-toggle login-box" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                            <span class="login-information" Style="color:White;">
-                                <label class="login-profile">
-                                   
-                                </label>&nbsp;&nbsp;
-                                <span class="login-icon">
-                                    <i class="fas fa-user-circle"></i>
-                                </span>
-                            </span>
-                        </a>
-                        
-                    </li>*@
-                    <li id="liNotification" style="color:White; display:none;" class="notification-alert-icon">
-                        @{ Html.RenderPartial("_Notification"); }
-                        @*<i class="fas fa-bell"></i>
-            <span class="notification-alert-number">4</span>*@
-                    </li>
+            <a class="nav-link dropdown-toggle login-box" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="login-information" Style="color:White;">
+                    <label class="login-profile">
+
+                    </label>&nbsp;&nbsp;
+                    <span class="login-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </span>
+                </span>
+            </a>
+
+        </li>*@
+
+
+                    @*<li id="liNotification" style="color:White; display:none;" class="nav-item">
+        <i class="fas fa-bell fa-2x" style="color:white;line-height:0px !important;">
+
+        </i>*@
+
+                    @*<i class="fas fa-bell"></i>
+        <span class="notification-alert-number">4</span>*@
+                    @*</li>*@
                 </ul>
 
             </div>

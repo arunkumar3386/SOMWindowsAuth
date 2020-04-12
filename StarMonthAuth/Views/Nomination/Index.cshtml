@@ -14,7 +14,7 @@
                 </div>*@
         </div>
 
-        <div>
+        <div id="dvFilterSection">
             <div class="clearfix">
                 <div class="float-right">
                     <button type="button" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse" data-target="#filterBox" aria-expanded="false"
@@ -260,6 +260,9 @@
             else {
                 $(".TQCSection").hide();
                 $(".nonTQCSection").show();
+            }
+            if (SOMRole == "1001") {
+                $("#dvFilterSection").hide();
             }
 
             if (userGrade =="Admin") {

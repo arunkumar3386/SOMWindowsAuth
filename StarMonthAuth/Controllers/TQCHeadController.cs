@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using StarMonthAuth.ActionFilter;
 //using StarOfTheMonth.ActionFilter;
 using StarOfTheMonth.Models;
 using StarOfTheMonth.Repo;
@@ -10,7 +11,7 @@ using System.Web.Mvc;
 
 namespace StarMonthAuth.Controllers
 {
-    //[CheckSessionIsAvailable]
+    [CheckSessionIsAvailable]
     public class TQCHeadController : Controller
     {
         private ITQCHeadRepo _TQCHeadRepo;

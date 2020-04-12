@@ -4,7 +4,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.tool.xml;
 
 using Newtonsoft.Json;
-
+using StarMonthAuth.ActionFilter;
 using StarOfTheMonth.Models;
 using StarOfTheMonth.Repo;
 using System;
@@ -20,6 +20,7 @@ using System.Web.Mvc;
 
 namespace StarMonthAuth.Controllers
 {
+    [CheckSessionIsAvailable]
     public class NominationController : Controller
     {
         private INominationRepo _nominationRepo;

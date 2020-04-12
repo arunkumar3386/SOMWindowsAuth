@@ -53,7 +53,7 @@ namespace StarMonthAuth.Controllers
                 }
 
                 //loggedInuser = "Sanjay"; //Nomination User -- DH --RThangaraj
-                //loggedInuser = "muthu"; //Nomination User DH -- RThangaraj
+                loggedInuser = "muthu"; //Nomination User DH -- RThangaraj
                 //loggedInuser = "kamudhan";//Nomination User 
                 //loggedInuser = "r.thangaraj"; //DH user
                 //loggedInuser = "r.thangaraj"; //DH user
@@ -61,7 +61,7 @@ namespace StarMonthAuth.Controllers
                 //loggedInuser = "Chandrasekar"; // Evaluation user
                 //loggedInuser = "S.Karthik"; // Evaluation user
 
-                loggedInuser = "Jerome"; //TQC Head
+                //loggedInuser = "Jerome"; //TQC Head
                 //loggedInuser = "KS.Suseel"; //Admin
 
                 ILoginRepo loginRepo = new LoginRepo();
@@ -72,7 +72,7 @@ namespace StarMonthAuth.Controllers
                     EmpMasterModel _orGModel = model.Data;
                     if (_orGModel != null)
                     {
-                        RepositoryResponse _model = loginRepo.GetPageAccessListByUserGrade(_orGModel.Grade);
+                        RepositoryResponse _model = loginRepo.GetPageAccessListByUserGrade(_orGModel.Grade, loggedInuser);
                         if (_model != null)
                         {
                             Session.Add("pageAccessList", _model.Data);

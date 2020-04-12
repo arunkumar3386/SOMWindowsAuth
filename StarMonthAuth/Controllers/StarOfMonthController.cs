@@ -1,4 +1,5 @@
 ﻿using Helper;
+using StarMonthAuth.ActionFilter;
 //using StarOfTheMonth.ActionFilter;
 using StarOfTheMonth.Model.Models;
 using StarOfTheMonth.Models;
@@ -11,7 +12,7 @@ using System.Web.Mvc;
 
 namespace StarMonthAuth.Controllers
 {
-    //[CheckSessionIsAvailable]
+    [CheckSessionIsAvailable]
     public class StarOfMonthController : Controller
     {
         private IStarOfMonthRepo _statRepo;
