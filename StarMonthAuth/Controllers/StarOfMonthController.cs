@@ -121,6 +121,26 @@ namespace StarMonthAuth.Controllers
                     int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
                     HttpContext.Session["NotifyCount"] = count;
 
+                    // reload SOM information
+
+                    IStarOfMonthRepo starOfTheMonth = new StarOfMonthRepo();
+                    List<EmpMasterModel> _data = starOfTheMonth.GetLastThreeStarOftheMonthEmpDetails();
+                    if (_data == null)
+                    {
+                        HttpContext.Session.Add("SOM_Month_Count", "0");
+                    }
+                    else
+                    {
+                        HttpContext.Session.Add("SOM_Month_Count", _data.Count);
+                    }
+
+                    for (int i = 0; i < _data.Count; i++)
+                    {
+                        HttpContext.Session.Add("SOM_Month_" + i, _data[i].EMPMonth);
+                        HttpContext.Session.Add("SOM_Image_" + i, _data[i].ImagePath);
+                    }
+
+
                     return Json(new { success = true, message = _repoResponse.message });
                 }
                 else

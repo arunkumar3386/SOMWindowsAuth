@@ -152,7 +152,7 @@ namespace StarOfTheMonth.Repo
 
                         objSOMEntities.StarOfTheMonths.Add(dbModel);
                         objSOMEntities.SaveChanges();
-                        baseModel = new RepositoryResponse { success = true, message = "Star of Month Details Added Successfully", Data = "" };
+                        baseModel = new RepositoryResponse { success = true, message = "Star of Month Declared Successfully", Data = "" };
                     }
                     else
                     {
@@ -169,7 +169,7 @@ namespace StarOfTheMonth.Repo
                         dbModel.ModifiedBy = int.Parse(loggedInuserID);
                         //dbModel.ModifiedDate = DateTime.UtcNow;
                         objSOMEntities.SaveChanges();
-                        baseModel = new RepositoryResponse { success = true, message = "Star of Month Details updated Successfully", Data = "" };
+                        baseModel = new RepositoryResponse { success = true, message = "Star of Month Declared updated Successfully", Data = "" };
                     }
 
                     if (dbNomModel != null)
@@ -197,11 +197,12 @@ namespace StarOfTheMonth.Repo
                     _nominationRepo.AddEntryIntoAuditLog(objAuditLog);
                 }
 
+                
                 //if (string.IsNullOrEmpty(IPValue) && IPValue == "true")
                 //{
                 //    AddOrEditStarOfMonth_IntranetPortal(model, loggedInuserID);
                 //}
-                
+
 
 
             }

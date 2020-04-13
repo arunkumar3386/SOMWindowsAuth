@@ -25,6 +25,12 @@
                             Nomination List
                         </a>
                     </li>
+                    <li class="nav-item" id="liAddNomination" style="color:White; display:none;">
+                        <a href="@Url.Action("Nomination", "Nomination")" class="nav-link text-uppercase font-weight-bold">
+                            <span class="fa fa-wpforms"></span>
+                            Create Nomination
+                        </a>
+                    </li>
                     <li class="nav-item" id="liNominationPendinglst" style="color:White; display:none;">
                         <a href="@Url.Action("PendingNomination", "Nomination")" class="nav-link text-uppercase font-weight-bold">
                             <span class="fas fa-pause-circle"></span>
@@ -37,7 +43,7 @@
                 Approved List
             </a>
         </li>*@
-                    <li class="nav-item" id="liViewEvaluationlst" style="color:White; display:none;"">
+                    <li class="nav-item" id="liViewEvaluationlst" style="color:White; display:none;" ">
                         <a href="@Url.Action("Evaluationlst", "Evaluation")" class="nav-link text-uppercase font-weight-bold">
                             <span class="fas fa-list"></span>
                             Evaluation List
@@ -49,12 +55,7 @@
                             Pending Evaluation List
                         </a>
                     </li>
-                    <li class="nav-item" id="liAddNomination" style="color:White; display:none;">
-                        <a href="@Url.Action("Nomination", "Nomination")" class="nav-link text-uppercase font-weight-bold">
-                            <span class="fa fa-wpforms"></span>
-                            Create Nomination
-                        </a>
-                    </li>
+
                     @*<li class="nav-item" id="liPanelMembers" style="color:White; display:none;">
             <a href="@Url.Action("Index", "PanelMembers")" class="nav-link text-uppercase font-weight-bold">
                 <span class="fas fa-list-ol"></span>

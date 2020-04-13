@@ -203,7 +203,7 @@
                                                     <th>
                                                         <span>
                                                             <b> @item.FileName</b>
-                                                            <a href="Nomination/DownloadFile?nomID=@item.NominationID&fname=@item.FileName" target="_blank">
+                                                            <a href="/Nomination/DownloadFile?nomID=@item.NominationID&fname=@item.FileName" target="_blank">
                                                                 <i class="fas fa-download" style="padding-left:10px; cursor:pointer;color:green;" data-toggle="tooltip" data-placement="bottom" title="Download"></i>
                                                             </a>
                                                         </span>
@@ -415,7 +415,7 @@
             console.log(comments);
             spinner_On();
             hideSuccessErrorDiv();
-            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+            if (status == "Employee_Assign_DH" && (UserGrade == "1002" || UserGrade == "1008")) {
                 if (auditLogComments != "") {
                     NominationFormDH($("#btnReject").data('url'));
                     spinner_Off();
@@ -454,7 +454,7 @@
             var auditLogComments = $("#AuditLogComments").val();
             spinner_On();
             hideSuccessErrorDiv();
-            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+            if (status == "Employee_Assign_DH" && (UserGrade == "1002" || UserGrade == "1008")) {
                 if (auditLogComments != "") {
                     NominationFormDH($("#btnReAssign").data('url'));
                     spinner_Off();
@@ -475,7 +475,7 @@
             var comments = $("#CommentsByDH").val();
             spinner_On();
             hideSuccessErrorDiv();
-            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+            if (status == "Employee_Assign_DH" && (UserGrade == "1002" || UserGrade == "1008" )) {
                 if (comments == "") {
                     alertify.alert("HoD Comments required");
                     spinner_Off();
@@ -601,109 +601,6 @@
         function reDirectToGridPage() {
             window.location.href = '/Nomination/Index';
         }
-
-        function hideEnableUIControls() {
-            var status = $("#Status").val();
-            $(".TQCHeadSection").hide();
-
-            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
-            console.log(UserGrade);
-            console.log(status);
-
-            if (UserGrade == "1001") { //Nomination Section
-                $(".DHSection").hide();
-                $("#btnSubmit").val("Submit to DH");
-                $("#btnApprove").hide();
-            }
-            else if (UserGrade == "1002") { // DH Section
-                $("#btnCancel").show();
-                $('.NomSection').attr('readonly', 'readonly');
-                $('.NomSection').addClass('input-disabled');
-                $("#btnSubmit").hide();
-                $("#btnApprove").show();
-                $("#btnReAssign").show();
-                $("#btnReject").show();
-                $("#fileInput").hide();
-            }
-            else if (UserGrade == "1004") {
-                $('.NomSection').attr('readonly', 'readonly');
-                $('.NomSection').addClass('input-disabled');
-                $("#btnCancel").show();
-                $("#btnSave").hide();
-                $("#btnSubmit").hide();
-                $("#btnApprove").hide();
-                $("#btnReAssign").hide();
-                $("#btnReject").hide();
-                $(".TQCHeadSection").show();
-                $("#CommentsByDH").attr('readonly', 'readonly');
-                $("#fileInput").hide();
-            }
-
-            if (status == "Employee_Assign_DH" && UserGrade != "1002") {
-
-                $('.NomSection').attr('readonly', 'readonly');
-                $('.NomSection').addClass('input-disabled');
-                $("#btnCancel").hide();
-                $("#btnSave").hide();
-                $("#btnSubmit").hide();
-                $("#btnApprove").hide();
-                $("#btnReAssign").hide();
-                $("#btnReject").hide();
-                $("#fileInput").hide();
-            }
-
-            if (status != "Employee_Save")
-            {
-
-            }
-            else if (status != "DH_Assign_EmployeeClarification")
-            {
-
-            }
-            else if (status != "AdminReopen") {
-
-            }
-            else {
-                showControls();
-            }
-            if (status == "Employee_Save") {
-                showControls();
-            }
-
-            if (status == "DH_Assign_TQC") {
-                showControls();
-            }
-            if (status == "Evaluators_Assign_TQC") {
-                showControls();
-            }
-            if (status == "DH_Reject") {
-                showControls();
-            }
-
-            //To check Logged in user same as Rpt person
-
-            var ReportingPersonID = $("#ReportingPersonID").val();
-            var loggedInUserID = '@HttpContext.Current.Session["UserID"].ToString()';
-            if (status == "Employee_Assign_DH" && ReportingPersonID != loggedInUserID) {
-                $('.NomSection').attr('readonly', 'readonly');
-                $('.NomSection').addClass('input-disabled');
-                $("#btnCancel").hide();
-                $("#btnSave").hide();
-                $("#btnSubmit").hide();
-                $("#btnApprove").hide();
-                $("#btnReAssign").hide();
-                $("#btnReject").hide();
-                $("#fileInput").hide();
-            }
-
-            var nomCreatedID = $("#EmployeeNumber").val();
-            if (UserGrade == "1001" && loggedInUserID != nomCreatedID) {
-                showControls();
-            }
-
-
-        }
-
         function controlNominationPage() {
             spinner_On();
             var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
@@ -736,40 +633,53 @@
                 }
 
             }
-            //else if (UserGrade != "1002") {
-            //    console.log("loop2");
-            //    justViewPage();
-            //}
-            //else {
-                if (UserGrade == "1001" && loggedInUserID == nomCreatedID && status == "Employee_Save") {
-                    console.log("loop3");
-                    NomAllowtoAddComments();
-                }
-                else if (UserGrade == "1001" && loggedInUserID != nomCreatedID && status == "Employee_Save") {
-                    console.log("loop4");
-                    justViewPage();
-                }
-                else if (UserGrade == "1001" && loggedInUserID != nomCreatedID && status != "Employee_Save") {
-                    console.log("loop5");
-                    justViewPage();
-                }
-                else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_DH") {
-                    console.log("loop6");
-                    DHAllowtoAddComments();
-                }
-                else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_DH") {
-                    console.log("loop6.1");
-                    DHAllowtoAddComments();
-                }
-                else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status == "Employee_Assign_DH") {
-                    console.log("loop7");
-                    justViewPage();
-                }
-                else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status != "Employee_Assign_DH") {
-                    console.log("loop8");
-                    justViewPage();
-                }
-            //}
+
+            if (UserGrade == "1006" && loggedInUserID == nomCreatedID && status == "DH_Assign_EmployeeClarification") {
+                console.log("loop3.1.0");
+                NomAllowtoAddComments();
+            }
+            
+            if (UserGrade == "1001" && loggedInUserID == nomCreatedID && status == "Employee_Save") {
+                console.log("loop3");
+                NomAllowtoAddComments();
+            }
+            else if (UserGrade == "1006" && loggedInUserID == nomCreatedID && status == "Employee_Save") {
+                console.log("loop3.1");
+                NomAllowtoAddComments();
+            }
+            else if (UserGrade == "1001" && loggedInUserID != nomCreatedID && status == "Employee_Save") {
+                console.log("loop4");
+                justViewPage();
+            }
+            else if (UserGrade == "1001" && loggedInUserID != nomCreatedID && status != "Employee_Save") {
+                console.log("loop5");
+                justViewPage();
+            }
+            else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_DH") {
+                console.log("loop6");
+                DHAllowtoAddComments();
+            }
+            else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_DH") {
+                console.log("loop6.1");
+                DHAllowtoAddComments();
+            }
+            else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status == "Employee_Assign_DH") {
+                console.log("loop7");
+                justViewPage();
+            }
+            else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status != "Employee_Assign_DH") {
+                console.log("loop8");
+                justViewPage();
+            }
+            else if (UserGrade == "1008" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_DH") {
+                console.log("loop8.1");
+                DHAllowtoAddComments();
+            }
+            else if (UserGrade == "1008" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_DH") {
+                console.log("loop8.2");
+                DHAllowtoAddComments();
+            }
+            
 
             var value = $("#NominationMessage").val();
 

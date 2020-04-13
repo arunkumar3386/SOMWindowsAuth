@@ -133,8 +133,8 @@
     function showHideSubMenus() {
      var userName = ""; var menuList = "";
      userName = '@HttpContext.Current.Session["UserName"].ToString()';
-     menuList =  '@HttpContext.Current.Session["pageAccessList"].ToString()';
-
+        menuList = '@HttpContext.Current.Session["pageAccessList"].ToString()';
+        console.log(menuList);
         if (menuList != '') {
             var array = menuList.split(",");
             for (i = 0; i < array.length; i++) {

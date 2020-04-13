@@ -53,7 +53,7 @@ namespace StarMonthAuth.Controllers
                 }
 
                 //loggedInuser = "Sanjay"; //Nomination User -- DH --RThangaraj
-                loggedInuser = "muthu"; //Nomination User DH -- RThangaraj
+                //loggedInuser = "muthu"; //Nomination User DH -- RThangaraj
                 //loggedInuser = "kamudhan";//Nomination User 
                 //loggedInuser = "r.thangaraj"; //DH user
                 //loggedInuser = "r.thangaraj"; //DH user
@@ -62,7 +62,10 @@ namespace StarMonthAuth.Controllers
                 //loggedInuser = "S.Karthik"; // Evaluation user
 
                 //loggedInuser = "Jerome"; //TQC Head
-                //loggedInuser = "KS.Suseel"; //Admin
+                loggedInuser = "KS.Suseel"; //Admin
+
+                //loggedInuser = "d.kalpanadevi";//Nomination User
+                //loggedInuser = "N.Vasudevan";//DH
 
                 ILoginRepo loginRepo = new LoginRepo();
                 RepositoryResponse model = loginRepo.GetLoginUserDetails(loggedInuser);

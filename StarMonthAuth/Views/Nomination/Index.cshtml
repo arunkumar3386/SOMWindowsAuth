@@ -243,7 +243,7 @@
             var userGrade = '@HttpContext.Current.Session["UserGrade"].ToString()';
             var SOMRole = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
             var Dept = '@HttpContext.Current.Session["UserDepartment"].ToString()';
-            //console.log(SOMRole);
+            console.log(SOMRole);
             //if (Dept == "1002") {
             //    $('#Nom_DeptFilter').attr('disabled', 'disabled');
             //    $('#Nom_DeptFilter').addClass('input-disabled');
@@ -261,6 +261,7 @@
                 $(".TQCSection").hide();
                 $(".nonTQCSection").show();
             }
+
             if (SOMRole == "1001") {
                 $("#dvFilterSection").hide();
             }
@@ -577,6 +578,8 @@
            //alertify.alert(id);
             $("#btnShowEvaluator").trigger("click");
             $("#ID").val(id);
+            $("#EvaluatorName").val("");
+            $("#EvaluatorNumber").val("");
         }
 
         function Clickfn(id) {

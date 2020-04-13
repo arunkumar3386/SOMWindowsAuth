@@ -18,6 +18,15 @@ namespace StarOfTheMonth.Models
 
         [Description("Admin")]
         Admin = 1005,
+
+        [Description("AdminNomination")]
+        AdminNomination = 1006,
+
+        [Description("AdminEvaluation")]
+        AdminEvaluation = 1007,
+
+        [Description("AdminDH")]
+        AdminDH = 1008,
     }
 
     public enum NominationStatus

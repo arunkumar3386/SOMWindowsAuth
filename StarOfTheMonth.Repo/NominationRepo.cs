@@ -408,7 +408,9 @@ namespace StarOfTheMonth.Repo
 
                     if (_empSomRole == (int)EmployeeRole.Admin)
                     {
-                        lstNomination = lstNomination.Where(r => r.Status != (int)NominationStatus.Employee_Save).ToList();
+                        //var _lstNomination = lstNomination.Where(r => r.EmployeeNumber == loggedInUserID).ToList();
+                       
+                        //lstNomination = lstNomination.Where(r => r.Status != (int)NominationStatus.Employee_Save && r.EmployeeNumber == loggedInUserID).ToList();
                     }
                     else if (_empSomRole == (int)EmployeeRole.TQCHead)
                     {
@@ -763,6 +765,26 @@ namespace StarOfTheMonth.Repo
                     item.IsNewAlert = false;
                     item.ModifiedBy = auditLog.CreatedBy;
                     objSOMEntities.SaveChanges();
+                }
+            }
+            if (auditLog.CurrentStatus == NominationStatus.TQC_Declare_SOM)
+            {
+                using (objSOMEntities = new SOMEntities())
+                {
+                    var auditLoglst = objSOMEntities.AuditLogs.Where(r => r.CurrentStatus == (int)NominationStatus.Evaluators_Assign_TQC).ToList();
+                    foreach (var item in auditLoglst)
+                    {
+                        item.IsNewAlert = false;
+                        item.ModifiedBy = auditLog.CreatedBy;
+                        objSOMEntities.SaveChanges();
+                    }
+                    var _auditLoglst = objSOMEntities.AuditLogs.Where(r => r.CurrentStatus == (int)NominationStatus.TQC_Declare_SOM).ToList();
+                    foreach (var item in _auditLoglst)
+                    {
+                        item.IsNewAlert = false;
+                        item.ModifiedBy = auditLog.CreatedBy;
+                        objSOMEntities.SaveChanges();
+                    }
                 }
             }
             //long rptPersonID = GetReportingIDByEmpID(auditLog.EmployeeNumber);

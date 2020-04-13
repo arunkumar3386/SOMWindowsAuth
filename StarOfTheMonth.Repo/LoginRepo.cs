@@ -227,7 +227,28 @@ namespace StarOfTheMonth.Repo
 
                 if (empAdmin.UserRole == 102)
                 {
-                    return (int)EmployeeRole.Admin;
+                    var _emp = objSOMEntities.Configurations.Where(r => r.Type == "NominationUserGrades" && r.IsActive == true).FirstOrDefault();
+                    var _eva = objSOMEntities.Configurations.Where(r => r.Type == "EvaluationUserGrades" && r.IsActive == true).FirstOrDefault();
+
+                    int _empNum = int.Parse(loggedInUserID);
+                    var _reptPersonDH = objIPEntities.EmpMasters.Where(r => r.ReportingPersonId == _empNum).FirstOrDefault();
+
+                    if (!string.IsNullOrEmpty(userGrade) && _emp.Value.ToLower().Contains(userGrade.ToLower()))
+                    {
+                        return (int)EmployeeRole.AdminNomination;
+                    }
+                    else if (!string.IsNullOrEmpty(userGrade) && _eva.Value.ToLower().Contains(userGrade.ToLower()))
+                    {
+                        return (int)EmployeeRole.AdminEvaluation;
+                    }
+                    else if (_reptPersonDH != null)
+                    {
+                        return (int)EmployeeRole.AdminDH;
+                    }
+                    else
+                    {
+                        return (int)EmployeeRole.Admin;
+                    }
                 }
 
                 var tqcHead = objSOMEntities.TQCHeads.Where(r => r.EmployeeNumber == loggedInUserID
@@ -240,14 +261,14 @@ namespace StarOfTheMonth.Repo
 
                 var emp = objSOMEntities.Configurations.Where(r => r.Type == "NominationUserGrades" && r.IsActive == true).FirstOrDefault();
 
-                if (emp.Value.Contains(userGrade))
+                if (!string.IsNullOrEmpty(userGrade) && emp.Value.ToLower().Contains(userGrade.ToLower()))
                 {
                     return (int)EmployeeRole.Nomination;
                 }
 
                 var eva = objSOMEntities.Configurations.Where(r => r.Type == "EvaluationUserGrades" && r.IsActive == true).FirstOrDefault();
 
-                if (eva.Value.Contains(userGrade))
+                if (!string.IsNullOrEmpty(userGrade) && eva.Value.ToLower().Contains(userGrade.ToLower()))
                 {
                     return (int)EmployeeRole.Evaluation;
                 }
@@ -266,7 +287,8 @@ namespace StarOfTheMonth.Repo
             {
                 string OrgGrade = string.Empty;
                 var emp = objIPEntities.EmpMasters.Where(r => r.UserName == loggedInuser).FirstOrDefault();
-                var reptPerson = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == emp.EmployeeNumber).FirstOrDefault();
+                int _empNum = int.Parse(emp.EmployeeNumber);
+                var reptPerson = objIPEntities.EmpMasters.Where(r => r.ReportingPersonId == _empNum).FirstOrDefault();
                 if (reptPerson != null)
                 {
                     OrgGrade = reptPerson.Grade;
@@ -287,14 +309,18 @@ namespace StarOfTheMonth.Repo
                 if (emp.UserRole == 102)
                 {
                     objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "AdminUserRole" && r.IsActive == true).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(emp.Grade) && NomUsrRole.Contains(emp.Grade.ToLower()))
+                    {
+                      var  _objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "NominationUserRole-101" && r.IsActive == true).FirstOrDefault();
+                        if (_objConfig != null)
+                        {
+                            objConfig.Value = "liAddNomination," + objConfig.Value;
+                        }
+                    }
                 }
                 else if (TqCUser != null)
                 {
                     objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "TQCHeadUserRole-104" && r.IsActive == true).FirstOrDefault();
-                }
-                else if (NomUsrRole.Contains(emp.Grade.ToLower()))
-                {
-                    objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "NominationUserRole-101" && r.IsActive == true).FirstOrDefault();
                 }
                 else if (grade == "DH" && !string.IsNullOrEmpty(OrgGrade.ToLower()) && EvaUsrRole.Contains(OrgGrade.ToLower()))
                 {
@@ -304,7 +330,11 @@ namespace StarOfTheMonth.Repo
                 {
                     objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "DepartmentHeadUserRole-102" && r.IsActive == true).FirstOrDefault();
                 }
-                else if (EvaUsrRole.Contains(emp.Grade.ToLower()))
+                else if (!string.IsNullOrEmpty(emp.Grade) && NomUsrRole.Contains(emp.Grade.ToLower()))
+                {
+                    objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "NominationUserRole-101" && r.IsActive == true).FirstOrDefault();
+                }
+                else if (!string.IsNullOrEmpty(emp.Grade) && EvaUsrRole.Contains(emp.Grade.ToLower()))
                 {
                     objConfig = objSOMEntities.Configurations.Where(r => r.Module == "USERRole" && r.Type == "EvaluationUserRole-103" && r.IsActive == true).FirstOrDefault();
                 }
@@ -331,7 +361,6 @@ namespace StarOfTheMonth.Repo
                 switch (SOMUserGrade)
                 {
                     case (int)EmployeeRole.Nomination: //Nomination
-
                         var Codes = new[] { (int)NominationStatus.DH_Reject,
                                         (int)NominationStatus.DH_Assign_EmployeeClarification,
                                         (int)NominationStatus.AdminReopen,
@@ -340,15 +369,22 @@ namespace StarOfTheMonth.Repo
                         var nomUsrCount = objSOMEntities.AuditLogs.Where(r => r.EmployeeNumber == loggedInUserID 
                                             && r.IsNewAlert == true 
                                             && Codes.Contains((int)r.CurrentStatus)).ToList();
-
-                        //var nomUsrCount = objSOMEntities.AuditLogs.Where(r => r.EmployeeNumber == loggedInUserID && r.IsNewAlert == true
-                        //            && (r.CurrentStatus == (int)NominationStatus.DH_Reject
-                        //            || r.CurrentStatus == (int)NominationStatus.DH_Assign_EmployeeClarification
-                        //            || r.CurrentStatus == (int)NominationStatus.AdminReopen 
-                        //            || r.CurrentStatus == (int)NominationStatus.Evaluator_Reject)
-                        //            ).ToList();
                         count = nomUsrCount.Count;
                         break;
+
+                    case (int)EmployeeRole.AdminNomination: //Nomination
+                        var CodesAN = new[] { (int)NominationStatus.DH_Reject,
+                                        (int)NominationStatus.DH_Assign_EmployeeClarification,
+                                        (int)NominationStatus.AdminReopen,
+                                        (int)NominationStatus.Evaluator_Reject};
+
+                        var nomUsrCountAN = objSOMEntities.AuditLogs.Where(r => r.EmployeeNumber == loggedInUserID
+                                            && r.IsNewAlert == true
+                                            && CodesAN.Contains((int)r.CurrentStatus)).ToList();
+                
+                        count = nomUsrCountAN.Count;
+                        break;
+
                     case (int)EmployeeRole.DepartmentHead: //DepartmentHead
                         var Codes1 = new[] { (int)NominationStatus.Employee_Assign_DH,
                                         (int)NominationStatus.Employee_ReAssign_DH};
@@ -356,28 +392,39 @@ namespace StarOfTheMonth.Repo
                         var DHUsrCount = objSOMEntities.AuditLogs.Where(r => r.DepartmentHeadID == loggedInUserID
                                         && r.IsNewAlert == true
                                         && Codes1.Contains((int)r.CurrentStatus)).ToList();
-
-                        //var DHUsrCount = objSOMEntities.AuditLogs.Where(r => r.DepartmentHeadID == loggedInUserID && r.IsNewAlert == true
-                        //            && (r.CurrentStatus == (int)NominationStatus.Employee_Assign_DH
-                        //            || r.CurrentStatus == (int)NominationStatus.Employee_ReAssign_DH)).ToList();
                         count = DHUsrCount.Count;
                         break;
+
+                    case (int)EmployeeRole.AdminDH: //DepartmentHead Admin
+                        var _Codes1 = new[] { (int)NominationStatus.Employee_Assign_DH,
+                                        (int)NominationStatus.Employee_ReAssign_DH};
+
+                        var _DHUsrCount = objSOMEntities.AuditLogs.Where(r => r.DepartmentHeadID == loggedInUserID
+                                        && r.IsNewAlert == true
+                                        && _Codes1.Contains((int)r.CurrentStatus)).ToList();
+                        count = _DHUsrCount.Count;
+                        break;
+
                     case (int)EmployeeRole.TQCHead: //TQCHead
                         var Codes2 = new[] { (int)NominationStatus.DH_Assign_TQC,
                                         (int)NominationStatus.Evaluators_Assign_TQC};
 
-                        var tqcUsrCount = objSOMEntities.AuditLogs.Where(r => r.TQCHeadID == loggedInUserID
-                                     && r.IsNewAlert == true
+                        var tqcUsrCount = objSOMEntities.AuditLogs.Where(r => 
+                                      r.IsNewAlert == true
                                      && Codes2.Contains((int)r.CurrentStatus)).ToList();
-
-                        //var tqcUsrCount = objSOMEntities.AuditLogs.Where(r => r.TQCHeadID == loggedInUserID && r.IsNewAlert == true &&
-                        //        (r.CurrentStatus == (int)NominationStatus.DH_Assign_TQC || r.CurrentStatus == (int)NominationStatus.Evaluators_Assign_TQC)).ToList();
                         count = tqcUsrCount.Count;
                         break;
+
                     case (int)EmployeeRole.Evaluation: //Evaluation
                         var eavUsrCount = objSOMEntities.AuditLogs.Where(r => r.EvaluatorID == loggedInUserID && r.IsNewAlert == true &&
                                     (r.CurrentStatus == (int)NominationStatus.TQC_Assign_Evaluator)).ToList();
                         count = eavUsrCount.Count;
+                        break;
+
+                    case (int)EmployeeRole.AdminEvaluation: //Evaluation Admin
+                        var _eavUsrCount = objSOMEntities.AuditLogs.Where(r => r.EvaluatorID == loggedInUserID && r.IsNewAlert == true &&
+                                    (r.CurrentStatus == (int)NominationStatus.TQC_Assign_Evaluator)).ToList();
+                        count = _eavUsrCount.Count;
                         break;
                 }
             }
