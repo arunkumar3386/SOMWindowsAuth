@@ -779,7 +779,7 @@
 ////([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES(12, 2000, N'NominationStatus', N'Nomination Status', 2007, N'Evaluators_To_TQC', N'Evaluators Assign TQC', 1)
 ////GO
 ////INSERT[dbo].[EnumAbbreviation]
-////([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES(13, 2000, N'NominationStatus', N'Nomination Status', 2008, N'DH_Reject', N'DH Reject', 1)
+////([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES(13, 2000, N'NominationStatus', N'Nomination Status', 2008, N'HoD_Reject', N'DH Reject', 1)
 ////GO
 ////INSERT[dbo].[EnumAbbreviation]
 ////([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES(14, 2000, N'NominationStatus', N'Nomination Status', 2009, N'TQC_Reject', N'TQC Reject', 1)
@@ -1050,7 +1050,7 @@
 //INSERT INTO EnumAbbreviation VALUES(2000,'NominationStatus','Nomination Status', 2005, 'TQC_To_Evaluators' ,'TQC Assign Evaluators', 1)
 //INSERT INTO EnumAbbreviation VALUES(2000,'NominationStatus','Nomination Status', 2006, 'Evaluators_Save' ,'Evaluators Save', 1)
 //INSERT INTO EnumAbbreviation VALUES(2000,'NominationStatus','Nomination Status', 2007, 'Evaluators_To_TQC' ,'Evaluators Assign TQC', 1)
-//INSERT INTO EnumAbbreviation VALUES(2000,'NominationStatus','Nomination Status', 2008, 'DH_Reject' ,'DH Reject', 1)
+//INSERT INTO EnumAbbreviation VALUES(2000,'NominationStatus','Nomination Status', 2008, 'HoD_Reject' ,'DH Reject', 1)
 //INSERT INTO EnumAbbreviation VALUES(2000,'NominationStatus','Nomination Status', 2009, 'TQC_Reject' ,'TQC Reject', 1)
 //INSERT INTO EnumAbbreviation VALUES(2000,'NominationStatus','Nomination Status', 2010, 'Evaluator_Reject' ,'Evaluator Reject', 1)
 //INSERT INTO EnumAbbreviation VALUES(2000,'NominationStatus','Nomination Status', 2011, 'Completed' ,'Completed', 1)

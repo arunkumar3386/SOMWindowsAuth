@@ -25,8 +25,14 @@ namespace StarOfTheMonth.Models
         [Description("AdminEvaluation")]
         AdminEvaluation = 1007,
 
-        [Description("AdminDH")]
-        AdminDH = 1008,
+        [Description("AdminHoD")]
+        AdminHoD = 1008,
+
+        [Description("AdminNominationHoD")]
+        AdminNominationHoD = 1009,
+
+        [Description("AdminEvaluationHoD")]
+        AdminEvaluationHoD = 10010,
     }
 
     public enum NominationStatus
@@ -35,13 +41,13 @@ namespace StarOfTheMonth.Models
         Employee_Save = 2001,
 
         [Description("Employee Assign HoD")]
-        Employee_Assign_DH = 2002,
+        Employee_Assign_HOD = 2002,
 
-        [Description("DH Assign EmployeeClarification")]
-        DH_Assign_EmployeeClarification = 2003,
+        [Description("HoD Assign EmployeeClarification")]
+        HoD_Assign_EmployeeClarification = 2003,
 
-        [Description("DH Assign TQC")]
-        DH_Assign_TQC = 2004,
+        [Description("HoD Assign TQC")]
+        HoD_Assign_TQC = 2004,
 
         [Description("TQC Assign Evaluator")]
         TQC_Assign_Evaluator = 2005,
@@ -52,8 +58,8 @@ namespace StarOfTheMonth.Models
         [Description("Evaluators Assign TQC")]
         Evaluators_Assign_TQC = 2007,
 
-        [Description("DH Reject")]
-        DH_Reject = 2008,
+        [Description("HoD Reject")]
+        HoD_Reject = 2008,
 
         [Description("TQC Reject")]
         TQC_Reject = 2009,
@@ -67,8 +73,8 @@ namespace StarOfTheMonth.Models
         [Description("AdminReopen")]
         AdminReopen = 2012,
 
-        [Description("Employee ReAssign DH")]
-        Employee_ReAssign_DH = 2013,
+        [Description("Employee ReAssign HoD")]
+        Employee_ReAssign_HoD = 2013,
 
         [Description("TQC Declare SOM")]
         TQC_Declare_SOM = 2014,

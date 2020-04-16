@@ -415,7 +415,7 @@
             console.log(comments);
             spinner_On();
             hideSuccessErrorDiv();
-            if (status == "Employee_Assign_DH" && (UserGrade == "1002" || UserGrade == "1008")) {
+            if (status == "Employee_Assign_HOD" && (UserGrade == "1002" || UserGrade == "1008")) {
                 if (auditLogComments != "") {
                     NominationFormDH($("#btnReject").data('url'));
                     spinner_Off();
@@ -454,7 +454,7 @@
             var auditLogComments = $("#AuditLogComments").val();
             spinner_On();
             hideSuccessErrorDiv();
-            if (status == "Employee_Assign_DH" && (UserGrade == "1002" || UserGrade == "1008")) {
+            if (status == "Employee_Assign_HOD" && (UserGrade == "1002" || UserGrade == "1008")) {
                 if (auditLogComments != "") {
                     NominationFormDH($("#btnReAssign").data('url'));
                     spinner_Off();
@@ -475,7 +475,7 @@
             var comments = $("#CommentsByDH").val();
             spinner_On();
             hideSuccessErrorDiv();
-            if (status == "Employee_Assign_DH" && (UserGrade == "1002" || UserGrade == "1008" )) {
+            if (status == "Employee_Assign_HOD" && (UserGrade == "1002" || UserGrade == "1008" )) {
                 if (comments == "") {
                     alertify.alert("HoD Comments required");
                     spinner_Off();
@@ -515,7 +515,7 @@
             var comments = $("#CommentsByDH").val();
             spinner_On();
             hideSuccessErrorDiv();
-            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+            if (status == "Employee_Assign_HOD" && UserGrade == "1002") {
                 if (comments == "") {
                     alertify.alert("HoD Comments required");
                     spinner_Off();
@@ -534,7 +534,7 @@
 
             spinner_On();
             hideSuccessErrorDiv();
-            if (status == "Employee_Assign_DH" && UserGrade == "1002") {
+            if (status == "Employee_Assign_HOD" && UserGrade == "1002") {
                 if (comments == "") {
                     alertify.alert("HoD Comments required");
                     spinner_Off();
@@ -617,7 +617,7 @@
                     console.log("loop00");
                     NomAllowaccessPage();
                 }
-                else if (status == "DH_Assign_EmployeeClarification") {
+                else if (status == "HoD_Assign_EmployeeClarification") {
                     console.log("loop0");
                     if (UserGrade == "1001") {
                         NomAllowaccessPage();
@@ -634,7 +634,7 @@
 
             }
 
-            if (UserGrade == "1006" && loggedInUserID == nomCreatedID && status == "DH_Assign_EmployeeClarification") {
+            if (UserGrade == "1006" && loggedInUserID == nomCreatedID && status == "HoD_Assign_EmployeeClarification") {
                 console.log("loop3.1.0");
                 NomAllowtoAddComments();
             }
@@ -655,28 +655,45 @@
                 console.log("loop5");
                 justViewPage();
             }
-            else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_DH") {
+            else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_HOD") {
                 console.log("loop6");
                 DHAllowtoAddComments();
             }
-            else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_DH") {
+            else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_HoD") {
                 console.log("loop6.1");
                 DHAllowtoAddComments();
             }
-            else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status == "Employee_Assign_DH") {
+            else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status == "Employee_Assign_HOD") {
                 console.log("loop7");
                 justViewPage();
             }
-            else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status != "Employee_Assign_DH") {
+            else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status != "Employee_Assign_HOD") {
                 console.log("loop8");
                 justViewPage();
             }
-            else if (UserGrade == "1008" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_DH") {
+            else if (UserGrade == "1008" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_HOD") {
                 console.log("loop8.1");
                 DHAllowtoAddComments();
             }
-            else if (UserGrade == "1008" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_DH") {
+            else if (UserGrade == "1008" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_HoD") {
                 console.log("loop8.2");
+                DHAllowtoAddComments();
+            }
+            else if (UserGrade == "10010" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_HOD") {
+                console.log("loop8.3");
+                DHAllowtoAddComments();
+            }
+            else if (UserGrade == "1009" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_HOD") {
+                console.log("loop8.3");
+                DHAllowtoAddComments();
+            }
+
+            else if (UserGrade == "1009" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_HoD") {
+                console.log("loop8.4");
+                DHAllowtoAddComments();
+            }
+            else if (UserGrade == "10010" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_HoD") {
+                console.log("loop8.5");
                 DHAllowtoAddComments();
             }
             
@@ -697,6 +714,11 @@
         }
 
         $("#SavingsIds").change(function () {
+            enableDisableMultiselectDropDown();
+            //alert($("#SavingsIds").val());
+        });
+
+        function enableDisableMultiselectDropDown() {
             var valu = $("#SavingsIds").val();
             if (valu == "1,2,3") {
                 $("#Cost").removeAttr('readonly', 'readonly');
@@ -778,8 +800,7 @@
                 $("#Paper").attr('readonly', 'readonly');
                 $("#Paper").addClass('readonly', 'readonly');
             }
-            //alert($("#SavingsIds").val());
-        });
+        }
 
         function justViewPage() {
           
@@ -924,6 +945,8 @@
                 $('#fileInput').val('');
 
             });
+
+            enableDisableMultiselectDropDown();
         });
 
         $('.listbox').multiselect({

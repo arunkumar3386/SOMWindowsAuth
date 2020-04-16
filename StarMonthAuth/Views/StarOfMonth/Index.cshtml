@@ -182,7 +182,7 @@
             $('#EmpNumber').val("");
             $('#EmpName').val("");
             $('#NominationID').hide();
-            $("#NominationIDs").val("");
+            $("#NominationIDs").val("-1");
             $("#EmployeeDetails").val("");
             $("#SOMComments").val("");
             //spinner_Off();
@@ -442,6 +442,11 @@
        
 
         function starPopupSave() {
+            var nominationID = $("#NominationIDs").val();
+            if (nominationID == -1) {
+                alertify.alert("SOM Alert", "Please Select NominationID", function () { });
+                return;
+            }
             $('.spinner').css('display', 'block');
             hideSuccessErrorDiv();
             $.ajax(

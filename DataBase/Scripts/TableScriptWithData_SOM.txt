@@ -470,7 +470,7 @@ INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescript
 GO
 INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (12, 2000, N'NominationStatus', N'Nomination Status', 2007, N'Evaluators_To_TQC', N'Evaluators Assign TQC', 1)
 GO
-INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (13, 2000, N'NominationStatus', N'Nomination Status', 2008, N'DH_Reject', N'DH Reject', 1)
+INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (13, 2000, N'NominationStatus', N'Nomination Status', 2008, N'HoD_Reject', N'DH Reject', 1)
 GO
 INSERT [dbo].[EnumAbbreviation] ([ID], [ParentID], [ParentName], [ParentDescription], [ChildID], [ChildName], [ChildDescription], [IsActive]) VALUES (14, 2000, N'NominationStatus', N'Nomination Status', 2009, N'TQC_Reject', N'TQC Reject', 1)
 GO

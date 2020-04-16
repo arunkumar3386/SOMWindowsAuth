@@ -100,6 +100,9 @@ namespace StarOfTheMonth.Models
 
         public string AuditLogComments { get; set; }
 
+        public string currentHoldingPerson { get; set; }
+        public string StatusText { get; set; }
+
     }
     
     public class fileProperty
