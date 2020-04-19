@@ -423,9 +423,14 @@ namespace StarOfTheMonth.Repo
                                && a.Status == (int)NominationStatus.Evaluators_Assign_TQC
                                select new { a, b }).ToList();
 
+                    SelectListItem objSelectListItem = new SelectListItem();
+                    objSelectListItem.Text = "--Select--";
+                    objSelectListItem.Value = "-1";
+                    objSelectListItem.Selected = true;
+                    lstSelect.Add(objSelectListItem);
                     foreach (var item in det)
                     {
-                        SelectListItem objSelectListItem = new SelectListItem();
+                        objSelectListItem = new SelectListItem();
                         string _nomID = item.a.NominationId;
                         objSelectListItem.Text = _nomID;//its displayed in UI
                         objSelectListItem.Value = item.b.EmployeeName + " (" + item.b.EmployeeNumber + ")";

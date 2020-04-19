@@ -33,7 +33,7 @@ namespace StarMonthAuth.ActionFilter
 
                 }
 
-                loggedInuser = "Sanjay"; //Nomination User -- DH --RThangaraj
+                //loggedInuser = "Sanjay"; //Nomination User -- DH --RThangaraj
                 //loggedInuser = "muthu"; //Nomination User DH -- RThangaraj
                 //loggedInuser = "kamudhan";//Nomination User 
                 //loggedInuser = "r.thangaraj"; //DH user

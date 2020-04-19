@@ -21,7 +21,7 @@ namespace StarMonthAuth.Controllers
         private RepositoryResponse repoResponse;
         private INotificationRepo notifyRepo;
 
-        public ActionResult Index(string dept = "", string date = "")
+        public ActionResult Index(string dept = "", string fromDate = "", string toDate = "")
         {
             DashboardModel model = new DashboardModel();
             ParticipatedCount partModel = new ParticipatedCount();
@@ -34,66 +34,95 @@ namespace StarMonthAuth.Controllers
             var monthFilter = loginRepo.GetMonthYearFilter();
             var deptFilter = loginRepo.GetDepartmentDetails();
 
-            model.Nom_DateFilterlst = monthFilter;
-            model.Nom_DeptFilterlst = deptFilter;
+            model.From_Nom_DateFilterlst = monthFilter;
+            model.DeptFilterlst = deptFilter;
 
 
             if (dept == "--Select--")
             {
                 dept = "";
             }
-            if (string.IsNullOrEmpty(date))
+            if (string.IsNullOrEmpty(fromDate))
             {
-                date = DateTime.Now.ToString("MMMM yyyy");
-                model.Nom_dateFilter = date;
+                fromDate = DateTime.Now.ToString("MMMM yyyy");
             }
-            else if (!string.IsNullOrEmpty(date))
+            else if (!string.IsNullOrEmpty(fromDate))
             {
-                string[] monthYear = date.Split(' ');
+                string[] monthYear = fromDate.Split(' ');
                 string month = monthYear[0].Substring(0, 3);
                 string year = monthYear[1];
-                date = month + "-" + year;
-            }            
-           
+                fromDate = month + "-" + year;
+            }
+
+            if (string.IsNullOrEmpty(toDate))
+            {
+                toDate = DateTime.Now.ToString("MMMM yyyy");
+            }
+            else if (!string.IsNullOrEmpty(toDate))
+            {
+                string[] monthYear = toDate.Split(' ');
+                string month = monthYear[0].Substring(0, 3);
+                string year = monthYear[1];
+                toDate = month + "-" + year;
+            }
+
             string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
-            if (string.IsNullOrEmpty(dept))
+            if (_empSOMRole == (int)EmployeeRole.TQCHead)
+            {
+               
+            }
+            else if (string.IsNullOrEmpty(dept))
             {
                 dept = System.Web.HttpContext.Current.Session["UserDepartment"].ToString();
-                model.Nom_DeptFilter = dept;
+                model.DeptFilter = dept;
             }
-            repoResponse = nominationRepo.GetReportDetails(_loggedInUserID, dept, date);
+            repoResponse = nominationRepo.GetReportDetails(_loggedInUserID, dept, fromDate, toDate);
             
             if (repoResponse.success)
             {
                 partModel = repoResponse.Data;
                 model.participatedCount = partModel;
             }
+            model.From_Date = DateTime.Now.ToString("MMMM yyyy");
+            model.To_Date = DateTime.Now.ToString("MMMM yyyy");
 
             return View(model);
         }
 
         [HttpPost]
-        public JsonResult LoadDashboardDetailsForFilter(string dept = "", string date = "")
+        public JsonResult LoadDashboardDetailsForFilter(string dept = "", string fromDate = "", string toDate = "")
         {
             repoResponse = new RepositoryResponse();
-            if (dept == "--Select--")
+            if (dept == "--ALL--")
             {
                 dept = "";
             }
-            if (date == "--Select--")
+            if (string.IsNullOrEmpty(fromDate))
             {
-                date = "";
+                fromDate = DateTime.Now.ToString("MMMM yyyy");
             }
-            else if (!string.IsNullOrEmpty(date))
+            else if (!string.IsNullOrEmpty(fromDate))
             {
-                string[] monthYear = date.Split(' ');
+                string[] monthYear = fromDate.Split(' ');
                 string month = monthYear[0].Substring(0, 3);
                 string year = monthYear[1];
-                date = month + "-" + year;
+                fromDate = month + "-" + year;
+            }
+
+            if (string.IsNullOrEmpty(toDate))
+            {
+                toDate = DateTime.Now.ToString("MMMM yyyy");
+            }
+            else if (!string.IsNullOrEmpty(toDate))
+            {
+                string[] monthYear = toDate.Split(' ');
+                string month = monthYear[0].Substring(0, 3);
+                string year = monthYear[1];
+                toDate = month + "-" + year;
             }
             nominationRepo = new NominationRepo();
             string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
-            repoResponse = nominationRepo.GetReportDetails(_loggedInUserID, dept, date);
+            repoResponse = nominationRepo.GetReportDetails(_loggedInUserID, dept, fromDate, toDate);
             if (repoResponse.success)
             {
                 ParticipatedCount partModel = new ParticipatedCount();

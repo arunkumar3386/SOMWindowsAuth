@@ -9,11 +9,11 @@ namespace StarOfTheMonth.Repo
 {
     public interface IEvaluationRepo : IDisposable
     {
-        RepositoryResponse LoadAllEvaluationData(string _loggedInUserID,string dept = "", string date = "");
+        RepositoryResponse LoadAllEvaluationData(string _loggedInUserID,string dept = "", string fromDate = "", string toDate = "");
         RepositoryResponse AddorUpdateEvaluationData(EvaluationModel model, string _loggedInUserID, bool isSubmit);
         RepositoryResponse LoadEvaluationDataByID(long ID);
         RepositoryResponse LoadEmpNominationDetails(long ID, string nominationID, string empNum);
-        RepositoryResponse LoadAllEvaluationData_Alltime(string _loggedInUserID, string dept = "", string date = "");
+        RepositoryResponse LoadAllEvaluationData_Alltime(string _loggedInUserID, string dept = "", string fromDate = "", string toDate = "");
     }
 
     public class EvaluationRepo : IEvaluationRepo
@@ -26,19 +26,29 @@ namespace StarOfTheMonth.Repo
         IStarOfMonthRepo starRepo;
         IConfigurationRepo configRepo;
 
-        public RepositoryResponse LoadAllEvaluationData(string _loggedInUserID,string dept, string date)
+        public RepositoryResponse LoadAllEvaluationData(string _loggedInUserID,string dept, string fromDate = "", string toDate = "")
         {
             baseModel = new RepositoryResponse();
             try
             {
-                string subMonth = string.Empty;
-                string subYear = string.Empty;
+                string F_subMonth = string.Empty;
+                string F_subYear = string.Empty;
 
-                if (!string.IsNullOrEmpty(date))
+                string TO_subMonth = string.Empty;
+                string TO_subYear = string.Empty;
+
+                if (!string.IsNullOrEmpty(toDate))
                 {
-                    string[] sDate = date.Split('-');
-                    subMonth = sDate[0];
-                    subYear = sDate[1];
+                    string[] sDate = toDate.Split('-');
+                    TO_subMonth = sDate[0];
+                    TO_subYear = sDate[1];
+                }
+
+                if (!string.IsNullOrEmpty(fromDate))
+                {
+                    string[] sDate = fromDate.Split('-');
+                    F_subMonth = sDate[0];
+                    F_subYear = sDate[1];
                 }
 
                 List<EvaluationModel> lstEvaluation = new List<EvaluationModel>();
@@ -67,15 +77,6 @@ namespace StarOfTheMonth.Repo
                     int i = 1;
                     foreach (var item in _NomDetails)
                     {
-                        //Evaluation objEvaluation = objSOMEntities.Evaluations.Where(
-                        //                r => r.CreatedBy == _loggedInUserID
-                        //                && r.NominationID.Value == item.nom.ID
-                        //                && r.IsActive == true).FirstOrDefault();
-
-                        //Evaluation objEvaluation = objSOMEntities.Evaluations.Where(
-                        //                r=> r.NominationID == item.nom.NominationId
-                        //                && r.IsActive == true).FirstOrDefault();
-
                         lstEvaluation.Add(ConvertEvaluation_DB2Model(item.em, item.eva, item.nom, i));
                     }
 
@@ -83,9 +84,17 @@ namespace StarOfTheMonth.Repo
                     {
                         lstEvaluation = lstEvaluation.Where(r => r.Department == dept).ToList();
                     }
-                    if (!string.IsNullOrEmpty(subMonth) && !string.IsNullOrEmpty(subYear))
+                    if (!string.IsNullOrEmpty(F_subMonth) && !string.IsNullOrEmpty(F_subYear) && !string.IsNullOrEmpty(TO_subMonth) && !string.IsNullOrEmpty(TO_subYear))
                     {
-                        lstEvaluation = lstEvaluation.Where(r => r.SubmittedMonth == subMonth && r.SubmittedYear == subYear).ToList();
+                        string sDate = "01" + F_subMonth + "" + F_subYear;
+                        string eDate = "30" + TO_subMonth + "" + TO_subYear;
+
+                        DateTime sdt = Assistant.SOMDbToDateTimeForFilter(sDate, true);
+                        DateTime edt = Assistant.SOMDbToDateTimeForFilter(eDate, false);
+
+                        lstEvaluation = lstEvaluation.Where(r => r.IsActive == true
+                                        && (r.CreatedDateForFilterAsDateTime.Date >= sdt.Date
+                                        && r.CreatedDateForFilterAsDateTime.Date <= edt.Date)).ToList();
                     }
 
 
@@ -169,9 +178,16 @@ namespace StarOfTheMonth.Repo
                         if (isSubmit)
                         {
                             configRepo = new ConfigurationRepo();
-                            configRepo.SendEmailUsingSOM_Evaluator_Assign_TQC(db.NominationID, _loggedInUserID);
-
-                            baseModel = new RepositoryResponse { success = true, message = "Evaluations Scroe Details Submitted to TQC Successfully" };
+                            bool result = configRepo.SendEmailUsingSOM_Evaluator_Assign_TQC(db.NominationID, _loggedInUserID);
+                            if (result)
+                            {
+                                baseModel = new RepositoryResponse { success = true, message = "Evaluations Scroe Details Submitted to TQC Successfully and Send Mail to TQC" };
+                            }
+                            else
+                            {
+                                baseModel = new RepositoryResponse { success = true, message = "Evaluations Scroe Details Submitted to TQC Successfully. Unable to Send Mail to TQC" };
+                            }
+                            
                         }
                         else
                         {
@@ -346,6 +362,7 @@ namespace StarOfTheMonth.Repo
                 model.SummaryOfAchievement = c.Idea;
                 model.SubmittedMonth = c.SubmittedMonth;
                 model.SubmittedYear = c.SubmittedYear;
+                model.CreatedDateForFilterAsDateTime = Assistant.SOMDbToDateTimePicker(c.CreatedDate.Substring(0, 8));
             }
             return model;
         }
@@ -399,19 +416,29 @@ namespace StarOfTheMonth.Repo
             return db;
         }
 
-        public RepositoryResponse LoadAllEvaluationData_Alltime(string _loggedInUserID, string dept, string date)
+        public RepositoryResponse LoadAllEvaluationData_Alltime(string _loggedInUserID, string dept, string fromDate = "", string toDate = "")
         {
             baseModel = new RepositoryResponse();
             try
             {
-                string subMonth = string.Empty;
-                string subYear = string.Empty;
+                string F_subMonth = string.Empty;
+                string F_subYear = string.Empty;
 
-                if (!string.IsNullOrEmpty(date))
+                string TO_subMonth = string.Empty;
+                string TO_subYear = string.Empty;
+
+                if (!string.IsNullOrEmpty(toDate))
                 {
-                    string[] sDate = date.Split('-');
-                    subMonth = sDate[0];
-                    subYear = sDate[1];
+                    string[] sDate = toDate.Split('-');
+                    TO_subMonth = sDate[0];
+                    TO_subYear = sDate[1];
+                }
+
+                if (!string.IsNullOrEmpty(fromDate))
+                {
+                    string[] sDate = fromDate.Split('-');
+                    F_subMonth = sDate[0];
+                    F_subYear = sDate[1];
                 }
 
                 List<EvaluationModel> lstEvaluation = new List<EvaluationModel>();
@@ -448,11 +475,18 @@ namespace StarOfTheMonth.Repo
                     {
                         lstEvaluation = lstEvaluation.Where(r => r.Department == dept).ToList();
                     }
-                    if (!string.IsNullOrEmpty(subMonth) && !string.IsNullOrEmpty(subYear))
+                    if (!string.IsNullOrEmpty(F_subMonth) && !string.IsNullOrEmpty(F_subYear) && !string.IsNullOrEmpty(TO_subMonth) && !string.IsNullOrEmpty(TO_subYear))
                     {
-                        lstEvaluation = lstEvaluation.Where(r => r.SubmittedMonth == subMonth && r.SubmittedYear == subYear).ToList();
-                    }
+                        string sDate = "01" + F_subMonth + "" + F_subYear;
+                        string eDate = "30" + TO_subMonth + "" + TO_subYear;
 
+                        DateTime sdt = Assistant.SOMDbToDateTimeForFilter(sDate, true);
+                        DateTime edt = Assistant.SOMDbToDateTimeForFilter(eDate, false);
+
+                        lstEvaluation = lstEvaluation.Where(r => r.IsActive == true
+                                        && (r.CreatedDateForFilterAsDateTime.Date >= sdt.Date
+                                        && r.CreatedDateForFilterAsDateTime.Date <= edt.Date)).ToList();
+                    }
 
                     baseModel = new RepositoryResponse { success = true, message = "Get Evaluation details Successfully", Data = lstEvaluation.OrderByDescending(r => r.TotalScore) };
                 }

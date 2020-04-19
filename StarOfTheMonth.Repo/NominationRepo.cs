@@ -15,7 +15,7 @@ namespace StarOfTheMonth.Repo
 
         RepositoryResponse GetNominationByID(string loggedInUserID, long ID, string fPath);
 
-        RepositoryResponse GetReportDetails(string loggedInUserID, string dept="", string date="");
+        RepositoryResponse GetReportDetails(string loggedInUserID, string dept="", string Fdate="", string Tdate = "");
 
         RepositoryResponse NominationFormDHOperations(string loggedInUserID, NominationModel model, int nominationStatus);
 
@@ -108,13 +108,13 @@ namespace StarOfTheMonth.Repo
                         
                         if (IsSubmit)
                         {
-                            if (dbModel.Status == (int)NominationStatus.DH_Assign_EmployeeClarification)
+                            if (dbModel.Status == (int)NominationStatus.HoD_Assign_EmployeeClarification)
                             {
-                                dbModel.Status = (int)NominationStatus.Employee_ReAssign_DH;
+                                dbModel.Status = (int)NominationStatus.Employee_ReAssign_HoD;
                             }
                             else
                             {
-                                dbModel.Status = (int)NominationStatus.Employee_Assign_DH;
+                                dbModel.Status = (int)NominationStatus.Employee_Assign_HOD;
                             }
                            
                             dbModel.NomSubmittedDate = DateTime.Now.ToString("ddMMyyyy");
@@ -155,7 +155,7 @@ namespace StarOfTheMonth.Repo
                         
                         if (IsSubmit)
                         {
-                            dbModel.Status = (int)NominationStatus.Employee_Assign_DH;
+                            dbModel.Status = (int)NominationStatus.Employee_Assign_HOD;
                             dbModel.NomSubmittedDate = DateTime.Now.ToString("ddMMyyyy");
                             dbModel.NomSignature = loggedInUserID.ToString();
                         }
@@ -221,11 +221,11 @@ namespace StarOfTheMonth.Repo
                     AuditLogModel objAuditLog = new AuditLogModel();
                     if (dbModel.Status == 2002)
                     {
-                        objAuditLog.CurrentStatus = NominationStatus.Employee_Assign_DH;
+                        objAuditLog.CurrentStatus = NominationStatus.Employee_Assign_HOD;
                     }
                     else if (dbModel.Status == 2013)
                     {
-                        objAuditLog.CurrentStatus = NominationStatus.Employee_ReAssign_DH;
+                        objAuditLog.CurrentStatus = NominationStatus.Employee_ReAssign_HoD;
                     }
                     objAuditLog.EmployeeNumber = dbModel.EmployeeNumber;
                     objAuditLog.IsNewAlert = true;
@@ -254,7 +254,16 @@ namespace StarOfTheMonth.Repo
                 if (IsSubmit)
                 {
                     configRepo = new ConfigurationRepo();
-                    configRepo.SendEmailUsingSOM_Nominee_Submit_HOD(dbModel.NominationId, loggedInUserID);
+                    bool result = configRepo.SendEmailUsingSOM_Nominee_Submit_HOD(dbModel.NominationId, loggedInUserID);
+                    if (result)
+                    {
+                        baseModel = new RepositoryResponse { success = true, message = "Nomination Details Updated Successfully and Sent Mail to HoD", Data = dbModel.NominationId };
+                    }
+                    else
+                    {
+                        baseModel = new RepositoryResponse { success = true, message = "Nomination Details Updated Successfully but Unable to Send a Mail", Data = dbModel.NominationId };
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -278,8 +287,10 @@ namespace StarOfTheMonth.Repo
                     {
                         objNomination.DHComments = model.CommentsByDH;
                         objNomination.Status = nominationStatus;
-                        if (nominationStatus == (int)NominationStatus.DH_Assign_TQC || nominationStatus == (int)NominationStatus.DH_Reject)
+                        if (nominationStatus == (int)NominationStatus.HoD_Assign_TQC || nominationStatus == (int)NominationStatus.HoD_Reject)
                         {
+                            objNomination.CreatedBy = loggedInUserID;
+                            objNomination.ModifiedBy = loggedInUserID;
                             objNomination.DHSubmittedDate = DateTime.Now.ToString("ddMMyyyy");
                             objNomination.DHSignature = loggedInUserID.ToString();
                         }
@@ -289,25 +300,42 @@ namespace StarOfTheMonth.Repo
 
                 AuditLogModel objAuditLog = new AuditLogModel();
                 configRepo = new ConfigurationRepo();
+    
                 if (nominationStatus == 2008) //Reject
                 {
-                    objAuditLog.CurrentStatus = NominationStatus.DH_Reject;
+                    objAuditLog.CurrentStatus = NominationStatus.HoD_Reject;
                     objAuditLog.Comments = model.AuditLogComments;
                     _message = "Nomination Rejected Successfully";
-                 
-                    configRepo.SendEmailUsingSOM_HOD_Reject_Nominee(objNomination.NominationId, loggedInUserID);
+
+                    bool _result =  configRepo.SendEmailUsingSOM_HoD_Reject_Nominee(objNomination.NominationId, loggedInUserID);
+                    if (_result)
+                    {
+                        _message = "Nomination Rejected Successfully and Send Mail to Nominee";
+                    }
+                    else
+                    {
+                        _message = "Nomination Rejected Successfully. Unable to Send Mail to Nominee";
+                    }
                 }
                 else if (nominationStatus == 2003) //Reassign
                 {
-                    objAuditLog.CurrentStatus = NominationStatus.DH_Assign_EmployeeClarification;
+                    objAuditLog.CurrentStatus = NominationStatus.HoD_Assign_EmployeeClarification;
                     objAuditLog.Comments = model.AuditLogComments;
                     _message = "Nomination Reassigned Successfully";
                  
-                    configRepo.SendEmailUsingSOM_HOD_ReAssign_Nominee(objNomination.NominationId, loggedInUserID);
+                    bool result1 = configRepo.SendEmailUsingSOM_HOD_ReAssign_Nominee(objNomination.NominationId, loggedInUserID);
+                    if (result1)
+                    {
+                        _message = "Nomination Reassigned Successfully and Send Mail to HoD";
+                    }
+                    else
+                    {
+                        _message = "Nomination Reassigned Successfully but unable to Send Mail to HoD";
+                    }
                 }
                 else if (nominationStatus == 2004) //Assign to TQC
                 {
-                    objAuditLog.CurrentStatus = NominationStatus.DH_Assign_TQC;
+                    objAuditLog.CurrentStatus = NominationStatus.HoD_Assign_TQC;
                     objAuditLog.Comments = model.AuditLogComments;
                     _message = "Nomination details assigned to TQC Successfully";
                     TQCHead _TQCHead;
@@ -316,10 +344,10 @@ namespace StarOfTheMonth.Repo
                         _TQCHead = objSOMEntities.TQCHeads.Where(r => r.IsActive == true).FirstOrDefault();
                     }
                     objAuditLog.TQCHeadID = _TQCHead.EmployeeNumber;
-
-                    configRepo.SendEmailUsingSOM_HOD_Assign_TQC(objNomination.NominationId, loggedInUserID);
                 }
                 long HODId = GetReportingIDByEmpID(objNomination.EmployeeNumber);
+                objAuditLog.CreatedBy = loggedInUserID;
+                objAuditLog.ModifiedBy = loggedInUserID;
                 objAuditLog.DepartmentHeadID = HODId.ToString();
                 objAuditLog.EmployeeNumber = objNomination.EmployeeNumber;
                 objAuditLog.IsNewAlert = true;
@@ -327,7 +355,17 @@ namespace StarOfTheMonth.Repo
                 objAuditLog.NominationID = objNomination.NominationId;
                 AddEntryIntoAuditLog(objAuditLog);
 
-                //if (nominationStatus == (int)NominationStatus.DH_Assign_TQC)
+                bool result = configRepo.SendEmailUsingSOM_HOD_Assign_TQC(objNomination.NominationId, loggedInUserID);
+                if (result)
+                {
+                    _message = _message + " and Send Mail to TQC";
+                }
+                else
+                {
+                    _message = _message + ". Unable to Send Mail to TQC";
+                }
+
+                //if (nominationStatus == (int)NominationStatus.HoD_Assign_TQC)
                 //{
                 //    AddEntryIntoCurrentMonthEvalator(model, loggedInUserID);
                 //}
@@ -341,16 +379,18 @@ namespace StarOfTheMonth.Repo
             return baseModel;
         }
 
-        public RepositoryResponse LoadNomination(string loggedInUserID,  string dept, string date, string toDate, bool isRejected)
+        public RepositoryResponse LoadNomination(string loggedInUserID,  string dept, string FDate, string TDate, bool isRejected)
         {
             baseModel = new RepositoryResponse();
             try
             {
-                string subMonth = string.Empty;
-                string subYear = string.Empty;
+               
+                string F_subMonth = string.Empty;
+                string F_subYear = string.Empty;
 
                 string TO_subMonth = string.Empty;
                 string TO_subYear = string.Empty;
+
                 int _empSomRole = 0;
                 string _dept = string.Empty;
                 LoginRepo = new LoginRepo();
@@ -363,25 +403,25 @@ namespace StarOfTheMonth.Repo
                 }
                  
 
-                if (!string.IsNullOrEmpty(toDate))
+                if (!string.IsNullOrEmpty(TDate))
                 {
-                    string[] sDate = toDate.Split('-');
+                    string[] sDate = TDate.Split('-');
                     TO_subMonth = sDate[0];
                     TO_subYear = sDate[1];
                 }
 
-                if (!string.IsNullOrEmpty(date))
+                if (!string.IsNullOrEmpty(FDate))
                 {
-                    string[] sDate = date.Split('-');
-                    subMonth = sDate[0];
-                    subYear = sDate[1];
+                    string[] sDate = FDate.Split('-');
+                    F_subMonth = sDate[0];
+                    F_subYear = sDate[1];
                 }
 
                 List<NominationModel> _lstNominations = new List<NominationModel>();
                 using (IntranetPortalEntities objIPEntities = new IntranetPortalEntities())
                 using (SOMEntities objSOMEntities = new SOMEntities())
                 {
-                    var lstNomination = (from a in objIPEntities.EmpMasters.AsEnumerable()
+                    var lstNominationLoad = (from a in objIPEntities.EmpMasters.AsEnumerable()
                                          join b in objSOMEntities.Nominations.AsEnumerable() on a.EmployeeNumber equals b.EmployeeNumber
                                          where b.IsActive == true
                                          select new
@@ -406,99 +446,33 @@ namespace StarOfTheMonth.Repo
                                              //filterDate = "01/" + b.SubmittedMonth + "/" + b.SubmittedYear,
                                          }).OrderByDescending(r => r.ID).ToList();
 
-                    if (_empSomRole == (int)EmployeeRole.Admin)
-                    {
-                        //var _lstNomination = lstNomination.Where(r => r.EmployeeNumber == loggedInUserID).ToList();
-                       
-                        //lstNomination = lstNomination.Where(r => r.Status != (int)NominationStatus.Employee_Save && r.EmployeeNumber == loggedInUserID).ToList();
-                    }
-                    else if (_empSomRole == (int)EmployeeRole.TQCHead)
-                    {
-                        //lstNomination = lstNomination.Where(r => r.Status == (int)NominationStatus.DH_Assign_TQC
-                        //                || r.Status == (int)NominationStatus.Evaluators_Assign_TQC).ToList();
-                        var Codes = new[] { (int)NominationStatus.Employee_Save,
-                                        (int)NominationStatus.Employee_Assign_DH,
-                                        (int)NominationStatus.Employee_ReAssign_DH,
-                                        (int)NominationStatus.DH_Reject,
-                                        (int)NominationStatus.AdminReopen,
-                                        (int)NominationStatus.DH_Assign_EmployeeClarification };
+                    List<NominationModel> lstNominations = new List<NominationModel>();
 
-                        lstNomination = lstNomination.Where(r => r.IsActive == true && !Codes.Contains((int)r.Status)).ToList();
-                        //lstNomination = lstNomination.Where(r => r.Status != (int)NominationStatus.Employee_Save
-                        //                || r.Status != (int)NominationStatus.Employee_Assign_DH
-                        //                || r.Status != (int)NominationStatus.Employee_ReAssign_DH
-                        //                || r.Status != (int)NominationStatus.DH_Reject
-                        //                || r.Status != (int)NominationStatus.AdminReopen
-                        //                || r.Status != (int)NominationStatus.DH_Assign_EmployeeClarification
-                        //                ).ToList();
-                    }
-                    else if (_empSomRole == (int)EmployeeRole.Evaluation)
+                    foreach (var item in lstNominationLoad)
                     {
-                        var Codes = new[] { (int)NominationStatus.Employee_Save,
-                                        (int)NominationStatus.Employee_Assign_DH,
-                                        (int)NominationStatus.Employee_ReAssign_DH,
-                                        (int)NominationStatus.DH_Reject,
-                                        (int)NominationStatus.AdminReopen,
-                                        (int)NominationStatus.DH_Assign_EmployeeClarification,
-                                        (int)NominationStatus.DH_Assign_TQC};
-
-                        lstNomination = lstNomination.Where(r => r.IsActive == true && !Codes.Contains((int)r.Status)).ToList();
-                        //lstNomination = lstNomination.Where(r => r.Status != (int)NominationStatus.Employee_Save
-                        //                || r.Status != (int)NominationStatus.Employee_Assign_DH 
-                        //                || r.Status != (int)NominationStatus.Employee_ReAssign_DH
-                        //                || r.Status != (int)NominationStatus.DH_Reject
-                        //                || r.Status != (int)NominationStatus.DH_Assign_TQC
-                        //                || r.Status != (int)NominationStatus.AdminReopen
-                        //                || r.Status != (int)NominationStatus.DH_Assign_EmployeeClarification
-                        //                ).ToList();
-                        if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
-                        {
-                            dept = _dept;
-                        }
-                    }
-                    else if (_empSomRole == (int)EmployeeRole.DepartmentHead)
-                    {
-                        //lstNomination = lstNomination.Where(r => r.Status == (int)NominationStatus.Employee_Assign_DH
-                        //                || r.Status == (int)NominationStatus.Employee_ReAssign_DH).ToList();
-
-                        lstNomination = lstNomination.Where(r => r.Status != (int)NominationStatus.Employee_Save).ToList();
-
-                        if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
-                        {
-                            dept = _dept;
-                        }
-                    }
-                    else if (_empSomRole == (int)EmployeeRole.Nomination)
-                    {
-                        //lstNomination = lstNomination.Where(r => r.Status == (int)NominationStatus.Employee_Save
-                        //                || r.Status == (int)NominationStatus.DH_Assign_EmployeeClarification
-                        //                ||r.Status == (int)NominationStatus.DH_Reject).ToList();
-
-                        lstNomination = lstNomination.Where(r => r.EmployeeNumber == loggedInUserID).ToList();
-                    }
-
-                    if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
-                    {
-                        lstNomination = lstNomination.Where(r => r.Department == dept).ToList();
-                    }
-                    if (!string.IsNullOrEmpty(subMonth) && !string.IsNullOrEmpty(subYear) && !string.IsNullOrEmpty(TO_subMonth) && !string.IsNullOrEmpty(TO_subYear))
-                    {
-                        string sDate = "01/" + subMonth + "/" + subYear;
-                        string eDate = "01/" + TO_subMonth + "/" + TO_subYear;
-                        //lstNomination = lstNomination.Where(r => r.IsActive == true
-                        //                && DateTime.Parse(r.filterDate) >= DateTime.Parse(sDate)
-                        //                && DateTime.Parse(r.filterDate) <= DateTime.Parse(eDate)).ToList();
-                    }
-                    else if (!string.IsNullOrEmpty(subMonth) && !string.IsNullOrEmpty(subYear) && string.IsNullOrEmpty(TO_subMonth) && string.IsNullOrEmpty(TO_subYear))
-                    {
-                        lstNomination = lstNomination.Where(r => r.SubmittedMonth == subMonth && r.SubmittedYear == subYear).ToList();
-                    }
-
-
-                    foreach (var item in lstNomination)
-                    {
+                        var auditLog = objSOMEntities.AuditLogs.Where(r => r.NominationID == item.NominationId).OrderByDescending(r => r.ID).FirstOrDefault();
 
                         NominationModel nomination = new NominationModel();
+                        if (auditLog != null)
+                        {
+                            var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == auditLog.CreatedBy).FirstOrDefault();
+                            if (person != null)
+                            {
+                                nomination.currentHoldingPerson = person.EmployeeName;
+                            }
+                            nomination.Status = (NominationStatus)auditLog.CurrentStatus;
+                            nomination.StatusText = EnumHelper.GetDescription((NominationStatus)auditLog.CurrentStatus);
+                        }
+                        else
+                        {
+                            var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == loggedInUserID).FirstOrDefault();
+                            if (person != null)
+                            {
+                                nomination.currentHoldingPerson = person.EmployeeName;
+                            }
+                            nomination.Status = NominationStatus.Employee_Save;
+                            nomination.StatusText = EnumHelper.GetDescription(NominationStatus.Employee_Save);
+                        }
                         nomination.NominationID = item.NominationId;
                         nomination.ID = item.ID;
                         nomination.EmployeeNumber = item.EmployeeNumber;
@@ -521,20 +495,140 @@ namespace StarOfTheMonth.Repo
                         {
                             nomination.IsEvalatorAssigned = true;
                         }
-
-
-                        //nomination.StartDate_ForGrid = Assistant.DateConversion(item.StartDate);
-                        //nomination.EndDate_ForGrid = Assistant.DateConversion(item.EndDate);
-                        _lstNominations.Add(nomination);
-
+                        //nomination.CreatedDateForFilter = Assistant.SOMDbToDateTimeForFilter(item.CreatedDate);
+                        nomination.CreatedDateForFilterAsDateTime = Assistant.SOMDbToDateTimePicker(item.CreatedDate.Substring(0,8));
+                        nomination.Status_int = (int)item.Status;
+                        nomination.IsActive = (bool)item.IsActive;
+                        lstNominations.Add(nomination);
                     }
+
+                    if (_empSomRole == (int)EmployeeRole.Admin)
+                    {
+                        //var _lstNomination = lstNomination.Where(r => r.EmployeeNumber == loggedInUserID).ToList();
+                        //lstNomination = lstNomination.Where(r => r.Status != (int)NominationStatus.Employee_Save && r.EmployeeNumber == loggedInUserID).ToList();
+                    }
+                    else if (_empSomRole == (int)EmployeeRole.TQCHead)
+                    {
+                        var Codes = new[] { (int)NominationStatus.Employee_Save,
+                                        (int)NominationStatus.Employee_Assign_HOD,
+                                        (int)NominationStatus.Employee_ReAssign_HoD,
+                                        (int)NominationStatus.HoD_Reject,
+                                        (int)NominationStatus.AdminReopen,
+                                        (int)NominationStatus.HoD_Assign_EmployeeClarification };
+
+                        lstNominations = lstNominations.Where(r => r.IsActive == true && !Codes.Contains((int)r.Status)).ToList();
+                    }
+                    else if (_empSomRole == (int)EmployeeRole.Evaluation)
+                    {
+                        var Codes = new[] { (int)NominationStatus.Employee_Save,
+                                        (int)NominationStatus.Employee_Assign_HOD,
+                                        (int)NominationStatus.Employee_ReAssign_HoD,
+                                        (int)NominationStatus.HoD_Reject,
+                                        (int)NominationStatus.AdminReopen,
+                                        (int)NominationStatus.HoD_Assign_EmployeeClarification,
+                                        (int)NominationStatus.HoD_Assign_TQC};
+
+                        lstNominations = lstNominations.Where(r => r.IsActive == true && !Codes.Contains((int)r.Status)).ToList();
+
+                        if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
+                        {
+                            dept = _dept;
+                        }
+                    }
+                    else if (_empSomRole == (int)EmployeeRole.DepartmentHead)
+                    {
+                        lstNominations = lstNominations.Where(r => r.Status_int != (int)NominationStatus.Employee_Save).ToList();
+
+                        if (string.IsNullOrEmpty(dept) && dept != "--ALL--")
+                        {
+                            dept = _dept;
+                        }
+                    }
+                    else if (_empSomRole == (int)EmployeeRole.Nomination)
+                    {
+                        lstNominations = lstNominations.Where(r => r.EmployeeNumber == loggedInUserID).ToList();
+                    }
+
+                    if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
+                    {
+                        lstNominations = lstNominations.Where(r => r.Department == dept).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(F_subMonth) && !string.IsNullOrEmpty(F_subYear) && !string.IsNullOrEmpty(TO_subMonth) && !string.IsNullOrEmpty(TO_subYear))
+                    {
+                        string sDate = "01" + F_subMonth + ""+ F_subYear;
+                        string eDate = "30" + TO_subMonth + "" + TO_subYear;
+
+                        DateTime sdt = Assistant.SOMDbToDateTimeForFilter(sDate, true);
+                        DateTime edt = Assistant.SOMDbToDateTimeForFilter(eDate, false);
+
+                        lstNominations = lstNominations.Where(r => r.IsActive == true
+                                        && (r.CreatedDateForFilterAsDateTime.Date >= sdt.Date
+                                        && r.CreatedDateForFilterAsDateTime.Date <= edt.Date)).ToList();
+                    }
+
+                    //foreach (var item in lstNomination)
+                    //{
+                    //    var auditLog = objSOMEntities.AuditLogs.Where(r => r.NominationID == item.NominationId).OrderByDescending(r => r.ID).FirstOrDefault();
+                        
+                    //    NominationModel nomination = new NominationModel();
+                    //    if (auditLog != null)
+                    //    {
+                    //        var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == auditLog.CreatedBy).FirstOrDefault();
+                    //        if (person != null)
+                    //        {
+                    //            nomination.currentHoldingPerson = person.EmployeeName;
+                    //        }
+                    //        //nomination.StatusText = GetNominationStringById((int)auditLog.CurrentStatus);
+                    //        nomination.Status = (NominationStatus)auditLog.CurrentStatus;
+                    //        nomination.StatusText = EnumHelper.GetDescription((NominationStatus)auditLog.CurrentStatus);
+                    //    }
+                    //    else
+                    //    {
+                    //        var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == loggedInUserID).FirstOrDefault();
+                    //        if (person != null)
+                    //        {
+                    //            nomination.currentHoldingPerson = person.EmployeeName;
+                    //        }
+                    //        nomination.Status = NominationStatus.Employee_Save;
+                    //        nomination.StatusText = EnumHelper.GetDescription(NominationStatus.Employee_Save);
+                    //        //nomination.StatusText = GetNominationStringById((int)NominationStatus.Employee_Save);
+                    //    }
+                    //    nomination.NominationID = item.NominationId;
+                    //    nomination.ID = item.ID;
+                    //    nomination.EmployeeNumber = item.EmployeeNumber;
+                    //    nomination.Name = item.EmployeeName;
+                    //    nomination.Department = item.Department;
+                    //    nomination.StartDate_ForGrid = Assistant.SOMDbToUIDateConversion(item.StartDate);
+                    //    nomination.EndDate_ForGrid = Assistant.SOMDbToUIDateConversion(item.EndDate);
+                    //    if (!string.IsNullOrEmpty(item.CreatedDate))
+                    //    {
+                    //        nomination.CreatedDate_ForGrid = Assistant.SOMDbToUIDateConversion_New(item.CreatedDate);
+                    //    }
+                    //    nomination.Cost = item.Cost;
+                    //    Evaluation objEvaluation = new Evaluation();
+                    //    objEvaluation = objSOMEntities.Evaluations.Where(r => r.NominationID == item.NominationId).FirstOrDefault();
+                    //    if (objEvaluation == null)
+                    //    {
+                    //        nomination.IsEvalatorAssigned = false;
+                    //    }
+                    //    else
+                    //    {
+                    //        nomination.IsEvalatorAssigned = true;
+                    //    }
+
+
+                    //    //nomination.StartDate_ForGrid = Assistant.DateConversion(item.StartDate);
+                    //    //nomination.EndDate_ForGrid = Assistant.DateConversion(item.EndDate);
+                    //    _lstNominations.Add(nomination);
+
+                    //}
 
                     baseModel = new RepositoryResponse
                     {
                         
                         success = true,
                         message = "Get Nomination details Successfully",
-                        Data = _lstNominations.OrderByDescending(r => string.IsNullOrEmpty(r.Cost) ? 0 : int.Parse(r.Cost))
+                        Data = lstNominations.OrderByDescending(r => string.IsNullOrEmpty(r.Cost) ? 0 : Decimal.Parse(r.Cost))
                                 .ThenBy(r => string.IsNullOrEmpty(r.Time) ? 0 : int.Parse(r.Time))
                                 .ThenBy(r => string.IsNullOrEmpty(r.Paper) ? 0 : int.Parse(r.Paper))
                     };
@@ -863,19 +957,28 @@ namespace StarOfTheMonth.Repo
             }
         }
 
-        public RepositoryResponse GetReportDetails(string loggedInUserID, string dept, string date)
+        public RepositoryResponse GetReportDetails(string loggedInUserID, string dept, string Fdate, string Tdate)
         {
             baseModel = new RepositoryResponse();
             try
             {
-                string subMonth = string.Empty;
-                string subYear = string.Empty;
+                string F_subMonth = string.Empty;
+                string F_subYear = string.Empty;
+                string T_subMonth = string.Empty;
+                string T_subYear = string.Empty;
 
-                if (!string.IsNullOrEmpty(date))
+                if (!string.IsNullOrEmpty(Fdate))
                 {
-                    string[] sDate = date.Split('-');
-                    subMonth = sDate[0];
-                    subYear = sDate[1];
+                    string[] sDate = Fdate.Split('-');
+                    F_subMonth = sDate[0];
+                    F_subYear = sDate[1];
+                }
+
+                if (!string.IsNullOrEmpty(Tdate))
+                {
+                    string[] sDate = Tdate.Split('-');
+                    T_subMonth = sDate[0];
+                    T_subYear = sDate[1];
                 }
 
                 ParticipatedCount model = new ParticipatedCount();
@@ -922,19 +1025,39 @@ namespace StarOfTheMonth.Repo
                     var lstEmpMaster = (from a in empNumber.AsEnumerable()
                                         join b in objIPEntities.EmpMasters.AsEnumerable() on a equals b.EmployeeNumber
                                         join c in objSOMEntities.Nominations.AsEnumerable() on b.EmployeeNumber equals c.EmployeeNumber
-                                        select new { a, b, c }).ToList();
+                                        select new { 
+                                            c.CreatedDate, c.IsActive, c.EmployeeNumber, b.Department }).ToList();
 
+                    List<NominationModel> lstModel = new List<NominationModel>();
+                    foreach (var item in lstEmpMaster)
+                    {
+                        NominationModel mod = new NominationModel();
+                        mod.CreatedDateForFilterAsDateTime = Assistant.SOMDbToDateTimePicker(item.CreatedDate.Substring(0, 8));
+                        mod.IsActive = (bool)item.IsActive;
+                        mod.EmployeeNumber = item.EmployeeNumber;
+                        mod.Department = item.Department;
+                        lstModel.Add(mod);
+                    }
                     if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
                     {
-                        lstEmpMaster = lstEmpMaster.Where(r => r.b.IsActive == true
-                                            && r.b.Department == dept).ToList();
+                        lstModel = lstModel.Where(r => r.IsActive == true
+                                            && r.Department == dept).ToList();
                     }
 
-                    if (!string.IsNullOrEmpty(subMonth) && !string.IsNullOrEmpty(subYear))
+                    if (!string.IsNullOrEmpty(F_subMonth) && !string.IsNullOrEmpty(F_subYear) && !string.IsNullOrEmpty(T_subMonth) && !string.IsNullOrEmpty(T_subYear))
                     {
-                        lstEmpMaster = lstEmpMaster.Where(r => r.c.SubmittedMonth == subMonth && r.c.SubmittedYear == subYear).ToList();
+                        string sDate = "01" + F_subMonth + "" + F_subYear;
+                        string eDate = "30" + T_subMonth + "" + T_subYear;
+
+                        DateTime sdt = Assistant.SOMDbToDateTimeForFilter(sDate, true);
+                        DateTime edt = Assistant.SOMDbToDateTimeForFilter(eDate, false);
+
+                        lstModel = lstModel.Where(r => r.IsActive == true
+                                        && (r.CreatedDateForFilterAsDateTime.Date >= sdt.Date
+                                        && r.CreatedDateForFilterAsDateTime.Date <= edt.Date)).ToList();
                     }
-                    var dat = lstEmpMaster.GroupBy(l => l.c.EmployeeNumber).Select(g => new { totCount = g.Select(l => l.c.EmployeeNumber).Distinct().Count() });
+
+                    var dat = lstModel.GroupBy(l => l.EmployeeNumber).Select(g => new { totCount = g.Select(l => l.EmployeeNumber).Distinct().Count() });
 
                     model.ParticipatedEmpCount = dat.Select(r => r.totCount).FirstOrDefault();
                 }
@@ -1087,7 +1210,7 @@ namespace StarOfTheMonth.Repo
 
                     //if (userRole == "DepartmentHead")
                     //{
-                    //    lstNomination = lstNomination.Where(r => r.Status == (int)NominationStatus.Employee_Assign_DH).ToList();
+                    //    lstNomination = lstNomination.Where(r => r.Status == (int)NominationStatus.Employee_Assign_HOD).ToList();
                     //}
 
                     //if (!string.IsNullOrEmpty(dept))
@@ -1100,8 +1223,8 @@ namespace StarOfTheMonth.Repo
                     //}
                     if (status == "pending")
                     {
-                        var Codes = new[] { (int)NominationStatus.Employee_ReAssign_DH,
-                                        (int)NominationStatus.Employee_Assign_DH};
+                        var Codes = new[] { (int)NominationStatus.Employee_ReAssign_HoD,
+                                        (int)NominationStatus.Employee_Assign_HOD};
 
                         //var nomUsrCount = objSOMEntities.AuditLogs.Where(r => r.EmployeeNumber == loggedInUserID
                         //                    && r.IsNewAlert == true
@@ -1112,7 +1235,7 @@ namespace StarOfTheMonth.Repo
                     }
                     //else if (status == "approved")
                     //{
-                    //    lstNomination = lstNomination.Where(r => r.Status == (int)NominationStatus.DH_Assign_TQC).ToList();
+                    //    lstNomination = lstNomination.Where(r => r.Status == (int)NominationStatus.HoD_Assign_TQC).ToList();
                     //}
                     int i = 1;
                     foreach (var item in lstNomination)
@@ -1139,7 +1262,7 @@ namespace StarOfTheMonth.Repo
                     {
                         success = true,
                         message = "Get Nomination details Successfully",
-                        Data = _lstNominations.OrderByDescending(r => string.IsNullOrEmpty(r.Cost) ? 0 : int.Parse(r.Cost))
+                        Data = _lstNominations.OrderByDescending(r => string.IsNullOrEmpty(r.Cost) ? 0 : Decimal.Parse(r.Cost))
                                .ThenBy(r => string.IsNullOrEmpty(r.Time) ? 0 : int.Parse(r.Time))
                                .ThenBy(r => string.IsNullOrEmpty(r.Paper) ? 0 : int.Parse(r.Paper))
                     };
@@ -1213,51 +1336,7 @@ namespace StarOfTheMonth.Repo
                                     model.TQCHeadName = empModel.EmployeeName;
                                 }
                             }
-
-                            string _message = string.Empty;
-                            switch (item.CurrentStatus)
-                            {
-                                case 2001:
-                                    _message = "Nomination created";
-                                    break;
-                                case 2002:
-                                    _message = "Nomination Form assigned to HoD";
-                                    break;
-                                case 2003:
-                                    _message = "HoD assigned to Nominee for Clarification";
-                                    break;
-                                case 2004:
-                                    _message = "HoD assigned to Evaluators";
-                                    break;                             
-                                case 2005:
-                                    _message = "Evaluator added Score for Nomination Form";
-                                    break;
-                                case 2006:
-                                    _message = "Evaluator submited Score to TQC";
-                                    break;
-                                case 2007:
-                                    _message = "HoD rejected Nomination Form";
-                                    break;
-                                case 2008:
-                                    _message = "TQC rejected Nomination Form";
-                                    break;
-                                case 2009:
-                                    _message = "Evaluator rejected Nomination Form";
-                                    break;
-                                case 2010:
-                                    _message = "Completed";
-                                    break;
-                                case 2011:
-                                    _message = "Admin has re-opened Nomination Form";
-                                    break;
-                                case 2012:
-                                    _message = "Nomination re-assigned to HoD";
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                            model.InfoMessage = _message;
+                            model.InfoMessage = GetNominationStringById((int)item.CurrentStatus);
                             lstAuditLog.Add(model);
                             i = i + 1;
                         }
@@ -1565,7 +1644,15 @@ namespace StarOfTheMonth.Repo
                     AddEntryIntoAuditLog(objAuditLog);
 
                     configRepo = new ConfigurationRepo();
-                    configRepo.SendEmailUsingSOM_TQC_Assign_Evaluator(objNomination.NominationId, loggedInUserID);
+                    bool result = configRepo.SendEmailUsingSOM_TQC_Assign_Evaluator(objNomination.NominationId, loggedInUserID);
+                    if (result)
+                    {
+                        baseModel = new RepositoryResponse { success = true, message = "Evaluator Assigned to Nomination Successfully By TQC and Send Mail to Evaluator", Data = "" };
+                    }
+                    else
+                    {
+                        baseModel = new RepositoryResponse { success = true, message = "Evaluator Assigned to Nomination Successfully By TQC. Unable to Send mail to Evaluator", Data = "" };
+                    }
                 }
             }
             catch (Exception ex)
@@ -1726,6 +1813,54 @@ namespace StarOfTheMonth.Repo
             }
             return content;
         }
+
+        public string GetNominationStringById(int id)
+        {
+            string _message = string.Empty;
+            switch (id)
+            {
+                case 2001:
+                    _message = "Nomination created";
+                    break;
+                case 2002:
+                    _message = "Nomination Form assigned to HoD";
+                    break;
+                case 2003:
+                    _message = "HoD assigned to Nominee for Clarification";
+                    break;
+                case 2004:
+                    _message = "HoD assigned to Evaluators";
+                    break;
+                case 2005:
+                    _message = "Evaluator added Score for Nomination Form";
+                    break;
+                case 2006:
+                    _message = "Evaluator submited Score to TQC";
+                    break;
+                case 2007:
+                    _message = "HoD rejected Nomination Form";
+                    break;
+                case 2008:
+                    _message = "TQC rejected Nomination Form";
+                    break;
+                case 2009:
+                    _message = "Evaluator rejected Nomination Form";
+                    break;
+                case 2010:
+                    _message = "Completed";
+                    break;
+                case 2011:
+                    _message = "Admin has re-opened Nomination Form";
+                    break;
+                case 2012:
+                    _message = "Nomination re-assigned to HoD";
+                    break;
+                default:
+                    break;
+            }
+            return _message;
+        }
+
 
         #region Horizontal Deployment
 

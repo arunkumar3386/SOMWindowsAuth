@@ -24,23 +24,25 @@
                     </button>
                 </div>
             </div>
-            <div class="collapse" id="filterBox">
+            <div class="collapse" id="filterBox" style="margin:20px;">
                 <div class="mb-3 mt-2 mx-0 py-2 row bg-light b-radius-5 border">
                     <div class="col">
-                        <div class="row mx-0">
-                            <label for="selectDept">Select Department</label>
-                            <div class="col-sm-6">
-                                @Html.DropDownListFor(m => m.Nom_DeptFilter, Model.Nom_DeptFilterlst, new { @class = "form-control", @id = "Nom_DeptFilter" })
+                        <div class="form-group required row NomSection">
+                            <label for="DeptFilter" class="col-sm-2 col-form-label control-label"> Department: </label>
+                            <div class="col-sm-2">
+                                @Html.DropDownListFor(m => m.DeptFilter, Model.DeptFilterlst, new { @class = "form-control", @id = "DeptFilter" })
                             </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row mx-0">
-                            <label for="selectDate">Select Month & Year</label>
-                            <div class="col-sm-6">
-                                @Html.TextBoxFor(m => m.Nom_dateFilter, new { @class = "form-control date-picker", @id = "Nom_dateFilter" })
+                            <label for="From_date" class="col-sm-1 col-form-label control-label">From:</label>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(m => m.From_Date, new { @class = "form-control date-picker", @id = "From_Date" })
                             </div>
-                            <button type="button" id="btnNomFilter" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse">Apply</button>
+                            <label for="TO_date" class="col-sm-1 col-form-label control-label">To:</label>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(m => m.To_Date, new { @class = "form-control date-picker", @id = "To_Date" })
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" id="btnNomFilter" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse">Apply</button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -43,38 +43,91 @@ namespace StarMonthAuth.Controllers
 
             List<SelectListItem> deptFilter = new List<SelectListItem>();
 
-            if (_empSOMRole == (int)EmployeeRole.DepartmentHead)
-            {
-                deptFilter = _loginRepo.GetDepartmentDetails(_dept, _dept);
-                model.Nom_dateFilter = DateTime.Now.ToString("MMMM yyyy");
-            }
-            else
+            if (_empSOMRole == (int)EmployeeRole.TQCHead )
             {
                 deptFilter = _loginRepo.GetDepartmentDetails();
             }
-            model.Nom_DeptFilterlst = deptFilter;
+            else if(_empSOMRole == (int)EmployeeRole.Nomination)
+            {
+                deptFilter = _loginRepo.GetDepartmentDetails(_dept, _dept);
+            }
+            else
+            {
+                deptFilter = _loginRepo.GetDepartmentDetails(_dept, "");
+            }
+            model.From_Date = DateTime.Now.ToString("MMMM yyyy");
+            model.To_Date = DateTime.Now.ToString("MMMM yyyy");
+            model.DeptFilterlst = deptFilter;
 
             return View(model);
         }
 
         [HttpPost]
-        public JsonResult LoadNominationDetailsForGrid(string dept = "", string date = "", string toDate = "")
+        public JsonResult LoadNominationDetailsForGrid(string dept = "", string fromDate = "", string toDate = "")
+        {
+            _repoResponse = new RepositoryResponse();
+            if (dept == "--ALL--")
+            {
+                dept = "";
+            }
+            if (fromDate == "--Select--")
+            {
+                fromDate = "";
+            }
+            else if (!string.IsNullOrEmpty(fromDate))
+            {
+                string[] monthYear = fromDate.Split(' ');
+                string month = monthYear[0].Substring(0, 3);
+                string year = monthYear[1];
+                fromDate = month + "-" + year;
+            }
+
+            if (toDate == "--Select--")
+            {
+                toDate = "";
+            }
+            else if (!string.IsNullOrEmpty(toDate))
+            {
+                string[] monthYear = toDate.Split(' ');
+                string month = monthYear[0].Substring(0, 3);
+                string year = monthYear[1];
+                toDate = month + "-" + year;
+            }
+
+            _nominationRepo = new NominationRepo();
+            string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
+            _repoResponse = _nominationRepo.LoadNomination(_loggedInUserID, dept, fromDate, toDate);
+            if (_repoResponse.success)
+            {
+                var _sa = new JsonSerializerSettings();
+                return Json(_repoResponse.Data);
+            }
+            else
+            {
+                return Json(new { success = _repoResponse.success.ToString(), message = _repoResponse.message });
+            }
+        }
+
+
+
+        [HttpPost]
+        public JsonResult LoadNominationRejectDetailsForGrid(string dept = "", string fromDate = "", string toDate = "")
         {
             _repoResponse = new RepositoryResponse();
             if (dept == "--Select--")
             {
                 dept = "";
             }
-            if (date == "--Select--")
+            if (fromDate == "--Select--")
             {
-                date = "";
+                fromDate = "";
             }
-            else if (!string.IsNullOrEmpty(date))
+            else if (!string.IsNullOrEmpty(fromDate))
             {
-                string[] monthYear = date.Split(' ');
+                string[] monthYear = fromDate.Split(' ');
                 string month = monthYear[0].Substring(0, 3);
                 string year = monthYear[1];
-                date = month + "-" + year;
+                fromDate = month + "-" + year;
             }
 
             if (toDate == "--Select--")
@@ -90,42 +143,7 @@ namespace StarMonthAuth.Controllers
             }
             _nominationRepo = new NominationRepo();
             string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
-            _repoResponse = _nominationRepo.LoadNomination(_loggedInUserID, dept, date, toDate);
-            if (_repoResponse.success)
-            {
-                var _sa = new JsonSerializerSettings();
-                return Json(_repoResponse.Data);
-            }
-            else
-            {
-                return Json(new { success = _repoResponse.success.ToString(), message = _repoResponse.message });
-            }
-        }
-
-
-
-        [HttpPost]
-        public JsonResult LoadNominationRejectDetailsForGrid(string dept = "", string date = "")
-        {
-            _repoResponse = new RepositoryResponse();
-            if (dept == "--Select--")
-            {
-                dept = "";
-            }
-            if (date == "--Select--")
-            {
-                date = "";
-            }
-            else if (!string.IsNullOrEmpty(date))
-            {
-                string[] monthYear = date.Split(' ');
-                string month = monthYear[0].Substring(0, 3);
-                string year = monthYear[1];
-                date = month + "-" + year;
-            }
-            _nominationRepo = new NominationRepo();
-            string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
-            _repoResponse = _nominationRepo.LoadNomination(_loggedInUserID, dept, date, "", true);
+            _repoResponse = _nominationRepo.LoadNomination(_loggedInUserID, dept, fromDate, toDate, true);
             if (_repoResponse.success)
             {
                 var _sa = new JsonSerializerSettings();
@@ -450,7 +468,7 @@ namespace StarMonthAuth.Controllers
             _repoResponse = new RepositoryResponse();
             _nominationRepo = new NominationRepo();
             string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
-            _repoResponse = _nominationRepo.NominationFormDHOperations(_loggedInUserID, model, (int)NominationStatus.DH_Assign_TQC);
+            _repoResponse = _nominationRepo.NominationFormDHOperations(_loggedInUserID, model, (int)NominationStatus.HoD_Assign_TQC);
 
             _loginRepo = new LoginRepo();
             int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
@@ -466,7 +484,7 @@ namespace StarMonthAuth.Controllers
             _repoResponse = new RepositoryResponse();
             _nominationRepo = new NominationRepo();
             string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
-            _repoResponse = _nominationRepo.NominationFormDHOperations(_loggedInUserID, model, (int)NominationStatus.DH_Assign_EmployeeClarification);
+            _repoResponse = _nominationRepo.NominationFormDHOperations(_loggedInUserID, model, (int)NominationStatus.HoD_Assign_EmployeeClarification);
 
             _loginRepo = new LoginRepo();
             int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
@@ -483,7 +501,7 @@ namespace StarMonthAuth.Controllers
             _repoResponse = new RepositoryResponse();
             _nominationRepo = new NominationRepo();
             string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
-            _repoResponse = _nominationRepo.NominationFormDHOperations(_loggedInUserID, model, (int)NominationStatus.DH_Reject);
+            _repoResponse = _nominationRepo.NominationFormDHOperations(_loggedInUserID, model, (int)NominationStatus.HoD_Reject);
 
             _loginRepo = new LoginRepo();
             int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
@@ -500,7 +518,7 @@ namespace StarMonthAuth.Controllers
             _loginRepo = new LoginRepo();
             _repoResponse = new RepositoryResponse();
             var deptFilter = _loginRepo.GetDepartmentDetails();
-            model.Nom_DeptFilterlst = deptFilter;
+            model.DeptFilterlst = deptFilter;
             return View(model);
         }
 
@@ -543,7 +561,7 @@ namespace StarMonthAuth.Controllers
             _loginRepo = new LoginRepo();
             _repoResponse = new RepositoryResponse();
             var deptFilter = _loginRepo.GetDepartmentDetails();
-            model.Nom_DeptFilterlst = deptFilter;
+            model.DeptFilterlst = deptFilter;
             return View(model);
         }
 

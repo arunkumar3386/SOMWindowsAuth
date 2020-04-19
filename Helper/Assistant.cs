@@ -579,6 +579,162 @@ namespace Helper
             return dt.ToString("ddMMyyyyTHHmmss");
         }
 
+        public static DateTime SOMDbToDateTimeForFilter(string sDate, bool start)
+        {
+            if (!string.IsNullOrEmpty(sDate))
+            {
+                string val = sDate.Substring(2, 3);
+                string month = string.Empty;
+                string date = string.Empty;
+                if (val == "Jan")
+                {
+                    month = "01";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "31";
+                    }
+                }
+                if (val == "Feb" )
+                {
+                    month = "02";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "28";
+                    }
+                }
+                if (val == "Mar" )
+                {
+                    month = "03";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "31";
+                    }
+                }
+                if (val == "Apr" )
+                {
+                    month = "04";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "30";
+                    }
+                }
+                if (val == "May" )
+                {
+                    month = "05";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "31";
+                    }
+                }
+                if (val == "Jun" )
+                {
+                    month = "06";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "30";
+                    }
+                }
+                if (val == "Jul" )
+                {
+                    month = "07";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "31";
+                    }
+                }
+                if (val == "Aug" )
+                {
+                    month = "08";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "31";
+                    }
+                }
+                if (val == "Sep" )
+                {
+                    month = "09";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "30";
+                    }
+                }
+                if (val == "Oct" )
+                {
+                    month = "10";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "31";
+                    }
+                }
+                if (val == "Nov" )
+                {
+                    month = "11";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "30";
+                    }
+                }
+                if (val == "Dec" )
+                {
+                    month = "12";
+                    if (start)
+                    {
+                        date = "01";
+                    }
+                    else
+                    {
+                        date = "31";
+                    }
+                }
+                sDate = month + "/" + date + "/" + sDate.Substring(5, 4);
+            }
+            return DateTime.Parse(sDate);
+        }
+
         public static IEnumerable<SelectListItem> LoadListofMonth(string selectedMonth)
         {
             List<SelectListItem> lstSelect = new List<SelectListItem>();

@@ -46,6 +46,7 @@ namespace StarOfTheMonth.Models
         public string SubmittedMonth { get; set; }
         public string SubmittedYear { get; set; }
         public NominationStatus Status { get; set; }
+        public int Status_int { get; set; }
         public bool IsActive { get; set; }
 
         public string NominationSubmittedDate { get; set; }
@@ -102,6 +103,7 @@ namespace StarOfTheMonth.Models
 
         public string currentHoldingPerson { get; set; }
         public string StatusText { get; set; }
+        public DateTime CreatedDateForFilterAsDateTime { get; set; }
 
     }
     
@@ -139,13 +141,13 @@ namespace StarOfTheMonth.Models
 
     public class DashboardModel
     {
-        public string Nom_DeptFilter { get; set; }
-        public IEnumerable<SelectListItem> Nom_DeptFilterlst { get; set; }
+        public string DeptFilter { get; set; }
+        public IEnumerable<SelectListItem> DeptFilterlst { get; set; }
 
-        public string Nom_dateFilter { get; set; }
-        public IEnumerable<SelectListItem> Nom_DateFilterlst { get; set; }
+        public string From_Date { get; set; }
+        public IEnumerable<SelectListItem> From_Nom_DateFilterlst { get; set; }
 
-        public string TO_Nom_dateFilter { get; set; }
+        public string To_Date { get; set; }
         public IEnumerable<SelectListItem> TO_Nom_DateFilterlst { get; set; }
 
         public string Eval_DeptFilter { get; set; }

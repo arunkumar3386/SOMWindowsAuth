@@ -90,7 +90,7 @@
 
                             <div class="col-md-4 my-3">Start Date<span class="req st"> </span></div>
                             <div class="col-md-8 my-2">
-                                @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control", @type = "date", @id = "StartDate" })
+                                @Html.TextBoxFor(m => m.StartDate, new { @class = "form-control date-picker", @type = "date", @id = "StartDate" })
                             </div>
 
                             <div class="col-md-4 my-3 endDate">End Date</div>
@@ -122,6 +122,20 @@
 
 @section Scripts {
     <script>
+        $(function () {
+            $('.date-picker').datepicker({
+                changeDay: true,
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: 'dd/mm/yy',
+                onClose: function (dateText, inst) {
+                    //console.log(inst);
+                    $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, inst.selectedDay));
+                }
+            });
+        });
+
         $(document).ready(function () {
             $("#pageTitle").text("TQC Head");
             LoadTQCHeadGrid();

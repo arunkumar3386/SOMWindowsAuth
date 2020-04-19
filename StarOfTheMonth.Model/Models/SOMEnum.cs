@@ -35,6 +35,49 @@ namespace StarOfTheMonth.Models
         AdminEvaluationHoD = 10010,
     }
 
+    public enum SOMEmpRole
+    {
+        [Description("TQCHead")]
+        TQCHead = 3001,
+
+        [Description("Admin")]
+        Admin = 3002,
+
+        [Description("HoD")]
+        HoD = 3003,
+
+        [Description("Evaluation")]
+        Evaluation = 3004,
+
+        [Description("Nomination")]
+        Nomination = 3005,
+
+        [Description("AdminHoD")]
+        AdminHoD = 3006,
+
+        [Description("AdminEvaluation")]
+        AdminEvaluation = 3007,
+
+        [Description("AdminNomination")]
+        AdminNomination = 3008,
+
+        [Description("HoDEvaluation")]
+        HoDEvaluation = 3009,
+
+        [Description("HoDNomination")]
+        HoDNomination = 3010,
+
+        [Description("AdminHoDEvaluation")]
+        AdminHoDEvaluation = 3011,
+
+        [Description("AdminHoDNomination")]
+        AdminHoDNomination = 3012,
+
+        [Description("AdminHoDEvaluationNomination")]
+        AdminHoDEvaluationNomination = 3013,
+
+    }
+
     public enum NominationStatus
     {
         [Description("Employee Save")]

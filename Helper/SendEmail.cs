@@ -183,7 +183,7 @@ namespace Helper
                 mailClient.Credentials = NetCrd;
                 mailClient.EnableSsl = P_PrimaryEnableSsl;
 
-                mailClient.Send(msg);
+                //mailClient.Send(msg);
                 bMailSent = true;
                 //SaveEmailMessage(objEmail, true, true);
             }

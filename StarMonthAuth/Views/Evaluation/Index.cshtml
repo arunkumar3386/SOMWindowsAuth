@@ -24,28 +24,32 @@
                     </button>
                 </div>
             </div>
-            <div class="collapse" id="filterBox">
+
+            <div class="collapse" id="filterBox" style="margin:20px;">
                 <div class="mb-3 mt-2 mx-0 py-2 row bg-light b-radius-5 border">
                     <div class="col">
-                        <div class="row mx-0">
-                            <label for="selectDept">Select Department</label>
-                            <div class="col-sm-6">
-                                @Html.DropDownListFor(m => m.Eval_DeptFilter, Model.Nom_DeptFilterlst, new { @class = "form-control", @id = "Eval_DeptFilter" })
+                        <div class="form-group required row NomSection">
+                            <label for="DeptFilter" class="col-sm-2 col-form-label control-label"> Department: </label>
+                            <div class="col-sm-2">
+                                @Html.DropDownListFor(m => m.Eval_DeptFilter, Model.DeptFilterlst, new { @class = "form-control", @id = "Eval_DeptFilter" })
                             </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row mx-0">
-                            <label for="selectDate">Select Month & Year</label>
-                            <div class="col-sm-6">
-                                @Html.TextBoxFor(m => m.Eval_dateFilter, new { @class = "form-control date-picker", @id = "Eval_dateFilter" })
-                                @*@Html.DropDownListFor(m => m.Eval_dateFilter, Model.Nom_DateFilterlst, new { @class = "form-control", @id = "Eval_dateFilter" })*@
+                            <label for="From_date" class="col-sm-1 col-form-label control-label">From:</label>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(m => m.From_Date, new { @class = "form-control date-picker", @id = "From_Date" })
                             </div>
-                            <button type="button" id="btnEvalFilter" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse">Apply</button>
+                            <label for="TO_date" class="col-sm-1 col-form-label control-label">To:</label>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(m => m.To_Date, new { @class = "form-control date-picker", @id = "To_Date" })
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" id="btnEvalFilter" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse">Apply</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+
         </div>
 
         <div id="tblEvaluation" style="display:none;">
@@ -466,7 +470,7 @@ onkeydown = "return ValidateNumber0_3(event);",
 
         $(document).ready(function () {
             $("#pageTitle").text("Evaluation Details");
-            LoadEvaluationGrid();
+            excuteFilter();
         });
 
         $(".calTotal").change(function () {
@@ -520,21 +524,36 @@ onkeydown = "return ValidateNumber0_3(event);",
         }
 
         $("#btnEvalFilter").click(function () {
-            LoadEvaluationGrid()
-            var E_dept = $("#Eval_DeptFilter option:selected").text();
-            var E_date = $("#Eval_dateFilter").val();
-            console.log(E_dept + " " + E_date);
+            excuteFilter();
         });
 
-        function LoadEvaluationGrid() {
+
+        function excuteFilter() {
+            var _dept = $("#Eval_DeptFilter option:selected").text();
+            var _fdate = $("#From_Date").val();
+            var _Tdate = $("#To_Date").val();
+            if (_Tdate == "") {
+                alertify.alert("SOM Alert", "Plese choose End Date");
+                return;
+            }
+            var A = moment("01-" + _fdate.replace(" ", "-"));
+            var B = moment("28-" + _Tdate.replace(" ", "-"));
+            //console.log(A + " - " + B);
+            //console.log(A.diff(B, 'days'))
+            if (A.diff(B, 'days') > 1) {
+                alertify.alert("SOM Alert", "Plese choose To Date greater than From Date");
+                return;
+            }
+            LoadEvaluationGrid(_dept, _fdate, _Tdate);
+        }
+
+        function LoadEvaluationGrid(_dept, _fdate, _Tdate) {
             spinner_On();
-            var E_dept = $("#Eval_DeptFilter option:selected").text();
-            var E_date = $("#Eval_dateFilter").val();
             $.ajax(
                 {
                     "url": $("#btnEvaluationGridDetGrid").data('url'),
                     "type": "POST",
-                    "data": { dept: E_dept, date: E_date },
+                    "data": { dept: _dept, fromDate: _fdate, toDate: _Tdate },
                     "dataType": "json",
                     success: function (data) {
                         //console.log(data);

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace StarOfTheMonth.Models
 {
@@ -67,5 +68,6 @@ namespace StarOfTheMonth.Models
 
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
+        public DateTime CreatedDateForFilterAsDateTime { get; set; }
     }
 }

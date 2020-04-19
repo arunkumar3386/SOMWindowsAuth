@@ -23,38 +23,25 @@
                     </button>
                 </div>
             </div>
-            <div class="collapse" id="filterBox">
+
+            <div class="collapse" id="filterBox" style="margin:20px;">
                 <div class="mb-3 mt-2 mx-0 py-2 row bg-light b-radius-5 border">
                     <div class="col">
-                        .
-                        <div class="form-group required row NomSection nonTQCSection">
-                            <label for="StartDate" class="col-sm-2 col-form-label control-label">Select Department:</label>
-                            <div class="col-sm-3">
-                                @Html.DropDownListFor(m => m.Nom_DeptFilter, Model.Nom_DeptFilterlst, new { @class = "form-control", @id = "Nom_DeptFilter" })
+                        <div class="form-group required row NomSection">
+                            <label for="DeptFilter" class="col-sm-2 col-form-label control-label"> Department: </label>
+                            <div class="col-sm-2">
+                                @Html.DropDownListFor(m => m.DeptFilter, Model.DeptFilterlst, new { @class = "form-control", @id = "DeptFilter" })
                             </div>
-                            <label for="Nom_dateFilter" class="col-sm-2 col-form-label control-label">Select Month & Year:</label>
-                            <div class="col-sm-3">
-                                @Html.TextBoxFor(m => m.Nom_dateFilter, new { @class = "form-control date-picker", @id = "Nom_dateFilter" })
+                            <label for="From_date" class="col-sm-1 col-form-label control-label">From:</label>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(m => m.From_Date, new { @class = "form-control date-picker", @id = "From_Date" })
+                            </div>
+                            <label for="TO_date" class="col-sm-1 col-form-label control-label">To:</label>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(m => m.To_Date, new { @class = "form-control date-picker", @id = "To_Date" })
                             </div>
                             <div class="col-sm-2">
-                                <button type="button" id="btnDashFilter" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse">Apply</button>
-                            </div>
-                        </div>
-                        <div class="form-group required row NomSection TQCSection">
-                            <label for="StartDate" class="col-sm-1 col-form-label control-label">Department:</label>
-                            <div class="col-sm-3">
-                                @Html.DropDownListFor(m => m.Nom_DeptFilter, Model.Nom_DeptFilterlst, new { @class = "form-control", @id = "Nom_DeptFilter" })
-                            </div>
-                            <label for="Nom_dateFilter" class="col-sm-1 col-form-label control-label">From:</label>
-                            <div class="col-sm-2">
-                                @Html.TextBoxFor(m => m.Nom_dateFilter, new { @class = "form-control date-picker", @id = "Nom_dateFilter" })
-                            </div>
-                            <label for="TO_Nom_dateFilter" class="col-sm-1 col-form-label control-label">To:</label>
-                            <div class="col-sm-2">
-                                @Html.TextBoxFor(m => m.TO_Nom_dateFilter, new { @class = "form-control date-picker", @id = "TO_Nom_dateFilter" })
-                            </div>
-                            <div class="col-sm-2">
-                                <button type="button" id="btnDashFilter" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse">Apply</button>
+                                <button type="button" id="btnNomFilter" class="btn btn-outline-filter ml-2 mb-2" data-toggle="collapse">Apply</button>
                             </div>
                         </div>
                     </div>
@@ -269,7 +256,8 @@
             }
 
             if (SOMRole == "1001") {
-                $("#dvFilterSection").hide();
+                $("#dvFilterSection").show();
+                $("#DeptFilter").prop("disabled", true);
             }
 
             if (userGrade =="Admin") {
@@ -281,37 +269,49 @@
             }
 
             $("#pageTitle").text("Nomination Details");
-            var N_dept = $("#Nom_DeptFilter option:selected").text();
-            var N_date = $("#Nom_dateFilter").val();
-            var N_TO_sdate = $("#TO_Nom_dateFilter").val();
-            //console.log(N_dept + " " + N_date);
-            LoadNominationGrid(N_date, N_dept, N_TO_sdate);
+
+            excuteFilter();
+           
             $('.dt-button').addClass('btn btn-primary fas fa-download');
 
         });
 
-        $("#btnNomFilter").click(function () {
-            LoadNominationGrid()
-            var N_dept = $("#Nom_DeptFilter option:selected").text();
-            var N_date = $("#Nom_dateFilter").val();
-            var N_TO_sdate = $("#TO_Nom_dateFilter").val();
-
-            LoadNominationGrid(N_date, N_dept, N_TO_sdate)
+        $("#btnNomFilter").click(function () {           
+            excuteFilter();
         });
 
-        function LoadNominationGrid(_date, _dept, N_TO_sdate) {
+        function excuteFilter() {
+            var _dept = $("#DeptFilter option:selected").text();
+            var _fdate = $("#From_Date").val();
+            var _Tdate = $("#To_Date").val();
+            if (_Tdate == "") {
+                alertify.alert("SOM Alert", "Plese choose End Date");
+                return;
+            }
+            var A = moment("01-" + _fdate.replace(" ", "-"));
+            var B = moment("28-" + _Tdate.replace(" ", "-"));
+            //console.log(A + " - " + B);
+            //console.log(A.diff(B, 'days'))
+            if (A.diff(B, 'days') > 1) {
+                alertify.alert("SOM Alert", "Plese choose To Date greater than From Date");
+                return;
+            }
+            LoadNominationGrid(_fdate, _Tdate, _dept);
+        }
+
+        function LoadNominationGrid(_fdate, _tdate, _dept) {
             var SOMRole = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
             //var assignUsr = true;
-            //console.log("LoadNominationGrid");
+            console.log(_tdate);
             var N_dept = _dept;
-            var N_date = _date;
-            var N_To_date = N_TO_sdate;
+            var N_From_date = _fdate;
+            var N_To_date = _tdate;
             spinner_On();
             $.ajax(
                 {
                     "url": $("#btnNominationGridDetGrid").data('url'),
                     "type": "POST",
-                    "data": { dept: N_dept, date: N_date, toDate: N_To_date},
+                    "data": { dept: N_dept, fromDate: N_From_date, toDate: N_To_date},
                     "dataType": "json",
                     success: function (data) {
                         //console.log(data);
@@ -460,15 +460,16 @@
             alertify.alert("SOM Alert","Nomination PDF file will be downloaded shortly");
         }
 
-        function LoadNominationRejectListGrid(_date, _dept) {
+        function LoadNominationRejectListGrid(_fdate, _Tdate, _dept) {
             var N_dept = _dept;
-            var N_date = _date;
+            var N_fdate = _fdate;
+            var N_Tdate = _Tdate;
             spinner_On();
             $.ajax(
                 {
                     "url": $("#btnNominationGridRejectDetGrid").data('url'),
                     "type": "POST",
-                    "data": { dept: N_dept, date: N_date },
+                    "data": { dept: N_dept, fromdate: N_fdate, toDate: N_Tdate },
                     "dataType": "json",
                     success: function (data) {
                         //console.log(data);
@@ -608,17 +609,21 @@
             if (valu == true) {
                 $('#tblNomination').hide();
                 $('#tblNominationReject').show();
-                var N_dept = $("#Nom_DeptFilter option:selected").text();
-                var N_date = $("#Nom_dateFilter").val();
-                LoadNominationRejectListGrid(N_date, N_dept);
+                var _dept = $("#DeptFilter option:selected").text();
+                var _fdate = $("#From_Date").val();
+                var _Tdate = $("#To_Date").val();
+                console.log(_fdate + " - " + _Tdate);
+                LoadNominationRejectListGrid(_fdate, _Tdate, _dept);
             }
+               
             else {
                 $('#tblNomination').show();
                 $('#tblNominationReject').hide();
-                var N_dept = $("#Nom_DeptFilter option:selected").text();
-                var N_date = $("#Nom_dateFilter").val();
-                var N_TO_sdate = $("#TO_Nom_dateFilter").val();
-                LoadNominationGrid(N_date, N_dept, N_TO_sdate);
+                var _dept = $("#DeptFilter option:selected").text();
+                var _fdate = $("#From_Date").val();
+                var _Tdate = $("#To_Date").val();
+                console.log(_fdate + " - " + _Tdate);
+                LoadNominationGrid(_fdate, _Tdate, _dept);
             }
         });
 

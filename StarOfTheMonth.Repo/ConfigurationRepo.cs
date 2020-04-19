@@ -14,19 +14,19 @@ namespace StarOfTheMonth.Repo
         RepositoryResponse AddOrEditConfigurationDetails(ConfigurationModel model, string _loggedInUserID);
         ConfigurationModel GetEmailDetails();
 
-        void SendEmailUsingSOM_Nominee_Submit_HOD(string nominationID, string loggedInUserID);
+        bool SendEmailUsingSOM_Nominee_Submit_HOD(string nominationID, string loggedInUserID);
 
-        void SendEmailUsingSOM_HOD_ReAssign_Nominee(string nominationID, string loggedInUserID);
+        bool SendEmailUsingSOM_HOD_ReAssign_Nominee(string nominationID, string loggedInUserID);
 
-        void SendEmailUsingSOM_HOD_Assign_TQC(string nominationID, string loggedInUserID);
+        bool SendEmailUsingSOM_HOD_Assign_TQC(string nominationID, string loggedInUserID);
 
-        void SendEmailUsingSOM_TQC_Assign_Evaluator(string nominationID, string loggedInUserID);
+        bool SendEmailUsingSOM_TQC_Assign_Evaluator(string nominationID, string loggedInUserID);
 
-        void SendEmailUsingSOM_Evaluator_Assign_TQC(string nominationID, string loggedInUserID);
+        bool SendEmailUsingSOM_Evaluator_Assign_TQC(string nominationID, string loggedInUserID);
 
-        void SendEmailUsingSOM_TQC_Declare_SOM(string nominationID, string loggedInUserID);
+        bool SendEmailUsingSOM_TQC_Declare_SOM(string nominationID, string loggedInUserID);
 
-        void SendEmailUsingSOM_HOD_Reject_Nominee(string nominationID, string loggedInUserID);
+        bool SendEmailUsingSOM_HoD_Reject_Nominee(string nominationID, string loggedInUserID);
     }
     public class ConfigurationRepo : IConfigurationRepo
     {
@@ -200,20 +200,22 @@ namespace StarOfTheMonth.Repo
 
         #region sendEmail 
 
-        public void SendEmailUsingSOM_Nominee_Submit_HOD(string nominationID, string loggedInUserID)
+        public bool SendEmailUsingSOM_Nominee_Submit_HOD(string nominationID, string loggedInUserID)
         {
-            string subject = "Star of the Month Nominee Form Submit to HoD";
-            string message = "Dear ##UserName##, <br><br>";
-            message += "<pre>  The below Nominee user has submitted Nomination from for your review. Please find the below details. " + "</pre><br><br>";
-            message += "<pre> Nominee User name     :   ##NomineeUserName## </pre>";
-            message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
-            message += "<pre> Nomination ID         :   ##NominationID## </pre>";
-            message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
-            message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
-            message += "<pre> Submitted Year        :   ##SubYear## </pre>";
-            message += "<br><br>";
-            message += "Thanks,<br>";
-            message += "##NomineeUserName##";
+            string subject = string.Empty;
+            string message = string.Empty;
+            //string subject = "Star of the Month Nominee Form Submit to HoD";
+            //string message = "Dear ##UserName##, <br><br>";
+            //message += "<pre>  The below Nominee user has submitted Nomination from for your review. Please find the below details. " + "</pre><br><br>";
+            //message += "<pre> Nominee User name     :   ##NomineeUserName## </pre>";
+            //message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
+            //message += "<pre> Nomination ID         :   ##NominationID## </pre>";
+            //message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
+            //message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
+            //message += "<pre> Submitted Year        :   ##SubYear## </pre>";
+            //message += "<br><br>";
+            //message += "Thanks,<br>";
+            //message += "##NomineeUserName##";
 
             using (objSOMEntities = new SOMEntities())
             using (objIPEntities = new IntranetPortalEntities())
@@ -233,40 +235,44 @@ namespace StarOfTheMonth.Repo
                 message.Replace("##SubMonth##", nom.SubmittedMonth);
                 message.Replace("##SubYear##", nom.SubmittedYear);
 
-                ConfigurationModel emailDet = GetEmailDetails();
+                //ConfigurationModel emailDet = GetEmailDetails();
 
-                EmailParam objEmail = new EmailParam();
-                objEmail.PrimaryEnableSsl = true;
-                objEmail.PrimaryFrom = emailDet.FromUserID;
-                objEmail.PrimaryPassword = emailDet.Password;
-                objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
-                objEmail.PrimarySMTP = emailDet.SMTP;
-                objEmail.ToEmailAddress = rptPerson.EmployeeEmail;
-                objEmail.MailContent = message;
-                objEmail.MailSubject = subject;
+                //EmailParam objEmail = new EmailParam();
+                //objEmail.PrimaryEnableSsl = true;
+                //objEmail.PrimaryFrom = emailDet.FromUserID;
+                //objEmail.PrimaryPassword = emailDet.Password;
+                //objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
+                //objEmail.PrimarySMTP = emailDet.SMTP;
+                //objEmail.ToEmailAddress = rptPerson.EmployeeEmail;
+                //objEmail.MailContent = message;
+                //objEmail.MailSubject = subject;
 
-                SendEmail sendEmail = new SendEmail();
-                sendEmail.SendEmailUsingPrimary(objEmail);
+                //SendEmail sendEmail = new SendEmail();
+                //sendEmail.SendEmailUsingPrimary(objEmail);
+                return SendEmail_New.SendHtmlFormattedEmail(message, subject, rptPerson.EmployeeEmail);
             }
         }
 
-        public void SendEmailUsingSOM_HOD_ReAssign_Nominee(string nominationID, string loggedInUserID)
+        public bool SendEmailUsingSOM_HOD_ReAssign_Nominee(string nominationID, string loggedInUserID)
         {
-            string subject = "Star of the Month HoD ReAssign to Nominee";
-            string message = "Dear ##UserName##, <br><br>";
-            message += "<pre>  The HoD user has need more information to approve Nomination from please refer HoD comments section. Please find the below details. " + "</pre><br><br>";
-            message += "<pre> HoD Name              :   ##HODUserName## </pre>";
-            message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
-            message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
-            message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
-            message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
-            message += "<pre> Nomination ID         :   ##NominationID## </pre>";
-            message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
-            message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
-            message += "<pre> Submitted Year        :   ##SubYear## </pre>";
-            message += "<br><br>";
-            message += "Thanks,<br>";
-            message += "##NomineeUserName##";
+            string subject = string.Empty;
+            string message = string.Empty;
+
+            //string subject = "Star of the Month HoD ReAssign to Nominee";
+            //string message = "Dear ##UserName##, <br><br>";
+            //message += "<pre>  The HoD user has need more information to approve Nomination from please refer HoD comments section. Please find the below details. " + "</pre><br><br>";
+            //message += "<pre> HoD Name              :   ##HODUserName## </pre>";
+            //message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
+            //message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
+            //message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
+            //message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
+            //message += "<pre> Nomination ID         :   ##NominationID## </pre>";
+            //message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
+            //message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
+            //message += "<pre> Submitted Year        :   ##SubYear## </pre>";
+            //message += "<br><br>";
+            //message += "Thanks,<br>";
+            //message += "##NomineeUserName##";
 
             using (objSOMEntities = new SOMEntities())
             using (objIPEntities = new IntranetPortalEntities())
@@ -291,40 +297,44 @@ namespace StarOfTheMonth.Repo
                 message.Replace("##SubMonth##", nom.SubmittedMonth);
                 message.Replace("##SubYear##", nom.SubmittedYear);
 
-                ConfigurationModel emailDet = GetEmailDetails();
+                //ConfigurationModel emailDet = GetEmailDetails();
 
-                EmailParam objEmail = new EmailParam();
-                objEmail.PrimaryEnableSsl = true;
-                objEmail.PrimaryFrom = emailDet.FromUserID;
-                objEmail.PrimaryPassword = emailDet.Password;
-                objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
-                objEmail.PrimarySMTP = emailDet.SMTP;
-                objEmail.ToEmailAddress = emp.EmployeeEmail;
-                objEmail.MailContent = message;
-                objEmail.MailSubject = subject;
+                //EmailParam objEmail = new EmailParam();
+                //objEmail.PrimaryEnableSsl = true;
+                //objEmail.PrimaryFrom = emailDet.FromUserID;
+                //objEmail.PrimaryPassword = emailDet.Password;
+                //objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
+                //objEmail.PrimarySMTP = emailDet.SMTP;
+                //objEmail.ToEmailAddress = emp.EmployeeEmail;
+                //objEmail.MailContent = message;
+                //objEmail.MailSubject = subject;
 
-                SendEmail sendEmail = new SendEmail();
-                sendEmail.SendEmailUsingPrimary(objEmail);
+                //SendEmail sendEmail = new SendEmail();
+                //sendEmail.SendEmailUsingPrimary(objEmail);
+                return SendEmail_New.SendHtmlFormattedEmail(message, subject, emp.EmployeeEmail);
             }
         }
 
-        public void SendEmailUsingSOM_HOD_Assign_TQC(string nominationID, string loggedInUserID)
+        public bool SendEmailUsingSOM_HOD_Assign_TQC(string nominationID, string loggedInUserID)
         {
-            string subject = "Star of the Month HoD Assign to TQC";
-            string message = "Dear ##TQCUserName##, <br><br>";
-            message += "<pre>  The HoD user has approved nominee information and submitted to TQC. Please find the below details. " + "</pre><br><br>";
-            message += "<pre> HoD Name              :   ##HODUserName## </pre>";
-            message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
-            message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
-            message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
-            message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
-            message += "<pre> Nomination ID         :   ##NominationID## </pre>";
-            message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
-            message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
-            message += "<pre> Submitted Year        :   ##SubYear## </pre>";
-            message += "<br><br>";
-            message += "Thanks,<br>";
-            message += "##HODUserName##";
+            string subject = string.Empty;
+            string message = string.Empty;
+
+            //string subject = "Star of the Month HoD Assign to TQC";
+            //string message = "Dear ##TQCUserName##, <br><br>";
+            //message += "<pre>  The HoD user has approved nominee information and submitted to TQC. Please find the below details. " + "</pre><br><br>";
+            //message += "<pre> HoD Name              :   ##HODUserName## </pre>";
+            //message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
+            //message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
+            //message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
+            //message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
+            //message += "<pre> Nomination ID         :   ##NominationID## </pre>";
+            //message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
+            //message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
+            //message += "<pre> Submitted Year        :   ##SubYear## </pre>";
+            //message += "<br><br>";
+            //message += "Thanks,<br>";
+            //message += "##HODUserName##";
 
             using (objSOMEntities = new SOMEntities())
             using (objIPEntities = new IntranetPortalEntities())
@@ -356,49 +366,54 @@ namespace StarOfTheMonth.Repo
 
 
 
-                ConfigurationModel emailDet = GetEmailDetails();
+                //ConfigurationModel emailDet = GetEmailDetails();
 
-                EmailParam objEmail = new EmailParam();
-                objEmail.PrimaryEnableSsl = true;
-                objEmail.PrimaryFrom = emailDet.FromUserID;
-                objEmail.PrimaryPassword = emailDet.Password;
-                objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
-                objEmail.PrimarySMTP = emailDet.SMTP;
-                objEmail.ToEmailAddress = tqcPerson.EmployeeEmail;
-                objEmail.MailContent = message;
-                objEmail.MailSubject = subject;
+                //EmailParam objEmail = new EmailParam();
+                //objEmail.PrimaryEnableSsl = true;
+                //objEmail.PrimaryFrom = emailDet.FromUserID;
+                //objEmail.PrimaryPassword = emailDet.Password;
+                //objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
+                //objEmail.PrimarySMTP = emailDet.SMTP;
+                //objEmail.ToEmailAddress = tqcPerson.EmployeeEmail;
+                //objEmail.MailContent = message;
+                //objEmail.MailSubject = subject;
 
-                SendEmail sendEmail = new SendEmail();
-                sendEmail.SendEmailUsingPrimary(objEmail);
+                //SendEmail sendEmail = new SendEmail();
+                //sendEmail.SendEmailUsingPrimary(objEmail);
+
+                return SendEmail_New.SendHtmlFormattedEmail(message, subject, tqcPerson.EmployeeEmail);
             }
         }
 
-        public void SendEmailUsingSOM_TQC_Assign_Evaluator(string nominationID, string loggedInUserID)
+        public bool SendEmailUsingSOM_TQC_Assign_Evaluator(string nominationID, string loggedInUserID)
         {
-            string subject = "Star of the Month TQC Add to Evaluator for Nomination";
-            string message = "Dear ##EvalName##, <br><br>";
-            message += "<pre>  The TQC user has add evaluation user to evaluate nomination form. Please find the below details. " + "</pre><br><br>";
+            string subject = string.Empty;
+            string message = string.Empty;
 
-            message += "<pre> HoD Name              :   ##HODUserName## </pre>";
-            message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
-            message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
+            //string subject = "Star of the Month TQC Add to Evaluator for Nomination";
+            //string message = "Dear ##EvalName##, <br><br>";
+            //message += "<pre>  The TQC user has add evaluation user to evaluate nomination form. Please find the below details. " + "</pre><br><br>";
 
-            message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
-            message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
-            message += "<pre> Nomination ID         :   ##NominationID## </pre>";
-            message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
-            message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
-            message += "<pre> Submitted Year        :   ##SubYear## </pre>";
+            //message += "<pre> HoD Name              :   ##HODUserName## </pre>";
+            //message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
+            //message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
 
-            message += "<pre> Evaluator Name        :   ##EvalName## </pre>";
-            message += "<pre> Evaluator No          :   ##EvalNo## </pre>";
+            //message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
+            //message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
+            //message += "<pre> Nomination ID         :   ##NominationID## </pre>";
+            //message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
+            //message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
+            //message += "<pre> Submitted Year        :   ##SubYear## </pre>";
 
-            message += "<pre> TQC Name              :   ##TQCName## </pre>";
-            message += "<pre> TQC No                :   ##TQCNo## </pre>";
+            //message += "<pre> Evaluator Name        :   ##EvalName## </pre>";
+            //message += "<pre> Evaluator No          :   ##EvalNo## </pre>";
 
-            message += "<br><br>";
-            message += "Thanks,<br>";
-            message += "##TQCName##";
+            //message += "<pre> TQC Name              :   ##TQCName## </pre>";
+            //message += "<pre> TQC No                :   ##TQCNo## </pre>";
+
+            //message += "<br><br>";
+            //message += "Thanks,<br>";
+            //message += "##TQCName##";
 
             using (objSOMEntities = new SOMEntities())
             using (objIPEntities = new IntranetPortalEntities())
@@ -432,49 +447,53 @@ namespace StarOfTheMonth.Repo
                 message.Replace("##EvalName##", evalEmp.EmployeeName);
                 message.Replace("##EvalNo##", evalEmp.EmployeeNumber);
 
-                ConfigurationModel emailDet = GetEmailDetails();
+                //ConfigurationModel emailDet = GetEmailDetails();
 
-                EmailParam objEmail = new EmailParam();
-                objEmail.PrimaryEnableSsl = true;
-                objEmail.PrimaryFrom = emailDet.FromUserID;
-                objEmail.PrimaryPassword = emailDet.Password;
-                objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
-                objEmail.PrimarySMTP = emailDet.SMTP;
-                objEmail.ToEmailAddress = evalEmp.EmployeeEmail;
-                objEmail.MailContent = message;
-                objEmail.MailSubject = subject;
+                //EmailParam objEmail = new EmailParam();
+                //objEmail.PrimaryEnableSsl = true;
+                //objEmail.PrimaryFrom = emailDet.FromUserID;
+                //objEmail.PrimaryPassword = emailDet.Password;
+                //objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
+                //objEmail.PrimarySMTP = emailDet.SMTP;
+                //objEmail.ToEmailAddress = evalEmp.EmployeeEmail;
+                //objEmail.MailContent = message;
+                //objEmail.MailSubject = subject;
 
-                SendEmail sendEmail = new SendEmail();
-                sendEmail.SendEmailUsingPrimary(objEmail);
+                //SendEmail sendEmail = new SendEmail();
+                //sendEmail.SendEmailUsingPrimary(objEmail);
+                return SendEmail_New.SendHtmlFormattedEmail(message, subject, evalEmp.EmployeeEmail);
             }
         }
 
-        public void SendEmailUsingSOM_Evaluator_Assign_TQC(string nominationID, string loggedInUserID)
+        public bool SendEmailUsingSOM_Evaluator_Assign_TQC(string nominationID, string loggedInUserID)
         {
-            string subject = "Star of the Month - Evaluator Submit Score Details to TQC";
-            string message = "Dear ##TQCName##, <br><br>";
-            message += "<pre>  The ##EvalName## user has evaluated the nomination form and submitted to TQC Head. Please find the below details. " + "</pre><br><br>";
+            string subject = string.Empty;
+            string message = string.Empty;
 
-            message += "<pre> HoD Name              :   ##HODUserName## </pre>";
-            message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
-            message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
+            //string subject = "Star of the Month - Evaluator Submit Score Details to TQC";
+            //string message = "Dear ##TQCName##, <br><br>";
+            //message += "<pre>  The ##EvalName## user has evaluated the nomination form and submitted to TQC Head. Please find the below details. " + "</pre><br><br>";
 
-            message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
-            message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
-            message += "<pre> Nomination ID         :   ##NominationID## </pre>";
-            message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
-            message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
-            message += "<pre> Submitted Year        :   ##SubYear## </pre>";
+            //message += "<pre> HoD Name              :   ##HODUserName## </pre>";
+            //message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
+            //message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
 
-            message += "<pre> Evaluator Name        :   ##EvalName## </pre>";
-            message += "<pre> Evaluator No          :   ##EvalNo## </pre>";
+            //message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
+            //message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
+            //message += "<pre> Nomination ID         :   ##NominationID## </pre>";
+            //message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
+            //message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
+            //message += "<pre> Submitted Year        :   ##SubYear## </pre>";
 
-            message += "<pre> TQC Name              :   ##TQCName## </pre>";
-            message += "<pre> TQC No                :   ##TQCNo## </pre>";
+            //message += "<pre> Evaluator Name        :   ##EvalName## </pre>";
+            //message += "<pre> Evaluator No          :   ##EvalNo## </pre>";
 
-            message += "<br><br>";
-            message += "Thanks,<br>";
-            message += "##EvalName##";
+            //message += "<pre> TQC Name              :   ##TQCName## </pre>";
+            //message += "<pre> TQC No                :   ##TQCNo## </pre>";
+
+            //message += "<br><br>";
+            //message += "Thanks,<br>";
+            //message += "##EvalName##";
 
             using (objSOMEntities = new SOMEntities())
             using (objIPEntities = new IntranetPortalEntities())
@@ -508,49 +527,54 @@ namespace StarOfTheMonth.Repo
                 message.Replace("##EvalName##", evalEmp.EmployeeName);
                 message.Replace("##EvalNo##", evalEmp.EmployeeNumber);
 
-                ConfigurationModel emailDet = GetEmailDetails();
+                //ConfigurationModel emailDet = GetEmailDetails();
 
-                EmailParam objEmail = new EmailParam();
-                objEmail.PrimaryEnableSsl = true;
-                objEmail.PrimaryFrom = emailDet.FromUserID;
-                objEmail.PrimaryPassword = emailDet.Password;
-                objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
-                objEmail.PrimarySMTP = emailDet.SMTP;
-                objEmail.ToEmailAddress = tqcPerson.EmployeeEmail;
-                objEmail.MailContent = message;
-                objEmail.MailSubject = subject;
+                //EmailParam objEmail = new EmailParam();
+                //objEmail.PrimaryEnableSsl = true;
+                //objEmail.PrimaryFrom = emailDet.FromUserID;
+                //objEmail.PrimaryPassword = emailDet.Password;
+                //objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
+                //objEmail.PrimarySMTP = emailDet.SMTP;
+                //objEmail.ToEmailAddress = tqcPerson.EmployeeEmail;
+                //objEmail.MailContent = message;
+                //objEmail.MailSubject = subject;
 
-                SendEmail sendEmail = new SendEmail();
-                sendEmail.SendEmailUsingPrimary(objEmail);
+                //SendEmail sendEmail = new SendEmail();
+                //sendEmail.SendEmailUsingPrimary(objEmail);
+
+                return SendEmail_New.SendHtmlFormattedEmail(message, subject, tqcPerson.EmployeeEmail);
             }
         }
 
-        public void SendEmailUsingSOM_TQC_Declare_SOM(string nominationID, string loggedInUserID)
+        public bool SendEmailUsingSOM_TQC_Declare_SOM(string nominationID, string loggedInUserID)
         {
-            string subject = "Star of the Month TQC Declare SOM";
-            string message = "Dear ##NomineeUserName##, <br><br>";
-            message += "<pre>  The ##NomineeUserName## user has declared the Star of the Month for ##SubMonth## - ##SubYear##. Please find the below details. " + "</pre><br><br>";
+            string subject = string.Empty;
+            string message = string.Empty;
 
-            message += "<pre> HoD Name              :   ##HODUserName## </pre>";
-            message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
-            message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
+            //string subject = "Star of the Month TQC Declare SOM";
+            //string message = "Dear ##NomineeUserName##, <br><br>";
+            //message += "<pre>  The ##NomineeUserName## user has declared the Star of the Month for ##SubMonth## - ##SubYear##. Please find the below details. " + "</pre><br><br>";
 
-            message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
-            message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
-            message += "<pre> Nomination ID         :   ##NominationID## </pre>";
-            message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
-            message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
-            message += "<pre> Submitted Year        :   ##SubYear## </pre>";
+            //message += "<pre> HoD Name              :   ##HODUserName## </pre>";
+            //message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
+            //message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
 
-            message += "<pre> Evaluator Name        :   ##EvalName## </pre>";
-            message += "<pre> Evaluator No          :   ##EvalNo## </pre>";
+            //message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
+            //message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
+            //message += "<pre> Nomination ID         :   ##NominationID## </pre>";
+            //message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
+            //message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
+            //message += "<pre> Submitted Year        :   ##SubYear## </pre>";
 
-            message += "<pre> TQC Name              :   ##TQCName## </pre>";
-            message += "<pre> TQC No                :   ##TQCNo## </pre>";
+            //message += "<pre> Evaluator Name        :   ##EvalName## </pre>";
+            //message += "<pre> Evaluator No          :   ##EvalNo## </pre>";
 
-            message += "<br><br>";
-            message += "Thanks,<br>";
-            message += "##TQCName##";
+            //message += "<pre> TQC Name              :   ##TQCName## </pre>";
+            //message += "<pre> TQC No                :   ##TQCNo## </pre>";
+
+            //message += "<br><br>";
+            //message += "Thanks,<br>";
+            //message += "##TQCName##";
 
             using (objSOMEntities = new SOMEntities())
             using (objIPEntities = new IntranetPortalEntities())
@@ -579,40 +603,45 @@ namespace StarOfTheMonth.Repo
                 message.Replace("##EvalName##", evalEmp.EmployeeName);
                 message.Replace("##EvalNo##", evalEmp.EmployeeNumber);
 
-                ConfigurationModel emailDet = GetEmailDetails();
+                //ConfigurationModel emailDet = GetEmailDetails();
 
-                EmailParam objEmail = new EmailParam();
-                objEmail.PrimaryEnableSsl = true;
-                objEmail.PrimaryFrom = emailDet.FromUserID;
-                objEmail.PrimaryPassword = emailDet.Password;
-                objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
-                objEmail.PrimarySMTP = emailDet.SMTP;
-                objEmail.ToEmailAddress = emp.EmployeeEmail;
-                objEmail.MailContent = message;
-                objEmail.MailSubject = subject;
+                //EmailParam objEmail = new EmailParam();
+                //objEmail.PrimaryEnableSsl = true;
+                //objEmail.PrimaryFrom = emailDet.FromUserID;
+                //objEmail.PrimaryPassword = emailDet.Password;
+                //objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
+                //objEmail.PrimarySMTP = emailDet.SMTP;
+                //objEmail.ToEmailAddress = emp.EmployeeEmail;
+                //objEmail.MailContent = message;
+                //objEmail.MailSubject = subject;
 
-                SendEmail sendEmail = new SendEmail();
-                //sendEmail.SendEmailUsingPrimary(objEmail);
+                //SendEmail sendEmail = new SendEmail();
+                ////sendEmail.SendEmailUsingPrimary(objEmail);
+
+                return SendEmail_New.SendHtmlFormattedEmail(message, subject, emp.EmployeeEmail);
             }
         }
 
-        public void SendEmailUsingSOM_HOD_Reject_Nominee(string nominationID, string loggedInUserID)
+        public bool SendEmailUsingSOM_HoD_Reject_Nominee(string nominationID, string loggedInUserID)
         {
-            string subject = "Star of the Month HoD Reject to Nominee";
-            string message = "Dear ##UserName##, <br><br>";
-            message += "<pre>  The HoD user has rejected Nomination from please refer HoD comments section. Please find the below details. " + "</pre><br><br>";
-            message += "<pre> HoD Name              :   ##HODUserName## </pre>";
-            message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
-            message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
-            message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
-            message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
-            message += "<pre> Nomination ID         :   ##NominationID## </pre>";
-            message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
-            message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
-            message += "<pre> Submitted Year        :   ##SubYear## </pre>";
-            message += "<br><br>";
-            message += "Thanks,<br>";
-            message += "##NomineeUserName##";
+            string subject = string.Empty;
+            string message = string.Empty;
+
+            //string subject = "Star of the Month HoD Reject to Nominee";
+            //string message = "Dear ##UserName##, <br><br>";
+            //message += "<pre>  The HoD user has rejected Nomination from please refer HoD comments section. Please find the below details. " + "</pre><br><br>";
+            //message += "<pre> HoD Name              :   ##HODUserName## </pre>";
+            //message += "<pre> HoD Employee No       :   ##HODUserNo## </pre>";
+            //message += "<pre> HoD Comments          :   ##HoDComments## </pre>";
+            //message += "<pre> Nominee User Name     :   ##NomineeUserName## </pre>";
+            //message += "<pre> Nominee Employee No   :   ##NomineeUserNo## </pre>";
+            //message += "<pre> Nomination ID         :   ##NominationID## </pre>";
+            //message += "<pre> Project Title         :   ##ProjectTitle## </pre>";
+            //message += "<pre> Submitted Month       :   ##SubMonth## </pre>";
+            //message += "<pre> Submitted Year        :   ##SubYear## </pre>";
+            //message += "<br><br>";
+            //message += "Thanks,<br>";
+            //message += "##NomineeUserName##";
 
             using (objSOMEntities = new SOMEntities())
             using (objIPEntities = new IntranetPortalEntities())
@@ -633,20 +662,22 @@ namespace StarOfTheMonth.Repo
                 message.Replace("##SubMonth##", nom.SubmittedMonth);
                 message.Replace("##SubYear##", nom.SubmittedYear);
 
-                ConfigurationModel emailDet = GetEmailDetails();
+                //ConfigurationModel emailDet = GetEmailDetails();
 
-                EmailParam objEmail = new EmailParam();
-                objEmail.PrimaryEnableSsl = true;
-                objEmail.PrimaryFrom = emailDet.FromUserID;
-                objEmail.PrimaryPassword = emailDet.Password;
-                objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
-                objEmail.PrimarySMTP = emailDet.SMTP;
-                objEmail.ToEmailAddress = emp.EmployeeEmail;
-                objEmail.MailContent = message;
-                objEmail.MailSubject = subject;
+                //EmailParam objEmail = new EmailParam();
+                //objEmail.PrimaryEnableSsl = true;
+                //objEmail.PrimaryFrom = emailDet.FromUserID;
+                //objEmail.PrimaryPassword = emailDet.Password;
+                //objEmail.PrimaryPortNo = int.Parse(emailDet.PortNo);
+                //objEmail.PrimarySMTP = emailDet.SMTP;
+                //objEmail.ToEmailAddress = emp.EmployeeEmail;
+                //objEmail.MailContent = message;
+                //objEmail.MailSubject = subject;
 
-                SendEmail sendEmail = new SendEmail();
-                //sendEmail.SendEmailUsingPrimary(objEmail);
+                //SendEmail sendEmail = new SendEmail();
+                ////sendEmail.SendEmailUsingPrimary(objEmail);
+
+                return SendEmail_New.SendHtmlFormattedEmail(message, subject, emp.EmployeeEmail);
             }
         }
 

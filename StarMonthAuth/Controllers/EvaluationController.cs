@@ -26,38 +26,58 @@ namespace StarMonthAuth.Controllers
         {
             DashboardModel model = new DashboardModel();
             _loginRepo = new LoginRepo();
-            var monthFilter = _loginRepo.GetMonthYearFilter();
-            var deptFilter = _loginRepo.GetDepartmentDetails();
-
-            model.Nom_DateFilterlst = monthFilter;
-            model.Nom_DeptFilterlst = deptFilter;
-
+            string _dept = System.Web.HttpContext.Current.Session["UserDepartment"].ToString();
+            List<SelectListItem> deptFilter = new List<SelectListItem>();
+            int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
+            if (_empSOMRole == (int)EmployeeRole.TQCHead)
+            {
+                deptFilter = _loginRepo.GetDepartmentDetails();
+            }
+            else
+            {
+                deptFilter = _loginRepo.GetDepartmentDetails(_dept, "");
+            }
+            model.DeptFilterlst = deptFilter;
+            model.From_Date = DateTime.Now.ToString("MMMM yyyy");
+            model.To_Date = DateTime.Now.ToString("MMMM yyyy");
 
             return View(model);
         }
 
         [HttpPost]
-        public JsonResult LoadEvaluationDetailsForGrid(string dept = "", string date = "")
+        public JsonResult LoadEvaluationDetailsForGrid(string dept = "", string fromDate = "", string toDate = "")
         {
             string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
             if (dept == "--Select--")
             {
                 dept = "";
             }
-            if (date == "--Select--")
+            if (fromDate == "--Select--")
             {
-                date = "";
+                fromDate = "";
             }
-            else if (!string.IsNullOrEmpty(date))
+            else if (!string.IsNullOrEmpty(fromDate))
             {
-                string[] monthYear = date.Split(' ');
+                string[] monthYear = fromDate.Split(' ');
                 string month = monthYear[0].Substring(0, 3);
                 string year = monthYear[1];
-                date = month + "-" + year;
+                fromDate = month + "-" + year;
+            }
+
+            if (toDate == "--Select--")
+            {
+                toDate = "";
+            }
+            else if (!string.IsNullOrEmpty(toDate))
+            {
+                string[] monthYear = toDate.Split(' ');
+                string month = monthYear[0].Substring(0, 3);
+                string year = monthYear[1];
+                toDate = month + "-" + year;
             }
             _repoResponse = new RepositoryResponse();
             _evaluationRepo = new EvaluationRepo();
-            _repoResponse = _evaluationRepo.LoadAllEvaluationData(_loggedInUserID, dept, date);
+            _repoResponse = _evaluationRepo.LoadAllEvaluationData(_loggedInUserID, dept, fromDate, toDate);
             if (_repoResponse.success)
             {
                 var _sa = new JsonSerializerSettings();
@@ -197,37 +217,60 @@ namespace StarMonthAuth.Controllers
         {
             DashboardModel model = new DashboardModel();
             _loginRepo = new LoginRepo();
-            var monthFilter = _loginRepo.GetMonthYearFilter();
-            var deptFilter = _loginRepo.GetDepartmentDetails();
+            string _dept = System.Web.HttpContext.Current.Session["UserDepartment"].ToString();
 
-            model.Nom_DateFilterlst = monthFilter;
-            model.Nom_DeptFilterlst = deptFilter;
+            List<SelectListItem> deptFilter = new List<SelectListItem>();
+            int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
+            if (_empSOMRole == (int)EmployeeRole.TQCHead)
+            {
+                deptFilter = _loginRepo.GetDepartmentDetails();
+            }
+            else
+            {
+                deptFilter = _loginRepo.GetDepartmentDetails(_dept, "");
+            }    
 
+            model.DeptFilterlst = deptFilter;
+
+            model.From_Date = DateTime.Now.ToString("MMMM yyyy");
+            model.To_Date = DateTime.Now.ToString("MMMM yyyy");
             return View(model);
         }
 
         [HttpPost]
-        public JsonResult LoadAllEvaluationDetailsForGrid(string dept = "", string date = "")
+        public JsonResult LoadAllEvaluationDetailsForGrid(string dept = "", string fromDate = "", string toDate = "")
         {
             string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
             if (dept == "--Select--")
             {
                 dept = "";
             }
-            if (date == "--Select--")
+            if (fromDate == "--Select--")
             {
-                date = "";
+                fromDate = "";
             }
-            else if (!string.IsNullOrEmpty(date))
+            else if (!string.IsNullOrEmpty(fromDate))
             {
-                string[] monthYear = date.Split(' ');
+                string[] monthYear = fromDate.Split(' ');
                 string month = monthYear[0].Substring(0, 3);
                 string year = monthYear[1];
-                date = month + "-" + year;
+                fromDate = month + "-" + year;
+            }
+
+            if (toDate == "--Select--")
+            {
+                toDate = "";
+            }
+            else if (!string.IsNullOrEmpty(toDate))
+            {
+                string[] monthYear = toDate.Split(' ');
+                string month = monthYear[0].Substring(0, 3);
+                string year = monthYear[1];
+                toDate = month + "-" + year;
             }
             _repoResponse = new RepositoryResponse();
             _evaluationRepo = new EvaluationRepo();
-            _repoResponse = _evaluationRepo.LoadAllEvaluationData_Alltime(_loggedInUserID, dept, date);
+            _repoResponse = _evaluationRepo.LoadAllEvaluationData_Alltime(_loggedInUserID, dept, fromDate, toDate);
             if (_repoResponse.success)
             {
                 var _sa = new JsonSerializerSettings();
