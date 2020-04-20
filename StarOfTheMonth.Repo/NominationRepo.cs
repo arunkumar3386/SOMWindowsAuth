@@ -499,55 +499,66 @@ namespace StarOfTheMonth.Repo
                         nomination.CreatedDateForFilterAsDateTime = Assistant.SOMDbToDateTimePicker(item.CreatedDate.Substring(0,8));
                         nomination.Status_int = (int)item.Status;
                         nomination.IsActive = (bool)item.IsActive;
+                        nomination.CreatedBy = item.CreatedBy;
                         lstNominations.Add(nomination);
                     }
 
-                    if (_empSomRole == (int)EmployeeRole.Admin)
+                    // if Nomination user
+                    if (_empSomRole == (int)SOMEmpRole.Nomination)
                     {
-                        //var _lstNomination = lstNomination.Where(r => r.EmployeeNumber == loggedInUserID).ToList();
-                        //lstNomination = lstNomination.Where(r => r.Status != (int)NominationStatus.Employee_Save && r.EmployeeNumber == loggedInUserID).ToList();
+                        lstNominations = lstNominations.Where(r => r.EmployeeNumber == loggedInUserID && r.IsActive == true).ToList();
                     }
-                    else if (_empSomRole == (int)EmployeeRole.TQCHead)
-                    {
-                        var Codes = new[] { (int)NominationStatus.Employee_Save,
-                                        (int)NominationStatus.Employee_Assign_HOD,
-                                        (int)NominationStatus.Employee_ReAssign_HoD,
-                                        (int)NominationStatus.HoD_Reject,
-                                        (int)NominationStatus.AdminReopen,
-                                        (int)NominationStatus.HoD_Assign_EmployeeClarification };
-
-                        lstNominations = lstNominations.Where(r => r.IsActive == true && !Codes.Contains((int)r.Status)).ToList();
-                    }
-                    else if (_empSomRole == (int)EmployeeRole.Evaluation)
-                    {
-                        var Codes = new[] { (int)NominationStatus.Employee_Save,
-                                        (int)NominationStatus.Employee_Assign_HOD,
-                                        (int)NominationStatus.Employee_ReAssign_HoD,
-                                        (int)NominationStatus.HoD_Reject,
-                                        (int)NominationStatus.AdminReopen,
-                                        (int)NominationStatus.HoD_Assign_EmployeeClarification,
-                                        (int)NominationStatus.HoD_Assign_TQC};
-
-                        lstNominations = lstNominations.Where(r => r.IsActive == true && !Codes.Contains((int)r.Status)).ToList();
-
-                        if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
-                        {
-                            dept = _dept;
-                        }
-                    }
-                    else if (_empSomRole == (int)EmployeeRole.DepartmentHead)
+                    else 
                     {
                         lstNominations = lstNominations.Where(r => r.Status_int != (int)NominationStatus.Employee_Save).ToList();
+                    }
 
-                        if (string.IsNullOrEmpty(dept) && dept != "--ALL--")
-                        {
-                            dept = _dept;
-                        }
-                    }
-                    else if (_empSomRole == (int)EmployeeRole.Nomination)
-                    {
-                        lstNominations = lstNominations.Where(r => r.EmployeeNumber == loggedInUserID).ToList();
-                    }
+                    //if (_empSomRole == (int)SOMEmpRole.Admin)
+                    //{
+                    //    //var _lstNomination = lstNomination.Where(r => r.EmployeeNumber == loggedInUserID).ToList();
+                    //    //lstNomination = lstNomination.Where(r => r.Status != (int)NominationStatus.Employee_Save && r.EmployeeNumber == loggedInUserID).ToList();
+                    //}
+                    //else if (_empSomRole == (int)SOMEmpRole.TQCHead)
+                    //{
+                    //    var Codes = new[] { (int)NominationStatus.Employee_Save,
+                    //                    (int)NominationStatus.Employee_Assign_HOD,
+                    //                    (int)NominationStatus.Employee_ReAssign_HoD,
+                    //                    (int)NominationStatus.HoD_Reject,
+                    //                    (int)NominationStatus.AdminReopen,
+                    //                    (int)NominationStatus.HoD_Assign_EmployeeClarification };
+
+                    //    lstNominations = lstNominations.Where(r => r.IsActive == true && !Codes.Contains((int)r.Status)).ToList();
+                    //}
+                    //else if (_empSomRole == (int)SOMEmpRole.Evaluation)
+                    //{
+                    //    var Codes = new[] { (int)NominationStatus.Employee_Save,
+                    //                    (int)NominationStatus.Employee_Assign_HOD,
+                    //                    (int)NominationStatus.Employee_ReAssign_HoD,
+                    //                    (int)NominationStatus.HoD_Reject,
+                    //                    (int)NominationStatus.AdminReopen,
+                    //                    (int)NominationStatus.HoD_Assign_EmployeeClarification,
+                    //                    (int)NominationStatus.HoD_Assign_TQC};
+
+                    //    lstNominations = lstNominations.Where(r => r.IsActive == true && !Codes.Contains((int)r.Status)).ToList();
+
+                    //    if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
+                    //    {
+                    //        dept = _dept;
+                    //    }
+                    //}
+                    //else if (_empSomRole == (int)SOMEmpRole.DepartmentHead)
+                    //{
+                    //    lstNominations = lstNominations.Where(r => r.Status_int != (int)NominationStatus.Employee_Save).ToList();
+
+                    //    if (string.IsNullOrEmpty(dept) && dept != "--ALL--")
+                    //    {
+                    //        dept = _dept;
+                    //    }
+                    //}
+                    //else if (_empSomRole == (int)SOMEmpRole.Nomination)
+                    //{
+                    //    lstNominations = lstNominations.Where(r => r.EmployeeNumber == loggedInUserID).ToList();
+                    //}
 
                     if (!string.IsNullOrEmpty(dept) && dept != "--ALL--")
                     {
@@ -565,63 +576,6 @@ namespace StarOfTheMonth.Repo
                                         && (r.CreatedDateForFilterAsDateTime.Date >= sdt.Date
                                         && r.CreatedDateForFilterAsDateTime.Date <= edt.Date)).ToList();
                     }
-
-                    //foreach (var item in lstNomination)
-                    //{
-                    //    var auditLog = objSOMEntities.AuditLogs.Where(r => r.NominationID == item.NominationId).OrderByDescending(r => r.ID).FirstOrDefault();
-                        
-                    //    NominationModel nomination = new NominationModel();
-                    //    if (auditLog != null)
-                    //    {
-                    //        var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == auditLog.CreatedBy).FirstOrDefault();
-                    //        if (person != null)
-                    //        {
-                    //            nomination.currentHoldingPerson = person.EmployeeName;
-                    //        }
-                    //        //nomination.StatusText = GetNominationStringById((int)auditLog.CurrentStatus);
-                    //        nomination.Status = (NominationStatus)auditLog.CurrentStatus;
-                    //        nomination.StatusText = EnumHelper.GetDescription((NominationStatus)auditLog.CurrentStatus);
-                    //    }
-                    //    else
-                    //    {
-                    //        var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == loggedInUserID).FirstOrDefault();
-                    //        if (person != null)
-                    //        {
-                    //            nomination.currentHoldingPerson = person.EmployeeName;
-                    //        }
-                    //        nomination.Status = NominationStatus.Employee_Save;
-                    //        nomination.StatusText = EnumHelper.GetDescription(NominationStatus.Employee_Save);
-                    //        //nomination.StatusText = GetNominationStringById((int)NominationStatus.Employee_Save);
-                    //    }
-                    //    nomination.NominationID = item.NominationId;
-                    //    nomination.ID = item.ID;
-                    //    nomination.EmployeeNumber = item.EmployeeNumber;
-                    //    nomination.Name = item.EmployeeName;
-                    //    nomination.Department = item.Department;
-                    //    nomination.StartDate_ForGrid = Assistant.SOMDbToUIDateConversion(item.StartDate);
-                    //    nomination.EndDate_ForGrid = Assistant.SOMDbToUIDateConversion(item.EndDate);
-                    //    if (!string.IsNullOrEmpty(item.CreatedDate))
-                    //    {
-                    //        nomination.CreatedDate_ForGrid = Assistant.SOMDbToUIDateConversion_New(item.CreatedDate);
-                    //    }
-                    //    nomination.Cost = item.Cost;
-                    //    Evaluation objEvaluation = new Evaluation();
-                    //    objEvaluation = objSOMEntities.Evaluations.Where(r => r.NominationID == item.NominationId).FirstOrDefault();
-                    //    if (objEvaluation == null)
-                    //    {
-                    //        nomination.IsEvalatorAssigned = false;
-                    //    }
-                    //    else
-                    //    {
-                    //        nomination.IsEvalatorAssigned = true;
-                    //    }
-
-
-                    //    //nomination.StartDate_ForGrid = Assistant.DateConversion(item.StartDate);
-                    //    //nomination.EndDate_ForGrid = Assistant.DateConversion(item.EndDate);
-                    //    _lstNominations.Add(nomination);
-
-                    //}
 
                     baseModel = new RepositoryResponse
                     {
@@ -1057,9 +1011,12 @@ namespace StarOfTheMonth.Repo
                                         && r.CreatedDateForFilterAsDateTime.Date <= edt.Date)).ToList();
                     }
 
+                    var _data = lstModel.Where(r => r.IsActive == true).Select(s => s.EmployeeNumber).Distinct();
+
+
                     var dat = lstModel.GroupBy(l => l.EmployeeNumber).Select(g => new { totCount = g.Select(l => l.EmployeeNumber).Distinct().Count() });
 
-                    model.ParticipatedEmpCount = dat.Select(r => r.totCount).FirstOrDefault();
+                    model.ParticipatedEmpCount = _data.Count();
                 }
 
                 baseModel = new RepositoryResponse { success = true, message= "Get report details Successfully...", Data = model };

@@ -118,7 +118,7 @@ namespace StarMonthAuth.Controllers
                 {
                     _loginRepo = new LoginRepo();
                     int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-                    int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+                    int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
                     HttpContext.Session["NotifyCount"] = count;
 
                     // reload SOM information
@@ -177,7 +177,7 @@ namespace StarMonthAuth.Controllers
             {
                 _loginRepo = new LoginRepo();
                 int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-                int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+                int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
                 HttpContext.Session["NotifyCount"] = count;
 
                 return Json(new { success = true, message = _repoResponse.message });

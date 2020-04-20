@@ -43,11 +43,11 @@ namespace StarMonthAuth.Controllers
 
             List<SelectListItem> deptFilter = new List<SelectListItem>();
 
-            if (_empSOMRole == (int)EmployeeRole.TQCHead )
+            if (_empSOMRole == (int)SOMEmpRole.TQCHead || _empSOMRole == (int)SOMEmpRole.Admin)
             {
                 deptFilter = _loginRepo.GetDepartmentDetails();
             }
-            else if(_empSOMRole == (int)EmployeeRole.Nomination)
+            else if(_empSOMRole == (int)SOMEmpRole.Nomination)
             {
                 deptFilter = _loginRepo.GetDepartmentDetails(_dept, _dept);
             }
@@ -295,7 +295,7 @@ namespace StarMonthAuth.Controllers
                 {
                     _loginRepo = new LoginRepo();
                     int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-                    int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+                    int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
                     HttpContext.Session["NotifyCount"] = count;
 
                     return Json(new { success = true, message = _repoResponse.message, Data = _repoResponse.Data });
@@ -408,7 +408,7 @@ namespace StarMonthAuth.Controllers
 
                 _loginRepo = new LoginRepo();
                 int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-                int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+                int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
                 HttpContext.Session["NotifyCount"] = count;
 
                 return Json(new { success = _repoResponse.success, message = _repoResponse.message, Data = _repoResponse.Data });
@@ -472,7 +472,7 @@ namespace StarMonthAuth.Controllers
 
             _loginRepo = new LoginRepo();
             int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-            int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+            int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
             HttpContext.Session["NotifyCount"] = count;
 
             return Json(new { success = _repoResponse.success, message = _repoResponse.message });
@@ -488,7 +488,7 @@ namespace StarMonthAuth.Controllers
 
             _loginRepo = new LoginRepo();
             int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-            int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+            int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
             HttpContext.Session["NotifyCount"] = count;
 
             return Json(new { success = _repoResponse.success, message = _repoResponse.message });
@@ -505,7 +505,7 @@ namespace StarMonthAuth.Controllers
 
             _loginRepo = new LoginRepo();
             int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-            int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+            int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
             HttpContext.Session["NotifyCount"] = count;
 
             return Json(new { success = _repoResponse.success, message = _repoResponse.message });
@@ -741,7 +741,7 @@ namespace StarMonthAuth.Controllers
 
                 _loginRepo = new LoginRepo();
                 int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-                int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+                int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
                 HttpContext.Session["NotifyCount"] = count;
 
                 return Json(new { success = _repoResponse.success, message = _repoResponse.message });

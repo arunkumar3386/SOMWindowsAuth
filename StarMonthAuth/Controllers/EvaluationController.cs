@@ -26,17 +26,18 @@ namespace StarMonthAuth.Controllers
         {
             DashboardModel model = new DashboardModel();
             _loginRepo = new LoginRepo();
-            string _dept = System.Web.HttpContext.Current.Session["UserDepartment"].ToString();
+            //string _dept = System.Web.HttpContext.Current.Session["UserDepartment"].ToString();
             List<SelectListItem> deptFilter = new List<SelectListItem>();
-            int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-            if (_empSOMRole == (int)EmployeeRole.TQCHead)
-            {
-                deptFilter = _loginRepo.GetDepartmentDetails();
-            }
-            else
-            {
-                deptFilter = _loginRepo.GetDepartmentDetails(_dept, "");
-            }
+           // int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
+            deptFilter = _loginRepo.GetDepartmentDetails();
+            //if (_empSOMRole == (int)SOMEmpRole.TQCHead)
+            //{
+            //    deptFilter = _loginRepo.GetDepartmentDetails();
+            //}
+            //else
+            //{
+            //    deptFilter = _loginRepo.GetDepartmentDetails(_dept, "");
+            //}
             model.DeptFilterlst = deptFilter;
             model.From_Date = DateTime.Now.ToString("MMMM yyyy");
             model.To_Date = DateTime.Now.ToString("MMMM yyyy");
@@ -156,7 +157,7 @@ namespace StarMonthAuth.Controllers
 
                 _loginRepo = new LoginRepo();
                 int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-                int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+                int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
                 HttpContext.Session["NotifyCount"] = count;
 
                 return Json(new { success = _repoResponse.success, message = _repoResponse.message });
@@ -191,7 +192,7 @@ namespace StarMonthAuth.Controllers
 
                 _loginRepo = new LoginRepo();
                 int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-                int count = _loginRepo.GetCountForUser(_loggedInUserID, _empSOMRole);
+                int count = _loginRepo.getActionCounts(_loggedInUserID, _empSOMRole);
                 HttpContext.Session["NotifyCount"] = count;
 
                 return Json(new { success = _repoResponse.success, message = _repoResponse.message });
@@ -217,19 +218,19 @@ namespace StarMonthAuth.Controllers
         {
             DashboardModel model = new DashboardModel();
             _loginRepo = new LoginRepo();
-            string _dept = System.Web.HttpContext.Current.Session["UserDepartment"].ToString();
+            //string _dept = System.Web.HttpContext.Current.Session["UserDepartment"].ToString();
 
             List<SelectListItem> deptFilter = new List<SelectListItem>();
-            int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
-            if (_empSOMRole == (int)EmployeeRole.TQCHead)
-            {
-                deptFilter = _loginRepo.GetDepartmentDetails();
-            }
-            else
-            {
-                deptFilter = _loginRepo.GetDepartmentDetails(_dept, "");
-            }    
-
+            //int _empSOMRole = int.Parse(System.Web.HttpContext.Current.Session["EmpSOMRole"].ToString());
+            //if (_empSOMRole == (int)SOMEmpRole.TQCHead)
+            //{
+            //    deptFilter = _loginRepo.GetDepartmentDetails();
+            //}
+            //else
+            //{
+            //    deptFilter = _loginRepo.GetDepartmentDetails(_dept, "");
+            //}    
+            deptFilter = _loginRepo.GetDepartmentDetails();
             model.DeptFilterlst = deptFilter;
 
             model.From_Date = DateTime.Now.ToString("MMMM yyyy");

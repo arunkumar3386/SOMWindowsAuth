@@ -15,7 +15,7 @@ namespace StarOfTheMonth.Models
         public string EmailID { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public EmployeeRole Role { get; set; }
+        public SOMEmpRole Role { get; set; }
         public string Department { get; set; }
         public string Position { get; set; }
         public bool IsActive { get; set; }
@@ -51,6 +51,7 @@ namespace StarOfTheMonth.Models
         public long ModifiedBy { get; set; }
 
         public int EmployeeSOMRole { get; set; }
+        public string EmployeeSOMRoleAsString { get; set; }
 
         public string EMPMonth { get; set; }
         public string EMPYear { get; set; }

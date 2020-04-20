@@ -67,7 +67,7 @@ namespace StarMonthAuth.Controllers
             }
 
             string _loggedInUserID = System.Web.HttpContext.Current.Session["UserID"].ToString();
-            if (_empSOMRole == (int)EmployeeRole.TQCHead)
+            if (_empSOMRole == (int)SOMEmpRole.TQCHead)
             {
                
             }

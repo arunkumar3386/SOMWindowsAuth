@@ -139,7 +139,7 @@
         if (menuList != '') {
             var array = menuList.split(",");
             for (i = 0; i < array.length; i++) {
-                $("#" + array[i] + "").show();
+                $("#" + array[i].trim() + "").show();
             }
         }
     }

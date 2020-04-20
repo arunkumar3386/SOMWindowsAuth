@@ -378,6 +378,68 @@
             });
         });
 
+        $(document).ready(function () {
+            var nomMessage = $("#NominationMessage").val();
+            if (nomMessage != '') {
+                alertify.alert("SOM Alert", nomMessage, function () { $("#btnCancel").click(); });
+            }
+            
+            controlNominationPage();
+            //enableDisableMultiselectDropDown();
+            //hideEnableUIControls();
+            $("#Name").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: $("#empNameSearch").data('url'),
+                        type: "POST",
+                        dataType: "json",
+                        data: { Prefix: request.term },
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                //this.console.log(item);
+                                return item;
+                                //return { label: item.EmployeeID, value: item.Name };
+                            }))
+
+                        }
+                    })
+                },
+                select: function (e, i) {
+                    console.log(i);
+                    var result = i.item.val;
+                    var splt = result.split("###");
+                    $("#EmployeeNumber").val(splt[0]);
+                    $("#Department").val(splt[1]);
+                },
+                minLength: 1,
+                messages: {
+                    noResults: "", results: ""
+                }
+            });
+
+            $("#fileInput").on("change", function () {
+                var fileInput = document.getElementById('fileInput');
+                //Iterating through each files selected in fileInput
+                for (i = 0; i < fileInput.files.length; i++) {
+
+                    var sfilename = fileInput.files[i].name;
+                    let srandomid = Math.random().toString(36).substring(7);
+
+                    formdata.append(sfilename, fileInput.files[i]);
+
+                    var markup = "<tr id='" + srandomid + "'><td>" + sfilename + "</td><td><a href='#' onclick='DeleteFile(\"" + srandomid + "\",\"" + sfilename +
+                        "\")'><span class='fas fa-times-circle red'></span></a></td></tr>"; // Binding the file name
+                    $("#FilesList tbody").append(markup);
+
+                }
+                chkatchtbl();
+                $('#fileInput').val('');
+
+            });
+
+            
+        });
+
         var table = $('#tblHorDep')[0];
 
         $(table).delegate('.tr_clone_add', 'click', function () {
@@ -448,13 +510,12 @@
         });
 
         function DHReAssignFunction() {
-            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
             var status = $("#Status").val();
             var comments = $("#CommentsByDH").val();
             var auditLogComments = $("#AuditLogComments").val();
             spinner_On();
             hideSuccessErrorDiv();
-            if (status == "Employee_Assign_HOD" && (UserGrade == "1002" || UserGrade == "1008")) {
+            if (status == "Employee_Assign_HOD") {
                 if (auditLogComments != "") {
                     NominationFormDH($("#btnReAssign").data('url'));
                     spinner_Off();
@@ -603,111 +664,62 @@
         }
         function controlNominationPage() {
             spinner_On();
-            var UserGrade = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+
+            var SOMRoleText = '@HttpContext.Current.Session["EmpSOMRoleText"].ToString()';
+            var SOMRole = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
+
             var loggedInUserID = '@HttpContext.Current.Session["UserID"].ToString()';
             var ReportingPersonID = $("#ReportingPersonID").val();
+
             var status = $("#Status").val();
             var nomCreatedID = $("#EmployeeNumber").val();
-
-            console.log(UserGrade + " -- " + loggedInUserID + " -- " + ReportingPersonID + " -- " + status + " -- " + nomCreatedID)
-            console.log(status);
-            var combineSts = "10011002";
-            if (!UserGrade.match(combineSts)) {
-                if (status == "0") {
-                    console.log("loop00");
+            console.log(nomCreatedID);
+            if (SOMRole == "3005") // NominationOnly 
+            {
+                if (loggedInUserID == nomCreatedID && status == '0') {
+                    console.log('aa');
                     NomAllowaccessPage();
                 }
-                else if (status == "HoD_Assign_EmployeeClarification") {
-                    console.log("loop0");
-                    if (UserGrade == "1001") {
-                        NomAllowaccessPage();
-                    }
-                    else {
-                        justViewPage();
-                    }
+                else if (loggedInUserID == nomCreatedID && (status == "Employee_Save" || status == "HoD_Assign_EmployeeClarification" || status == "AdminReopen"  )) {
+                    //Show Save and AssignHoD button allow full pageAccess
+                    console.log('a');
+                    NomAllowaccessPage();
                 }
-
-                else {
-                    console.log("loop1");
+                else if (loggedInUserID == nomCreatedID && status == "HoD_Reject" ) {
+                    //Show Save and AssignHoD button allow full pageAccess
                     justViewPage();
                 }
-
+                else if (loggedInUserID == nomCreatedID && (status == "Employee_Assign_HOD" || status == "Employee_ReAssign_HoD") ) {
+                    //Show Save and AssignHoD button allow full pageAccess
+                    console.log('a');
+                    justViewPage();
+                }
+                else if (loggedInUserID != nomCreatedID) {
+                    //Just View Page 
+                    console.log('b');
+                    justViewPage();
+                }
             }
-
-            if (UserGrade == "1006" && loggedInUserID == nomCreatedID && status == "HoD_Assign_EmployeeClarification") {
-                console.log("loop3.1.0");
-                NomAllowtoAddComments();
-            }
-            
-            if (UserGrade == "1001" && loggedInUserID == nomCreatedID && status == "Employee_Save") {
-                console.log("loop3");
-                NomAllowtoAddComments();
-            }
-            else if (UserGrade == "1006" && loggedInUserID == nomCreatedID && status == "Employee_Save") {
-                console.log("loop3.1");
-                NomAllowtoAddComments();
-            }
-            else if (UserGrade == "1001" && loggedInUserID != nomCreatedID && status == "Employee_Save") {
-                console.log("loop4");
-                justViewPage();
-            }
-            else if (UserGrade == "1001" && loggedInUserID != nomCreatedID && status != "Employee_Save") {
-                console.log("loop5");
-                justViewPage();
-            }
-            else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_HOD") {
-                console.log("loop6");
-                DHAllowtoAddComments();
-            }
-            else if (UserGrade == "1002" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_HoD") {
-                console.log("loop6.1");
-                DHAllowtoAddComments();
-            }
-            else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status == "Employee_Assign_HOD") {
-                console.log("loop7");
-                justViewPage();
-            }
-            else if (UserGrade == "1002" && loggedInUserID != ReportingPersonID && status != "Employee_Assign_HOD") {
-                console.log("loop8");
-                justViewPage();
-            }
-            else if (UserGrade == "1008" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_HOD") {
-                console.log("loop8.1");
-                DHAllowtoAddComments();
-            }
-            else if (UserGrade == "1008" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_HoD") {
-                console.log("loop8.2");
-                DHAllowtoAddComments();
-            }
-            else if (UserGrade == "10010" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_HOD") {
-                console.log("loop8.3");
-                DHAllowtoAddComments();
-            }
-            else if (UserGrade == "1009" && loggedInUserID == ReportingPersonID && status == "Employee_Assign_HOD") {
-                console.log("loop8.3");
-                DHAllowtoAddComments();
-            }
-
-            else if (UserGrade == "1009" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_HoD") {
-                console.log("loop8.4");
-                DHAllowtoAddComments();
-            }
-            else if (UserGrade == "10010" && loggedInUserID == ReportingPersonID && status == "Employee_ReAssign_HoD") {
-                console.log("loop8.5");
-                DHAllowtoAddComments();
-            }
-            
-
-            var value = $("#NominationMessage").val();
-
-            if (value != '') {
-                $("#NomResctrict").show();
-                $("#NominationMessage").html(value);
-                $("#btnSave").hide();
-                $("#btnSubmit").hide();
+            else if (SOMRoleText.indexOf("HoD") != -1) {
+                console.log(status);
+                if (loggedInUserID == ReportingPersonID && (status == "Employee_ReAssign_HoD" || status == "Employee_Assign_HOD") ) {
+                    //HoD operation enable
+                    console.log('c');
+                    DHAllowtoAddComments();
+                }
+                else if (loggedInUserID == ReportingPersonID) {
+                    //Just view Page
+                    console.log('d');
+                    justViewPage();
+                }
+                else {
+                    justViewPage();
+                }
             }
             else {
-                $("#NomResctrict").hide();
+                console.log('e');
+                //Just View Page
+                justViewPage();
             }
 
             spinner_Off();
@@ -803,7 +815,7 @@
         }
 
         function justViewPage() {
-          
+
             $('.NomSection').attr('readonly', 'readonly');
             $('.NomSection').addClass('input-disabled');
             $("#btnCancel").show();
@@ -817,6 +829,7 @@
             $("#CommentsByDH").attr('readonly', 'readonly');
             $("#fileInput").hide();
             $("#SavingsIds").multiselect("disable");
+            
         }
 
         function DHAllowtoAddComments() {
@@ -852,6 +865,7 @@
         }
 
         function NomAllowaccessPage() {
+            
             $('.NomSection').removeAttr('readonly');
             $('.NomSection').removeClass('input-disabled');
             $("#btnCancel").show();
@@ -869,6 +883,7 @@
             $("#CommentsByDH").attr('readonly', 'readonly');
             $("#fileInput").show();
             $("#SavingsIds").multiselect("enable");
+            enableDisableMultiselectDropDown();
         }
 
         function showControls() {
@@ -889,65 +904,7 @@
 
         var formdata = new FormData(); //FormData object
 
-        $(document).ready(function () {
-            var nomMessage = $("#NominationMessage").val();
-            if (nomMessage != '') {
-                alertify.alert("SOM Alert", nomMessage, function () { $("#btnCancel").click(); });
-            }
-            controlNominationPage();
-            //hideEnableUIControls();
-            $("#Name").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: $("#empNameSearch").data('url'),
-                        type: "POST",
-                        dataType: "json",
-                        data: { Prefix: request.term },
-                        success: function (data) {
-                            response($.map(data, function (item) {
-                                //this.console.log(item);
-                                return item;
-                                //return { label: item.EmployeeID, value: item.Name };
-                            }))
 
-                        }
-                    })
-                },
-                select: function (e, i) {
-                    console.log(i);
-                    var result = i.item.val;
-                    var splt = result.split("###");
-                    $("#EmployeeNumber").val(splt[0]);
-                    $("#Department").val(splt[1]);
-                },
-                minLength: 1,
-                messages: {
-                    noResults: "", results: ""
-                }
-            });
-
-            $("#fileInput").on("change", function () {
-                var fileInput = document.getElementById('fileInput');
-                //Iterating through each files selected in fileInput
-                for (i = 0; i < fileInput.files.length; i++) {
-
-                    var sfilename = fileInput.files[i].name;
-                    let srandomid = Math.random().toString(36).substring(7);
-
-                    formdata.append(sfilename, fileInput.files[i]);
-
-                    var markup = "<tr id='" + srandomid + "'><td>" + sfilename + "</td><td><a href='#' onclick='DeleteFile(\"" + srandomid + "\",\"" + sfilename +
-                        "\")'><span class='fas fa-times-circle red'></span></a></td></tr>"; // Binding the file name
-                    $("#FilesList tbody").append(markup);
-
-                }
-                chkatchtbl();
-                $('#fileInput').val('');
-
-            });
-
-            enableDisableMultiselectDropDown();
-        });
 
         $('.listbox').multiselect({
             includeSelectAllOption: true

@@ -42,8 +42,11 @@ namespace StarMonthAuth.ActionFilter
                 //loggedInuser = "Chandrasekar"; // Evaluation user
                 //loggedInuser = "S.Karthik"; // Evaluation user
 
-                // loggedInuser = "Jerome"; //TQC Head
+                //loggedInuser = "Jerome"; //TQC Head
                 //loggedInuser = "KS.Suseel"; //Admin
+
+                //loggedInuser = "d.kalpanadevi";
+                //loggedInuser = "Shakir";
 
                 ILoginRepo loginRepo = new LoginRepo();
                 RepositoryResponse model = loginRepo.GetLoginUserDetails(loggedInuser);
@@ -53,12 +56,12 @@ namespace StarMonthAuth.ActionFilter
                     EmpMasterModel _orGModel = model.Data;
                     if (_orGModel != null)
                     {
-                        RepositoryResponse _model = loginRepo.GetPageAccessListByUserGrade(_orGModel.Grade, loggedInuser);
-                        if (_model != null)
-                        {
-                            HttpContext.Current.Session.Add("pageAccessList", _model.Data);
-                            //claims.Add(new Claim(ClaimTypes.Actor, _model.Data));
-                        }
+                        //RepositoryResponse _model = loginRepo.GetPageAccessListByUserGrade(_orGModel.Grade, loggedInuser);
+                        //if (_model != null)
+                        //{
+                        //    HttpContext.Current.Session.Add("pageAccessList", _model.Data);
+                        //    //claims.Add(new Claim(ClaimTypes.Actor, _model.Data));
+                        //}
                     }
                     HttpContext.Current.Session.Add("UserName", _orGModel.UserName);
                     HttpContext.Current.Session.Add("UserFullName", _orGModel.EmployeeName);
@@ -93,12 +96,15 @@ namespace StarMonthAuth.ActionFilter
                         EmpMasterModel data = _model1.Data;
                         empRole = data.EmployeeSOMRole;
                         HttpContext.Current.Session.Add("EmpSOMRole", empRole.ToString());
+                        HttpContext.Current.Session.Add("EmpSOMRoleText", data.EmployeeSOMRoleAsString);
 
+                        string menuNames = loginRepo.getMenuForUser(_orGModel.EmployeeNumber, empRole);
+                        HttpContext.Current.Session.Add("pageAccessList", menuNames);
                         //claims.Add(new Claim(ClaimTypes.StreetAddress, empRole.ToString()));
                     }
 
                     //Get Notification count
-                    int count = loginRepo.GetCountForUser(_orGModel.EmployeeNumber, empRole);
+                    int count = loginRepo.getActionCounts(_orGModel.EmployeeNumber, empRole);
 
                     HttpContext.Current.Session.Add("NotifyCount", count);
                     //claims.Add(new Claim(ClaimTypes.HomePhone, count.ToString()));

@@ -54,18 +54,20 @@ namespace StarMonthAuth.Controllers
 
                 //loggedInuser = "Sanjay"; //Nomination User -- DH --RThangaraj
                 //loggedInuser = "muthu"; //Nomination User DH -- RThangaraj
-                loggedInuser = "kamudhan";//Nomination User 
+                //loggedInuser = "kamudhan";//Nomination User 
                 //loggedInuser = "r.thangaraj"; //DH user
                 //loggedInuser = "r.thangaraj"; //DH user
 
                 //loggedInuser = "Chandrasekar"; // Evaluation user
                 //loggedInuser = "S.Karthik"; // Evaluation user
 
-                //loggedInuser = "Jerome"; //TQC Head
+                // loggedInuser = "Jerome"; //TQC Head
                 //loggedInuser = "KS.Suseel"; //Admin
 
                 //loggedInuser = "d.kalpanadevi";//Nomination User
                 //loggedInuser = "N.Vasudevan";//DH
+                //loggedInuser = "d.kalpanadevi";
+               // loggedInuser = "Shakir";
 
                 ILoginRepo loginRepo = new LoginRepo();
                 RepositoryResponse model = loginRepo.GetLoginUserDetails(loggedInuser);
@@ -75,19 +77,19 @@ namespace StarMonthAuth.Controllers
                     EmpMasterModel _orGModel = model.Data;
                     if (_orGModel != null)
                     {
-                        RepositoryResponse _model = loginRepo.GetPageAccessListByUserGrade(_orGModel.Grade, loggedInuser);
-                        if (_model != null)
-                        {
-                            Session.Add("pageAccessList", _model.Data);
-                        }
-                    }
-                    Session.Add("UserName", _orGModel.UserName);
-                    Session.Add("UserFullName", _orGModel.EmployeeName);
-                    Session.Add("UserID", _orGModel.EmployeeNumber);
-                    Session.Add("UserDepartment", _orGModel.Department);
-                    Session.Add("UserGrade", _orGModel.Grade.ToString());
+                        //RepositoryResponse _model = loginRepo.GetPageAccessListByUserGrade(_orGModel.Grade, loggedInuser);
+                        //if (_model != null)
+                        //{
+                        //    Session.Add("pageAccessList", _model.Data);
+                        //}
 
-                    
+                        Session.Add("UserName", _orGModel.UserName);
+                        Session.Add("UserFullName", _orGModel.EmployeeName);
+                        Session.Add("UserID", _orGModel.EmployeeNumber);
+                        Session.Add("UserDepartment", _orGModel.Department);
+                        Session.Add("UserGrade", _orGModel.Grade.ToString());
+                    }
+
                     int empRole = 0;
                     RepositoryResponse _model1 = loginRepo.GetUserDetailsByUserID(_orGModel.EmployeeNumber);
                     if (_model1 != null && _model1.Data != null)
@@ -95,10 +97,14 @@ namespace StarMonthAuth.Controllers
                         EmpMasterModel data = _model1.Data;
                         empRole = data.EmployeeSOMRole;
                         Session.Add("EmpSOMRole", empRole.ToString());
+                        Session.Add("EmpSOMRoleText", data.EmployeeSOMRoleAsString);
+
+                        string menuNames = loginRepo.getMenuForUser(_orGModel.EmployeeNumber, empRole);
+                        Session.Add("pageAccessList", menuNames);
                     }
 
                     //Get Notification count
-                    int count = loginRepo.GetCountForUser(_orGModel.EmployeeNumber, empRole);
+                    int count = loginRepo.getActionCounts(_orGModel.EmployeeNumber, empRole);
 
                     Session.Add("NotifyCount", count);
 
@@ -120,7 +126,7 @@ namespace StarMonthAuth.Controllers
                         Session.Add("SOM_Image_" + i, _data[i].ImagePath);
                     }
 
-                    if (empRole == (int)EmployeeRole.Nomination)
+                    if (empRole == (int)SOMEmpRole.Nomination)
                     {
                         return RedirectToAction("Index", "Nomination");
                     }

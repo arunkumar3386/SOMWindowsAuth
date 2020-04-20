@@ -2,7 +2,7 @@
 
 namespace StarOfTheMonth.Models
 {
-    public enum EmployeeRole
+    public enum EmployeeRole_
     {
         [Description("Nomination")]
         Nomination = 1001,
@@ -35,6 +35,7 @@ namespace StarOfTheMonth.Models
         AdminEvaluationHoD = 10010,
     }
 
+
     public enum SOMEmpRole
     {
         [Description("TQCHead")]
@@ -52,30 +53,38 @@ namespace StarOfTheMonth.Models
         [Description("Nomination")]
         Nomination = 3005,
 
+        [Description("EvaluationNomination")]
+        EvaluationNomination = 3006,
+
         [Description("AdminHoD")]
-        AdminHoD = 3006,
+        AdminHoD = 3007,
 
         [Description("AdminEvaluation")]
-        AdminEvaluation = 3007,
+        AdminEvaluation = 3008,
 
         [Description("AdminNomination")]
-        AdminNomination = 3008,
+        AdminNomination = 3009,
+
+        [Description("AdminEvaluationNomination")]
+        AdminEvaluationNomination = 3010,
 
         [Description("HoDEvaluation")]
-        HoDEvaluation = 3009,
+        HoDEvaluation = 3011,
 
         [Description("HoDNomination")]
-        HoDNomination = 3010,
+        HoDNomination = 3012,
+
+        [Description("HoDEvaluationNomination")]
+        HoDEvaluationNomination = 3013,
 
         [Description("AdminHoDEvaluation")]
-        AdminHoDEvaluation = 3011,
+        AdminHoDEvaluation = 3014,
 
         [Description("AdminHoDNomination")]
-        AdminHoDNomination = 3012,
+        AdminHoDNomination = 3015,
 
         [Description("AdminHoDEvaluationNomination")]
-        AdminHoDEvaluationNomination = 3013,
-
+        AdminHoDEvaluationNomination = 3016,
     }
 
     public enum NominationStatus

@@ -144,6 +144,7 @@
         </div>
     </div>
 </div>
+
 @*ModalPopup ADD Evaluator Start*@
 <div class="modal fade" id="addEvaluator" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -232,46 +233,21 @@
         });
 
         $(document).ready(function () {
-
-            var userGrade = '@HttpContext.Current.Session["UserGrade"].ToString()';
+            var SOMRoleText = '@HttpContext.Current.Session["EmpSOMRoleText"].ToString()';
             var SOMRole = '@HttpContext.Current.Session["EmpSOMRole"].ToString()';
-            var Dept = '@HttpContext.Current.Session["UserDepartment"].ToString()';
-            console.log(SOMRole);
-            //if (Dept == "1002") {
-            //    $('#Nom_DeptFilter').attr('disabled', 'disabled');
-            //    $('#Nom_DeptFilter').addClass('input-disabled');
-            //}
-            //else {
-            //    $('#Nom_DeptFilter').removeAttr('readonly', 'readonly');
-            //    $('#Nom_DeptFilter').removeClass('input-disabled');
-            //}
 
-            if (SOMRole == "1003") {
-                $(".nonTQCSection").hide();
-                $(".TQCSection").show();
-            }
-            else {
-                $(".TQCSection").hide();
-                $(".nonTQCSection").show();
-            }
-
-            if (SOMRole == "1001") {
-                $("#dvFilterSection").show();
+            if (SOMRole == "3005") // NominationOnly
+            {
                 $("#DeptFilter").prop("disabled", true);
             }
-
-            if (userGrade =="Admin") {
+            else if (SOMRoleText.indexOf("HoD") != -1) //user have Admin access
+            {
                 $('#dvReject').show();
                 $('#RejectedCheck').prop('checked', false);
             }
-            else {
-                $('#dvReject').hide();
-            }
 
             $("#pageTitle").text("Nomination Details");
-
             excuteFilter();
-           
             $('.dt-button').addClass('btn btn-primary fas fa-download');
 
         });
@@ -356,27 +332,25 @@
                                     'data': '',
                                     'sortable': false,
                                     'render': function json(data, type, full, meta) {
-                                        //console.log(full);
-                                        if (SOMRole == "1003") {
-                                            if (full.IsEvalatorAssigned) {
-                                                return "<a style='cursor:pointer;' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>" + " "
-                                                    + "<a style='cursor:pointer; color:red;'onclick='PdfDownload()' href='/Nomination/GeneratePDF?ID=" + full.NominationID + "'><i class='fas fa-file-pdf'></i></a>";
-                                            }
-                                            else {
+                                        if (SOMRole == "3001") // TQC Head
+                                        {
+                                            if (full.StatusText == "HoD Assign TQC") {
                                                 return "<a style='cursor:pointer;' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>" + " "
                                                     + "<a style='cursor:pointer; color:red;'onclick='PdfDownload()' href='/Nomination/GeneratePDF?ID=" + full.NominationID + "'><i class='fas fa-file-pdf'></i></a>" + "  "
                                                     + "<a style='cursor:pointer; color:green;' data-toggle='tooltip' title='Assign Evaluator' onclick='AssignEvaluator(" + full.ID + ")'> <i class='fas fa-user-plus'></i></a> ";
-
-                                                //return "<a style='cursor:pointer;'  data-toggle='tooltip' title='View Nomination' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>"
-                                                //     + "  " + "<a style='cursor:pointer;color:green;' data-toggle='tooltip' title='Assign Evaluator' onclick='AssignEvaluator(" + full.ID + ")'><i class='fas fa-user-plus'></i></a>";
                                             }
+                                            else //if (full.IsEvalatorAssigned)
+                                            {
+                                                return "<a style='cursor:pointer;' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>" + " "
+                                                    + "<a style='cursor:pointer; color:red;'onclick='PdfDownload()' href='/Nomination/GeneratePDF?ID=" + full.NominationID + "'><i class='fas fa-file-pdf'></i></a>";
+                                            }
+                                            
                                         }
-                                        else {
+                                        else
+                                        {
                                             return "<a style='cursor:pointer;' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>" + " "
                                                 + "<a style='cursor:pointer; color:red;'onclick='PdfDownload()' href='/Nomination/GeneratePDF?ID=" + full.NominationID + "'><i class='fas fa-file-pdf'></i></a>";
                                         }
-
-                                        //return "<a asp-controller='Nomination' asp-action='Index'>"+full.EmployeeID+"</a>"
                                     }
                                 },
                                 { 'data': 'ID', "visible": false, },
@@ -390,8 +364,6 @@
                                 { 'data': 'StatusText' },
                                 { 'data': 'currentHoldingPerson' },
                                 { 'data': 'CreatedDate_ForGrid', "visible": false, },
-
-                                
                             ],
 
                             //"fnRowCallback": function (nRow, aData, iDisplayIndex) {
@@ -523,13 +495,7 @@
                                     'data': '',
                                     'sortable': false,
                                     'render': function json(data, type, full, meta) {
-
-                                        //return "<i  class='fas fa-eye' style='cursor:pointer;' onclick=ViewNomData('" + full.EmployeeID + "'); ></i>";
-                                        //var binding = "Url.Action('Nomination','Nomination', new { id ='" + full.ID+"' })";
-                                        //return "<a class='fas fa-eye' style='cursor:pointer;' href='" + binding + "'></a>";
-                                        //return "<a  style='cursor:pointer;' href='/Login/Nomination/Nomination/" + full.ID + "'><i class='fas fa-eye'></i></a>";
                                         return "<a style='cursor:pointer;' onclick='Clickfn(" + full.ID + ")'><i class='fas fa-eye'></i></a>";
-                                        //return "<a asp-controller='Nomination' asp-action='Index'>"+full.EmployeeID+"</a>"
                                     }
                                 },
                             ],
@@ -545,10 +511,6 @@
                                 }
                             }],
 
-                            //"fnRowCallback": function (nRow, aData, iDisplayIndex) {
-                            //    $("td:first", nRow).html(iDisplayIndex + 1);
-                            //    return nRow;
-                            //},
                         });
 
                         // To decide it's textbox or Select Filter
@@ -558,7 +520,6 @@
                             if (title == "Emp.No" || title == "Name" || title == "Department" || title == "Project Start Date" || title == "Project End Date"
                                 || title == "Nomination ID" || title == "Created Date" ) {
                                 $(this).html('<div class="search"><input type="text" class="form-control" placeholder="Search"></div>');
-                                //$(this).html('<div class="search"><input type="text" class="form-control" placeholder="Search ' + title + '"></div>');
                             }
                             else if (title == "Sl.No" || title == "ID" || title.trim() == "") {
                                 $(this).html("");
@@ -594,8 +555,6 @@
 
         function Clickfn(id) {
             window.location.href = '@Url.Action("Nomination", "Nomination")?id=' +id;
-            //var url = '@Url.Action("Nomination", "Nomination", new {id = 10010})'; //Generate URL string using razor
-           // window.location.href = url.replace('-1', id); //replace ID value
         }
 
         function clearSearch() {
