@@ -52,7 +52,7 @@ namespace StarMonthAuth.Controllers
 
                 }
 
-                //loggedInuser = "Sanjay"; //Nomination User -- DH --RThangaraj
+                loggedInuser = "Sanjay"; //Nomination User -- DH --RThangaraj
                 //loggedInuser = "muthu"; //Nomination User DH -- RThangaraj
                 //loggedInuser = "kamudhan";//Nomination User 
                 //loggedInuser = "r.thangaraj"; //DH user
@@ -61,7 +61,7 @@ namespace StarMonthAuth.Controllers
                 //loggedInuser = "Chandrasekar"; // Evaluation user
                 //loggedInuser = "S.Karthik"; // Evaluation user
 
-                // loggedInuser = "Jerome"; //TQC Head
+                //loggedInuser = "Jerome"; //TQC Head
                 //loggedInuser = "KS.Suseel"; //Admin
 
                 //loggedInuser = "d.kalpanadevi";//Nomination User
@@ -82,7 +82,16 @@ namespace StarMonthAuth.Controllers
                         //{
                         //    Session.Add("pageAccessList", _model.Data);
                         //}
-
+                        if (string.IsNullOrEmpty(_orGModel.ImagePath))
+                        {
+                            Session.Add("UserImage", "/Images/UserImages/user-1.jpg");
+                        }
+                        else
+                        {
+                            Session.Add("UserImage", _orGModel.ImagePath);
+                        }
+                        
+                        //Session.Add("UserImage", "/Images/UserImages/user-1.jpg");
                         Session.Add("UserName", _orGModel.UserName);
                         Session.Add("UserFullName", _orGModel.EmployeeName);
                         Session.Add("UserID", _orGModel.EmployeeNumber);

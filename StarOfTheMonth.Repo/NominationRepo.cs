@@ -379,6 +379,75 @@ namespace StarOfTheMonth.Repo
             return baseModel;
         }
 
+        public string GetCurrentHoldingPerson(string loggedInUserID, string NominationId, string status, string empNumber)
+        {
+            string personName = string.Empty;
+            string personEnumber = string.Empty;
+            int rptNum = int.Parse(empNumber);
+            using (objIPEntities = new IntranetPortalEntities())
+            using (objSOMEntities = new SOMEntities())
+            {
+                switch (status)
+                {
+                    //Nomination
+                    case "Employee Save":
+                    case "HoD Assign EmployeeClarification":
+                    case "HoD Reject":
+                    case "AdminReopen":
+                        personEnumber = empNumber;
+                        var _emp = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == empNumber).FirstOrDefault();
+                        if (_emp != null)
+                        {
+                            personName = _emp.EmployeeName;
+                        }
+                        break;
+
+                    //HoD
+                    case "Employee Assign HoD":
+                    case "Employee ReAssign HoD":
+                        var hod = objIPEntities.EmpMasters.Where(r => r.ReportingPersonId == rptNum).FirstOrDefault();
+                        if (hod != null)
+                        {
+                            personEnumber = hod.EmployeeNumber;
+                            personName = hod.EmployeeName;
+                        }
+                        break;
+
+                    //TQC
+                    case "HoD Assign TQC":
+                    case "Evaluators Assign TQC":
+                    case "TQC Declare SOM":
+                        var tqc = objSOMEntities.TQCHeads.Where(r => r.IsActive == true).FirstOrDefault();
+                        if (tqc != null)
+                        {
+                            personEnumber = tqc.EmployeeNumber;
+                            personName = tqc.Name;
+                        }                       
+                        break;
+
+                    //Evaluators
+                    case "Evaluators Save":
+                    case "TQC Assign Evaluator":
+                        var eval = objSOMEntities.Evaluations.Where(r => r.NominationID == NominationId).FirstOrDefault();
+                        if (eval != null)
+                        {
+                            personEnumber = eval.EmployeeNumber;
+                            var emp = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == eval.EmployeeNumber).FirstOrDefault();
+                            if (emp != null)
+                            {
+                                personName = emp.EmployeeName;
+                            }
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            return personName;
+        }
+
         public RepositoryResponse LoadNomination(string loggedInUserID,  string dept, string FDate, string TDate, bool isRejected)
         {
             baseModel = new RepositoryResponse();
@@ -455,24 +524,34 @@ namespace StarOfTheMonth.Repo
                         NominationModel nomination = new NominationModel();
                         if (auditLog != null)
                         {
-                            var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == auditLog.CreatedBy).FirstOrDefault();
-                            if (person != null)
-                            {
-                                nomination.currentHoldingPerson = person.EmployeeName;
-                            }
+                            //var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == auditLog.CreatedBy).FirstOrDefault();
+                            //if (person != null)
+                            //{
+                            //    nomination.currentHoldingPerson = person.EmployeeName;
+                            //}
+                            string statusText = EnumHelper.GetDescription((NominationStatus)auditLog.CurrentStatus);
+                            nomination.currentHoldingPerson = GetCurrentHoldingPerson(loggedInUserID, item.NominationId, statusText, item.EmployeeNumber);
                             nomination.Status = (NominationStatus)auditLog.CurrentStatus;
-                            nomination.StatusText = EnumHelper.GetDescription((NominationStatus)auditLog.CurrentStatus);
+                            nomination.StatusText = statusText;
                         }
                         else
                         {
-                            var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == loggedInUserID).FirstOrDefault();
-                            if (person != null)
-                            {
-                                nomination.currentHoldingPerson = person.EmployeeName;
-                            }
+                            //var person = objIPEntities.EmpMasters.Where(r => r.EmployeeNumber == loggedInUserID).FirstOrDefault();
+                            //if (person != null)
+                            //{
+                            //    nomination.currentHoldingPerson = person.EmployeeName;
+                            //}
+
+                            string statusText = EnumHelper.GetDescription(NominationStatus.Employee_Save);
+                            nomination.currentHoldingPerson = GetCurrentHoldingPerson(loggedInUserID, item.NominationId, statusText, item.EmployeeNumber);
+
                             nomination.Status = NominationStatus.Employee_Save;
-                            nomination.StatusText = EnumHelper.GetDescription(NominationStatus.Employee_Save);
+                            nomination.StatusText = statusText;
+
+
                         }
+
+
                         nomination.NominationID = item.NominationId;
                         nomination.ID = item.ID;
                         nomination.EmployeeNumber = item.EmployeeNumber;
@@ -1640,29 +1719,41 @@ namespace StarOfTheMonth.Repo
                 string finalHD = string.Empty;
                 if (_lstHD.Count > 0)
                 {
+
                     foreach (var item in _lstHD)
                     {
                         if (string.IsNullOrEmpty(finalHD))
                         {
-                            finalHD = horizontalDep.Replace("##AreaOfInterest1##", item.AreaOfInterest);
-                            finalHD = horizontalDep.Replace("##ImplementationStatus1##", item.ImplementationStatus);
+                            finalHD = horizontalDep.Replace("##AreaOfInterest1##", item.AreaOfInterest).
+                                    Replace("##ImplementationStatus1##", item.ImplementationStatus);
                         }
                         else
                         {
-                            string _temp;
-                            _temp = horizontalDep.Replace("##AreaOfInterest1##", item.AreaOfInterest);
-                            _temp = horizontalDep.Replace("##ImplementationStatus1##", item.ImplementationStatus);
-                            finalHD = finalHD + _temp;
+                            finalHD = finalHD +""+ horizontalDep.Replace("##AreaOfInterest1##", item.AreaOfInterest).
+                                   Replace("##ImplementationStatus1##", item.ImplementationStatus);
                         }
                     }
+                    //foreach (var item in _lstHD)
+                    //{
+                    //    if (string.IsNullOrEmpty(finalHD))
+                    //    {
+                    //        finalHD = horizontalDep.Replace("##AreaOfInterest1##", item.AreaOfInterest);
+                    //        finalHD = finalHD + horizontalDep.Replace("##ImplementationStatus1##", item.ImplementationStatus);
+                    //    }
+                    //    else
+                    //    {
+                    //        string _temp;
+                    //        _temp = horizontalDep.Replace("##AreaOfInterest1##", item.AreaOfInterest);
+                    //        _temp = horizontalDep.Replace("##ImplementationStatus1##", item.ImplementationStatus);
+                    //        finalHD = finalHD + _temp;
+                    //    }
+                    //}
                 }
                 else
                 {
                     finalHD = "<tr><td></td><td></td></tr>";
                 }
                 
-
-
                 content = content.Replace("##HorizontalDeployment##", finalHD);
 
                 string fileUpload = "<tr> " +
@@ -1714,7 +1805,7 @@ namespace StarOfTheMonth.Repo
                 
                 
                 content = content.Replace("##UploadedFileName##", finalNames);
-
+                content = content.Replace("##NominationID##", data.b.NominationId);
                 content = content.Replace("##Name##", data.a.EmployeeName);
                 content = content.Replace("##EmployeeNumber##", data.a.EmployeeNumber);
                 content = content.Replace("##Department##", data.a.Department);
@@ -1746,6 +1837,14 @@ namespace StarOfTheMonth.Repo
                             content = content.Replace("##NominationSignature##", empModel.EmployeeName);
                         }
                     }
+                    else
+                    {
+                        content = content.Replace("##NominationSignature##", "");
+                    }
+                }
+                else
+                {
+                    content = content.Replace("##NominationSignature##", "");
                 }
                
                 content = content.Replace("##NominationSubmittedDate##", Assistant.SOMDbToDateTimePickerAsString(data.b.NomSubmittedDate));
@@ -1766,6 +1865,14 @@ namespace StarOfTheMonth.Repo
                             content = content.Replace("##DHSignature##", empModel.EmployeeName);
                         }
                     }
+                    else
+                    {
+                        content = content.Replace("##DHSignature##", "");
+                    }
+                }
+                else
+                {
+                    content = content.Replace("##DHSignature##", "");
                 }
             }
             return content;

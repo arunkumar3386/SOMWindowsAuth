@@ -362,6 +362,10 @@ namespace StarOfTheMonth.Repo
                 model.SummaryOfAchievement = c.Idea;
                 model.SubmittedMonth = c.SubmittedMonth;
                 model.SubmittedYear = c.SubmittedYear;
+
+                model.Cost = c.Cost;
+                model.Time = c.Time;
+                model.Paper = c.Paper;
                 if (!string.IsNullOrEmpty(c.CreatedDate))
                 {
                     model.CreatedDateForFilterAsDateTime = Assistant.SOMDbToDateTimePicker(c.CreatedDate.Substring(0, 8));

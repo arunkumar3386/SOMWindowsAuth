@@ -33,7 +33,7 @@ namespace StarMonthAuth.ActionFilter
 
                 }
 
-                //loggedInuser = "Sanjay"; //Nomination User -- DH --RThangaraj
+                loggedInuser = "Sanjay"; //Nomination User -- DH --RThangaraj
                 //loggedInuser = "muthu"; //Nomination User DH -- RThangaraj
                 //loggedInuser = "kamudhan";//Nomination User 
                 //loggedInuser = "r.thangaraj"; //DH user
@@ -63,6 +63,18 @@ namespace StarMonthAuth.ActionFilter
                         //    //claims.Add(new Claim(ClaimTypes.Actor, _model.Data));
                         //}
                     }
+
+                    if (string.IsNullOrEmpty(_orGModel.ImagePath))
+                    {
+                        HttpContext.Current.Session.Add("UserImage", "/Images/UserImages/user-1.jpg");
+                    }
+                    else
+                    {
+                        HttpContext.Current.Session.Add("UserImage", _orGModel.ImagePath);
+                    }
+
+                    //HttpContext.Current.Session.Add("UserImage", _orGModel.ImagePath);
+                    //HttpContext.Current.Session.Add("UserImage", "/Images/UserImages/user-1.jpg");
                     HttpContext.Current.Session.Add("UserName", _orGModel.UserName);
                     HttpContext.Current.Session.Add("UserFullName", _orGModel.EmployeeName);
                     HttpContext.Current.Session.Add("UserID", _orGModel.EmployeeNumber);

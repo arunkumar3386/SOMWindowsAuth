@@ -66,6 +66,10 @@ namespace StarOfTheMonth.Models
         public string SubmittedYear { get; set; }
         public string SummaryOfAchievement { get; set; }
 
+        public string Cost { get; set; }
+        public string Time { get; set; }
+        public string Paper { get; set; }
+
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime CreatedDateForFilterAsDateTime { get; set; }
